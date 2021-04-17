@@ -1,0 +1,27 @@
+{
+  "name": "cs-546-final-project",
+  "version": "1.0.0",
+  "description": "Group 34 final project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vodewey12/CS-546-Final-Project.git"
+  },
+  "author": "Marjan Chowdhury, Aaron Vo Dewey, Mohammad Khan, Songhan Yu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vodewey12/CS-546-Final-Project/issues"
+  },
+  "homepage": "https://github.com/vodewey12/CS-546-Final-Project#readme",
+  "dependencies": {
+    "mongodb": "^3.6.4",
+		"express": "^4.17.1",
+		"express-session": "^1.17.0",
+    "handlebars": "^4.7.3",
+    "bcryptjs": "^2.4.3"
+	}
+}
