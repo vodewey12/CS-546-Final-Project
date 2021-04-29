@@ -73,15 +73,6 @@ module.exports = {
     if (!editedComment) throw 'You must provide an editedComment';
     if (editedComment.constructor !== Object) throw "the editedComment must be an object";
     if (Object.entries(editedComment).length === 0 && editedComment.constructor === Object) throw "editedComment Object cannot be an empty object";
-    
-    const updatedComment = {
-      commentId: ObjectId(),   // ObjectId
-      comContent: comContent,  // stirng
-      userName: userName,      // string
-      postTime: Date(),        // Date
-      rating: 0,               // Number
-      isSolution: false        // Boolean: default is false
-    };
 
     const updatedComment = {};
     if (editedComment.comContent) {  // we only update comment content
