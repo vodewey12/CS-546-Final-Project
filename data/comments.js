@@ -16,10 +16,10 @@ module.exports = {
     let parsedCommentId = ObjectId(commentId);
 
     const commentsCollection = await comments();
-    const comment = await commentsCollection.findOne({_id: parsedCommentId});
+    const comment = await commentsCollection.findOne({_commentId: parsedCommentId});
     if (comment === null) throw 'No comment with that commentId';
 
-    comment.commentId = comment.commentId.toString();  //convert ObjectId to String
+    comment._commentId = comment._commentId.toString();  //convert ObjectId to String
     return comment;
   },
 
@@ -33,7 +33,7 @@ module.exports = {
     const commentsCollection = await comments();  //get reference to comment collection
     
     const newComment = {
-      commentId: ObjectId(),   // ObjectId
+      _commentId: ObjectId(),   // ObjectId
       comContent: comContent,  // stirng
       userName: userName,      // string
       postTime: Date(),        // Date
@@ -59,7 +59,7 @@ module.exports = {
 
     //convert ObjectId to String for every array element
     for (let c of commentList) {
-      c.commentId = c.commentId.toString();
+      c._commentId = c._commentId.toString();
     }
 
     return commentList;  //an array of object
@@ -75,20 +75,20 @@ module.exports = {
     if (Object.entries(editedComment).length === 0 && editedComment.constructor === Object) throw "editedComment Object cannot be an empty object";
 
     const updatedComment = {};
-    if (editedComment.comContent) {  // we only update comment content
-      updatedComment.comContent = editedComment.title;
+    if (editedComment.comContent) {  // only update comment content
+      updatedComment.comContent = editedComment.comContent;
     }
     
     let parsedCommentId = ObjectId(commentId);
     const commentsCollection = await comments();
-    const currentComment = await commentsCollection.findOne({ _id: parsedCommentId})  //store original comment before updating
+    const currentComment = await commentsCollection.findOne({ _commentId: parsedCommentId})  //store original comment before updating
 
     updatedComment.userName = currentComment.userName;
     updatedComment.postTime = Date();  // update comment time
     updatedComment.rating = currentComment.rating;
     updatedComment.isSolution = currentComment.isSolution;  // if comment is solution, after editing, it still is solution
 
-    return await commentsCollection.updateOne( { _id: parsedCommentId }, { $set: updatedComment })
+    return await commentsCollection.updateOne( { _commentId: parsedCommentId }, { $set: updatedComment })
       .then(function () {
         return module.exports.getCommentByCommentId(commentId);
       })
@@ -104,7 +104,7 @@ module.exports = {
     const commentsCollection = await comments();
     const comment = await this.getCommentByCommentId(parsedCommentId);
 
-    const deletionInfo = await movieCollection.deleteOne({ _id: parsedCommentId });
+    const deletionInfo = await movieCollection.deleteOne({ _commentId: parsedCommentId });
 
     if (deletionInfo.deletedCount === 0) {
       throw `Could not delete comment with commentId of ${commentId}`;
