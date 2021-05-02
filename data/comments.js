@@ -53,7 +53,7 @@ module.exports = {
   },
 
 
-  getAll: async function() {
+  getAllComments: async function() {
     const commentsCollection = await comments();  //get reference to comment collection
     const commentList = await commentsCollection.find({}).toArray();
 
@@ -111,5 +111,89 @@ module.exports = {
     }
 
     return `${comment.comContent} has been successfully deleted`;
+  },
+
+
+  markCommentSol: async function(commentId) {  // mark this comment as solution
+    if (!commentId) throw 'You must provide an commentId for removing';
+    if (typeof commentId !== 'string' || commentId.length === 0) throw "the commentId must be string type and not an empty string";
+    if (!ObjectID.isValid(commentId)) throw "the commentId provided is not a valid ObjectId";
+    let parsedCommentId = ObjectId(commentId);
+
+    const commentsCollection = await comments();
+    const comment = await this.getCommentByCommentId(parsedCommentId);
+
+    const solComment = {};
+    
+    let parsedCommentId = ObjectId(commentId);
+    const commentsCollection = await comments();
+    const currentComment = await commentsCollection.findOne({ _commentId: parsedCommentId})  //store original comment before updating
+
+    solComment.comContent = currentComment.comContent;
+    solComment.userName = currentComment.userName;
+    solComment.postTime = Date();  // update comment time
+    solComment.rating = currentComment.rating;
+    solComment.isSolution = true;  // we regard the comment is solution, so mark it as 'true'
+
+    return await commentsCollection.updateOne( { _commentId: parsedCommentId }, { $set: solComment })
+      .then(function () {
+        return module.exports.getCommentByCommentId(commentId);
+      })
+  },
+
+  
+  upvoteComment: async function(commentId) {
+    if (!commentId) throw 'You must provide an commentId for removing';
+    if (typeof commentId !== 'string' || commentId.length === 0) throw "the commentId must be string type and not an empty string";
+    if (!ObjectID.isValid(commentId)) throw "the commentId provided is not a valid ObjectId";
+    let parsedCommentId = ObjectId(commentId);
+
+    const commentsCollection = await comments();
+    const comment = await this.getCommentByCommentId(parsedCommentId);
+
+    const upvoteComment = {};
+    
+    let parsedCommentId = ObjectId(commentId);
+    const commentsCollection = await comments();
+    const currentComment = await commentsCollection.findOne({ _commentId: parsedCommentId})  //store original comment before updating
+
+    upvoteComment.comContent = currentComment.comContent;
+    upvoteComment.userName = currentComment.userName;
+    upvoteComment.postTime = Date();  // update comment time
+    upvoteComment.rating = currentComment.rating + 1;
+    upvoteComment.isSolution = currentComment.isSolution;
+
+    return await commentsCollection.updateOne( { _commentId: parsedCommentId }, { $set: upvoteComment })
+      .then(function () {
+        return module.exports.getCommentByCommentId(commentId);
+      })
+  },
+
+
+  downvoteComment: async function(commentId) {
+    if (!commentId) throw 'You must provide an commentId for removing';
+    if (typeof commentId !== 'string' || commentId.length === 0) throw "the commentId must be string type and not an empty string";
+    if (!ObjectID.isValid(commentId)) throw "the commentId provided is not a valid ObjectId";
+    let parsedCommentId = ObjectId(commentId);
+
+    const commentsCollection = await comments();
+    const comment = await this.getCommentByCommentId(parsedCommentId);
+
+    const downvoteComment = {};
+    
+    let parsedCommentId = ObjectId(commentId);
+    const commentsCollection = await comments();
+    const currentComment = await commentsCollection.findOne({ _commentId: parsedCommentId})  //store original comment before updating
+
+    downvoteComment.comContent = currentComment.comContent;
+    downvoteComment.userName = currentComment.userName;
+    downvoteComment.postTime = Date();  // update comment time
+    downvoteComment.rating = currentComment.rating - 1;
+    downvoteComment.isSolution = currentComment.isSolution;
+
+    return await commentsCollection.updateOne( { _commentId: parsedCommentId }, { $set: downvoteComment })
+      .then(function () {
+        return module.exports.getCommentByCommentId(commentId);
+      })
   }
 };
