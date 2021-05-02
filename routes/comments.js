@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const data = require('../data');
-const { getCommentByCommentId } = require('../data/comments');
 const userData = data.reviews;  // ../data/users.js
 const postData = data.books;  // ../data/posts.js
 const commentData = data.comments;  // ../data/comments.js
