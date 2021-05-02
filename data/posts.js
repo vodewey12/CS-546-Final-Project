@@ -59,7 +59,7 @@ const exportedMethods = {
         const newInsertInformation = await postCollection.insertOne(newPost);
         if (newInsertInformation.insertedCount === 0) throw 'Insert failed!';
         const newID = newInsertInformation.insertedId.toString();
-        return await this.getPost(newID);
+        return await this.getPostById(newID);
     },
 
     async getAllPosts() {
@@ -71,7 +71,7 @@ const exportedMethods = {
         });
         return postList;
     },
-    async getPost(id) {
+    async getPostById(id) {
         let postId = idCheck(id);
         const postCollection = await posts();
         const post = await postCollection.findOne({ _postId: postId });
@@ -123,7 +123,7 @@ const exportedMethods = {
         if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
             throw 'Update failed';
 
-        return await this.getPost(postId.toString());
+        return await this.getPostById(postId.toString());
     },
     async deletePost(id) {
         let postId = idCheck(id);
