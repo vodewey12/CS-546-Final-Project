@@ -124,9 +124,6 @@ module.exports = {
     const comment = await this.getCommentByCommentId(parsedCommentId);
 
     const solComment = {};
-    
-    let parsedCommentId = ObjectId(commentId);
-    const commentsCollection = await comments();
     const currentComment = await commentsCollection.findOne({ _commentId: parsedCommentId})  //store original comment before updating
 
     solComment.comContent = currentComment.comContent;
@@ -152,9 +149,6 @@ module.exports = {
     const comment = await this.getCommentByCommentId(parsedCommentId);
 
     const upvoteComment = {};
-    
-    let parsedCommentId = ObjectId(commentId);
-    const commentsCollection = await comments();
     const currentComment = await commentsCollection.findOne({ _commentId: parsedCommentId})  //store original comment before updating
 
     upvoteComment.comContent = currentComment.comContent;
@@ -180,9 +174,6 @@ module.exports = {
     const comment = await this.getCommentByCommentId(parsedCommentId);
 
     const downvoteComment = {};
-    
-    let parsedCommentId = ObjectId(commentId);
-    const commentsCollection = await comments();
     const currentComment = await commentsCollection.findOne({ _commentId: parsedCommentId})  //store original comment before updating
 
     downvoteComment.comContent = currentComment.comContent;
