@@ -1,7 +1,7 @@
 const mongoCollections = require('../config/mongoCollections');
 const comments = mongoCollections.comments;
 const users = mongoCollections.users;
-let usersJS = require('./users');  // we need use async method of books
+let usersJS = require('./users');
 
 let ObjectID = require('mongodb').ObjectID;  // MongoDB Node check if objectid is valid. https://stackoverflow.com/questions/11985228/mongodb-node-check-if-objectid-is-valid
 let { ObjectId } = require('mongodb');
