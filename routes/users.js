@@ -54,7 +54,6 @@ router.post("/create", async (req, res) => {
   const error = [];
   if (!username) error.push("userName is not valid");
   if (!email) error.push("Email is not valid");
-
   if (error.length > 0) {
     res.status(400).json({ error: error });
   } else {
@@ -80,12 +79,10 @@ router.post("/create", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   const id = xss(req.params.id);
-
   if (!id) {
     res.status(400).json({ error: "User id is not valid" });
     return;
   }
-
   try {
     let deleted = await userFunctions.deleteUser(id);
     if (deleted) {
@@ -109,7 +106,6 @@ router.post("/login", async (req, res) => {
     bcrypt.compare(password, userData.password, function (err, results) {
       if (results == true) {
         res.send({
-          token: "12345",
           userData,
         });
       } else res.status(404).send("Invalid Email/Password Combination");
