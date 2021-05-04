@@ -26,8 +26,8 @@ module.exports = {
 
   createComments: async function(comContent, userName) {  // userId is string
     if (comContent == " ")  throw "Comment content with empty spaces are NOT valid strings";
-    if (!comContent || !userName) throw "userId, comContent and userName is needed"
-    if (typeof comContent !== 'string' || typeof userName !== 'string') throw "userId, comContent and userName must be string"
+    if (!comContent || !userName) throw "comContent and userName is needed"
+    if (typeof comContent !== 'string' || typeof userName !== 'string') throw "comContent and userName must be string"
     if (comContent.length === 0 || userName.length === 0) throw 'comContent, userName must be provide'
 
     const commentsCollection = await comments();  //get reference to comment collection
@@ -42,7 +42,7 @@ module.exports = {
 
     const insertComment = await commentsCollection.insertOne(newComment);
     if (insertComment.insertedCount === 0) throw 'Could not add comment into database';
-    
+
     //after successfully inserting movie, mongo will automatically generate an _id for comment, then we can get the commentId
     let commentId = insertComment.insertedId;  //commentId is ObjectId
     commentId = commentId.toString();
@@ -101,9 +101,9 @@ module.exports = {
     let parsedCommentId = ObjectId(commentId);
     
     const commentsCollection = await comments();
-    const comment = await this.getCommentByCommentId(parsedCommentId);
+    const comment = await this.getCommentByCommentId(commentId);
 
-    const deletionInfo = await movieCollection.deleteOne({ _id: parsedCommentId });
+    const deletionInfo = await commentsCollection.deleteOne({ _id: parsedCommentId });
 
     if (deletionInfo.deletedCount === 0) {
       throw `Could not delete comment with commentId of ${commentId}`;
@@ -120,7 +120,6 @@ module.exports = {
     let parsedCommentId = ObjectId(commentId);
 
     const commentsCollection = await comments();
-    const comment = await this.getCommentByCommentId(parsedCommentId);
 
     const solComment = {};
     const currentComment = await commentsCollection.findOne({ _id: parsedCommentId})  //store original comment before updating
@@ -145,7 +144,6 @@ module.exports = {
     let parsedCommentId = ObjectId(commentId);
 
     const commentsCollection = await comments();
-    const comment = await this.getCommentByCommentId(parsedCommentId);
 
     const upvoteComment = {};
     const currentComment = await commentsCollection.findOne({ _id: parsedCommentId})  //store original comment before updating
@@ -170,7 +168,6 @@ module.exports = {
     let parsedCommentId = ObjectId(commentId);
 
     const commentsCollection = await comments();
-    const comment = await this.getCommentByCommentId(parsedCommentId);
 
     const downvoteComment = {};
     const currentComment = await commentsCollection.findOne({ _id: parsedCommentId})  //store original comment before updating
