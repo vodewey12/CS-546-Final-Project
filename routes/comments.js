@@ -103,4 +103,71 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+
+router.patch('/markSol', async(req, res) => {
+  if (!req.params.id) {
+    res.status(400).json({ error: 'You must supply an commentId to mark it as solution' });
+    return;
+  }
+
+  try {
+    await commentData.getCommentByCommentId(xss(req.params.id));
+  } catch (e) {
+    res.status(404).json({ error: 'Comment not found with this id' });
+    return;
+  }
+
+  try {
+    await commentData.markCommentSol(xss(req.params.id));
+    res.status(200).json({ 'commentId': req.params.id, "deleted": true });
+  } catch (e) {
+    res.status(500).json({error: 'markSol fails' });
+  }
+});
+
+
+router.patch('/upvote', async (req, res) => {
+  if (!req.params.id) {
+    res.status(400).json({ error: 'You must supply an commentId to upvote' });
+    return;
+  }
+
+  try {
+    await commentData.getCommentByCommentId(xss(req.params.id));
+  } catch (e) {
+    res.status(404).json({ error: 'Comment not found with this id' });
+    return;
+  }
+
+  try {
+    await commentData.upvoteComment(xss(req.params.id));
+    res.status(200).json({ 'commentId': req.params.id, "deleted": true });
+  } catch (e) {
+    res.status(500).json({error: 'upvote fails' });
+  }
+});
+
+
+router.patch('/downvote', async (req, res) =>{
+  if (!req.params.id) {
+    res.status(400).json({ error: 'You must supply an commentId to downvote' });
+    return;
+  }
+
+  try {
+    await commentData.getCommentByCommentId(xss(req.params.id));
+  } catch (e) {
+    res.status(404).json({ error: 'Comment not found with this id' });
+    return;
+  }
+
+  try {
+    await commentData.downvoteComment(xss(req.params.id));
+    res.status(200).json({ 'commentId': req.params.id, "deleted": true });
+  } catch (e) {
+    res.status(500).json({error: 'downvote fails' });
+  }
+});
+
+
 module.exports = router;
