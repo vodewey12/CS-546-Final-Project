@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const data = require('../data');
+const xss = require("xss");
 const userData = data.reviews;  // ../data/users.js
 const postData = data.books;  // ../data/posts.js
 const commentData = data.comments;  // ../data/comments.js
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {  // return an array of all comments
 
 router.get('/:id', async (req, res) => {  // /:id is commentId
   try {
-    const commentOfPost= await commentData.getCommentByCommentId(req.params.id)   // req.params.id is commentId
+    const commentOfPost= await commentData.getCommentByCommentId(xss(req.params.id))   // req.params.id is commentId
     res.status(200).json(commentOfPost)
   } catch (e) {
     res.status(404).json({ message: 'getCommentByCommentId(req.params.id) fails' });
@@ -42,7 +43,7 @@ router.post('/', async (req, res) => {
 
   try {  // Json is valid and comment can be created successful
     const { comContent, userName } = aCommentData;  
-    const commentThatPost = await commentData.createComments() // create a comment
+    const commentThatPost = await commentData.createComments(xss(comContent), xss(userName)) // create a comment
     res.status(200).json(commentThatPost);
   } catch (e) {
     res.status(500).json({ error: "createComments() fails" })
@@ -59,10 +60,10 @@ router.patch('/:id', async (req, res) => {
 
   let updatedObject = {};
   try {
-    const currentComment = await commentData.getCommentByCommentId(req.params.id);
+    const currentComment = await commentData.getCommentByCommentId(xss(req.params.id));
     // compare patchComment with currentComment
     if (updatedComment.comContent && updatedComment.comContent !== currentComment.comContent)
-      updatedObject.comContent = updatedComment.comContent;
+      updatedObject.comContent = xss(updatedComment.comContent);
   } catch (e) {
     res.status(404).json({ error: 'Patch failed' });
     return;
@@ -70,7 +71,7 @@ router.patch('/:id', async (req, res) => {
 
   if (Object.keys(updatedObject).length !== 0) {  //there is updated info
     try {
-      const editCom = await commentData.editComment(req.params.id, updatedObject);
+      const editCom = await commentData.editComment(xss(req.params.id), updatedObject);
       res.status(200).json(editCom);
     } catch (e) {
       res.status(500).json({ error: 'editComment() fails' });
@@ -88,14 +89,14 @@ router.delete('/:id', async (req, res) => {
   }
 
   try {
-    await commentData.getCommentByCommentId(req.params.id);
+    await commentData.getCommentByCommentId(xss(req.params.id));
   } catch (e) {
     res.status(404).json({ error: 'Comment not found with this id' });
     return;
   }
 
   try {
-    await commentData.deleteComment(req.params.id);
+    await commentData.deleteComment(xss(req.params.id));
     res.status(200).json({ 'commentId': req.params.id, "deleted": true });
   } catch (e) {
     res.status(500).json({error: 'deleteComment() fails' });
