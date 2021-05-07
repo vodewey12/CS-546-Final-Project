@@ -31,23 +31,26 @@ Schema
 */
 
 const exportedMethods = {
-    async createPost(id, title, postContent, tags) {
+    async createPost(userId, userName, title, postContent, tags) {
         // postId, postTime, rating, resolvedStatus, commentIds will be generated
-        // userName obtained from id (userID) parameter
         // other parameters are received from routes
-        if (arguments.length < 6) throw 'not enough arguments provided';
-        let userId = idCheck(id);
-        if (!(stringCheck(title) && stringCheck(postContent))) {
-            throw 'title, and postContent parameters must be strings';
+        if (arguments.length < 5) throw 'not enough arguments provided';
+        if (
+            !(
+                stringCheck(userName) &&
+                stringCheck(userId) &&
+                stringCheck(title) &&
+                stringCheck(postContent)
+            )
+        ) {
+            throw 'userName, userId, title, and postContent parameters must be strings';
         }
         if (!(Array.isArray(tags) && tags.every(stringCheck)))
             throw 'tags parameter must be an array of strings';
-        let user = users.findUser(id);
         const postCollection = await posts();
         let newPost = {
-            _postId: ObjectID(),
             userId: userId,
-            userName: user.userName,
+            userName: userName,
             title: title,
             postContent: postContent,
             tags: tags,
@@ -71,12 +74,20 @@ const exportedMethods = {
         });
         return postList;
     },
+    async getPostsByUser(id) {
+        let userId = idCheck(id);
+        const postCollection = await posts();
+        const postList = await postCollection
+            .find({}, { projection: { userId: userId } })
+            .toArray();
+        if (!postList) throw 'no posts by given user found';
+        return postList;
+    },
     async getPostById(id) {
         let postId = idCheck(id);
         const postCollection = await posts();
         const post = await postCollection.findOne({ _postId: postId });
         if (!post) throw 'post not found';
-        post._postId = post._postId.toString();
         return post;
     },
     // user edits a post
@@ -120,16 +131,14 @@ const exportedMethods = {
             { _id: postId, postTime: JSON.stringify(new Date()) },
             { $set: postUpdateInfo }
         );
-        if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
-            throw 'Update failed';
-
+        if (!updateInfo && !updateInfo.modifiedCount) throw 'Update failed';
         return await this.getPostById(postId.toString());
     },
     async deletePost(id) {
         let postId = idCheck(id);
         const postCollection = await posts();
         const deletionInfo = await postCollection.removeOne({
-            _postId: postId
+            _id: postId
         });
         if (deletionInfo.deletedCount === 0) {
             throw `Could not delete post with id of ${id}`;
