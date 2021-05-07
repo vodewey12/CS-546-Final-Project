@@ -12,17 +12,7 @@
     border-radius: 50%;
 }
 
-
-.header-nav {
-    float: left;
-    color: rgb(255, 244, 244);
-    padding: 8px;
-    font-size: 18px;
-    line-height: 25px;
-
-}
-
-.header-title {
+.header a {
     float: left;
     color: rgb(255, 244, 244);
     text-align: center;
@@ -42,7 +32,6 @@
     background-color: #ddd;
     color: black;
 }
-
 
 
 .header-right {
