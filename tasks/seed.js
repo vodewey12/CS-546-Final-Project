@@ -46,6 +46,28 @@ async function main() {
         "Benedict Cumberbatch",  //userName
     );
 
+    // users collection
+    const user1 = await users.createUser({
+        userName : "Sherlock",
+        email: "sholmes@email.com",
+        password: "$2a$16$7JKSiEmoP3GNDSalogqgPu0sUbwder7CAN/5wnvCWe6xCKAKwlTD.", // hashed [refer raw pwd from lab10 description]
+        nickName: "masterdetective123",
+        major: "Psychology",
+        gradYear: "2023"
+    });
+
+    const user2 = await users.createUser({
+        userName : "Elizabeth",
+        email: "elemon@email.com",
+        password: "$2a$16$SsR2TGPD24nfBpyRlBzINeGU61AH0Yo/CbgfOlU1ajpjnPuiQaiDm", // hashed [refer raw pwd from lab10 description]
+        nickName: "lemon",
+        major: "English",
+        gradYear: "2024"
+    });
+
+    const allUsers = await users.getAllUsers();
+    console.log(allUsers);
+
 
     await db.serverConfig.close();
     console.log('Done seeding database');
