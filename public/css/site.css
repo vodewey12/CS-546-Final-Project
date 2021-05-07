@@ -79,7 +79,9 @@
     margin-left: 50px;
 }
 
-
+.sign-out-button {
+    height: 20px;
+}
 
 @media screen and (max-height: 450px) {
     .sidenav {
