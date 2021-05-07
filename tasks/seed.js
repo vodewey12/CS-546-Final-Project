@@ -20,7 +20,72 @@ async function main() {
     const db = await dbConnection();
     await db.dropDatabase();  //Removes the current database, deleting the associated data files.
     
+    //user:
+    const user1 = await users.createUser({
+        userName: "userName1",
+        email: "user1@stevens.edu",
+        passWord: "password",
+        major: "Computer Science",
+        gradYear: 2023,
+        courses: ['cs546', 'cs520', 'cs555']
+    })
+
+    const user2 = await users.createUser({
+        userName: "user2",
+        email: "user2@stevens.edu",
+        passWord: "123",
+        major: "Computer Engineering",
+        gradYear: 2022,
+        courses: ['cs546', 'cs555']
+    })
+
+    const user3 = await users.createUser({
+        userName: "userName",
+        email: "user3@stevens.edu",
+        passWord: "456",
+        major: "Soft Engineering",
+        gradYear: 2021,
+        courses: ['cs546', 'cs554']
+    })
+
+    const user4 = await users.createUser({
+        userName: "userName",
+        email: "group34@stevens.edu",
+        passWord: "789",
+        major: "Electrical Engineering",
+        gradYear: 2021,
+        courses: ['cs546', 'cs545']
+    })
+        
+    //post:
+    const post1 = await posts.createPost(
+        "111111b74218c3426861590e",
+        "Thie is 1st postTitle",
+        "This is postContent",
+        ["cs546", "cs545"]
+    );
+
+    const post2 = await posts.createPost(
+        "222222b74218c3426861590e",
+        "Thie is 2nd postTitle",
+        "This is postContent",
+        ["cs546", "cs555"]
+    );
+
+    const post3 = await posts.createPost(
+        "333333b74218c3426861590e",
+        "Thie is 3rd postTitle",
+        "This is postContent",
+        ["cs546", "cs520"]
+    );
     
+    const post4 = await posts.createPost(
+        "333333b74218c3426861590e",
+        "Thie is 4rd postTitle",
+        "This is postContent",
+        ["cs546", "cs555"]
+    );
+
     //test case for comments collection
     //comment1:
     const comment1 = await comments.createComments(
