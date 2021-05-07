@@ -1,3 +1,50 @@
 .container-root {
     padding: 0.01em 16px
 }
+
+.header {
+    overflow: hidden;
+    background-color: #A32638;
+    padding: 5px 10px;
+}
+
+.circle {
+    border-radius: 50%;
+}
+
+
+.header-nav {
+    float: left;
+    color: rgb(255, 244, 244);
+    padding: 8px;
+    font-size: 18px;
+    line-height: 25px;
+
+}
+
+.header-title {
+    float: left;
+    color: rgb(255, 244, 244);
+    text-align: center;
+    padding: 8px;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 25px;
+    border-radius: 4px;
+}
+
+.header a.logo {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.header-nav:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+
+
+.header-right {
+    float: right;
+}
