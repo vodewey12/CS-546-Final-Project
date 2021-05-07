@@ -57,3 +57,13 @@
     cursor: pointer;
     white-space: nowrap
 }
+
+.chip {
+    display: inline-block;
+    padding: 0 10px;
+    height: 20px;
+    font-size: 10px;
+    line-height: 20px;
+    border-radius: 25px;
+    background-color: #f1f1f1;
+}
