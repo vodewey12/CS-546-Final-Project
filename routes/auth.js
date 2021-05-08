@@ -10,9 +10,16 @@ router.get("/" , async (req, res) => {
         res.render('pages/login' , {
             title: 'login',
             partial: 'login_check_script',
-            error: false });
+        });
         return;
     }
 });
+
+router.get("/register" , async (req, res) => {
+    res.render('pages/register' , {
+        title: 'register',
+        partial: 'register_check_script',
+    });
+})
 
 module.exports = router;

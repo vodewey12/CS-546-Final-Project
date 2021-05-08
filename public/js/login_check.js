@@ -1,13 +1,15 @@
 (function($) {
 
     let loginForm = $('#login-form');
-    let inputEmail = $('#email');
-    let inputPass = $('#password');
-    let errorDiv = $('#error-container');
-    errorDiv.hide();
     
 
     loginForm.submit(function(event){
+
+        let inputEmail = $('#email');
+        let inputPass = $('#password');
+        let errorDiv = $('#error-container');
+        errorDiv.hide();
+        
 
         // input and email can't be empty bc of required attribute
         let email = inputEmail.val();
