@@ -20,7 +20,82 @@ async function main() {
     const db = await dbConnection();
     await db.dropDatabase();  //Removes the current database, deleting the associated data files.
     
+    //test case for users collection
+    //user:
+    authUser1 = {
+        username: "userName1",
+        email: "user1@stevens.edu",
+        password: "password",
+        major: "Computer Science",
+        year: 2023,
+        courses: ['cs546', 'cs520', 'cs555']
+    };
+    const user1 = await users.createUser(authUser1);
+
+    authUser2 = {
+        userName: "user2",
+        email: "user2@stevens.edu",
+        passWord: "123",
+        major: "Computer Engineering",
+        gradYear: 2022,
+        courses: ['cs546', 'cs555']
+    };
+    const user2 = await users.createUser(authUser2);
+
+    authUser3 = {
+        userName: "userName",
+        email: "user3@stevens.edu",
+        passWord: "456",
+        major: "Soft Engineering",
+        gradYear: 2021,
+        courses: ['cs546', 'cs554']
+    };
+    const user3 = await users.createUser(authUser3);
+
+    authUser4 = {
+        userName: "userName",
+        email: "group34@stevens.edu",
+        passWord: "789",
+        major: "Electrical Engineering",
+        gradYear: 2021,
+        courses: ['cs546', 'cs545']
+    }
+    const user4 = await users.createUser(authUser4);
+
+    //test case for posts collection
+    //post:
+    const post1 = await posts.createPost(
+        "111111b74218c3426861590e",
+        "user1's userName",
+        "Thie is 1st postTitle",
+        "This is postContent",
+        ["cs546", "cs545"]
+    );
+
+    const post2 = await posts.createPost(
+        "222222b74218c3426861590e",
+        "user2's userName",
+        "Thie is 2nd postTitle",
+        "This is postContent",
+        ["cs546", "cs555"]
+    );
+
+    const post3 = await posts.createPost(
+        "333333b74218c3426861590e",
+        "user3's userName",
+        "Thie is 3rd postTitle",
+        "This is postContent",
+        ["cs546", "cs520"]
+    );
     
+    const post4 = await posts.createPost(
+        "333333b74218c3426861590e",
+        "Eren Yaeger",
+        "Thie is 4rd postTitle",
+        "This is postContent",
+        ["cs546", "cs555"]
+    );
+
     //test case for comments collection
     //comment1:
     const comment1 = await comments.createComments(

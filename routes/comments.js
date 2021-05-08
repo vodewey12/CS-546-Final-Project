@@ -2,15 +2,15 @@ const express = require('express');
 const router = express.Router();
 const data = require('../data');
 const xss = require("xss");
-const userData = data.reviews;  // ../data/users.js
-const postData = data.books;  // ../data/posts.js
+const userData = data.users;  // ../data/users.js
+const postData = data.posts;  // ../data/posts.js
 const commentData = data.comments;  // ../data/comments.js
 
 
 router.get('/', async (req, res) => {  // return an array of all comments
   try {
     const commentOfPost= await commentData.getAllComments();
-    res.status(200).json(commentOfPost)
+    res.status(200).json(commentOfPost);
   } catch (e) {
     res.status(404).json({ message: 'getAllComments() fails' });
     return;
@@ -119,7 +119,7 @@ router.patch('/markSol', async(req, res) => {
 
   try {
     await commentData.markCommentSol(xss(req.params.id));
-    res.status(200).json({ 'commentId': req.params.id, "deleted": true });
+    res.status(200).json({ 'commentId': req.params.id, "markCommentAsSol": true });
   } catch (e) {
     res.status(500).json({error: 'markSol fails' });
   }
@@ -141,7 +141,7 @@ router.patch('/upvote', async (req, res) => {
 
   try {
     await commentData.upvoteComment(xss(req.params.id));
-    res.status(200).json({ 'commentId': req.params.id, "deleted": true });
+    res.status(200).json({ 'commentId': req.params.id, "upvoteComment": true });
   } catch (e) {
     res.status(500).json({error: 'upvote fails' });
   }
@@ -163,7 +163,7 @@ router.patch('/downvote', async (req, res) =>{
 
   try {
     await commentData.downvoteComment(xss(req.params.id));
-    res.status(200).json({ 'commentId': req.params.id, "deleted": true });
+    res.status(200).json({ 'commentId': req.params.id, "downvoteComment": true });
   } catch (e) {
     res.status(500).json({error: 'downvote fails' });
   }
