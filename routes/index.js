@@ -1,7 +1,7 @@
 const commentRoutes = require("./comments");
 const userRoutes = require("./users");
 const postRoutes = require("./posts");
-
+const profileRoutes = require("./profile");
 const constructorMethod = (app) => {
   app.use("/users", userRoutes);
   app.use("/comments", commentRoutes);
