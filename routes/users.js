@@ -158,7 +158,8 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-router.get('/logout', async (req, res) => {
+
+router.get('/logout', async (req, res) => {  // user click logout in profile page will trigger this router to logout and clear Cookie
   res.clearCookie('AuthCookie');
   res.clearCookie('Build Session');
   req.session.destroy();
