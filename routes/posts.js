@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const data = require('../data');
+const xss = require('xss');
 const postData = data.posts;
 const userData = data.users;
 
@@ -30,6 +31,13 @@ router.post('/', async (req, res) => {
         return;
     }
 
+    if (!postInfo.userName) {
+        res.status(400).json({
+            error: 'You must provide a userId'
+        });
+        return;
+    }
+
     if (!postInfo.title) {
         res.status(400).json({ error: 'You must provide a title' });
         return;
@@ -51,10 +59,11 @@ router.post('/', async (req, res) => {
 
     try {
         const newPost = await postData.createPost(
-            postInfo.userId,
-            postInfo.title,
-            postInfo.postContent,
-            postInfo.tags
+            xss(postInfo.userId),
+            xss(postInfo.userName),
+            xss(postInfo.title),
+            xss(postInfo.postContent),
+            xss(postInfo.tags)
         );
         res.json(newPost);
     } catch (e) {
@@ -62,9 +71,28 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/userposts/:id', async (req, res) => {
+    const id = xss(req.params.id);
+    if (!id) {
+        res.status(400).json({ error: 'Invalid userId' });
+        return;
+    }
     try {
-        let post = await postData.getPostById(req.params.id);
+        let postList = await postData.getPostsByUser(id);
+        res.json(postList);
+    } catch (e) {
+        res.status(404).json({ error: 'Post not found' });
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    const id = xss(req.params.id);
+    if (!id) {
+        res.status(400).json({ error: 'Invalid postId' });
+        return;
+    }
+    try {
+        let post = await postData.getPostById(id);
         res.json(post);
     } catch (e) {
         res.status(404).json({ error: 'Post not found' });
@@ -107,8 +135,16 @@ router.put('/:id', async (req, res) => {
         return;
     }
 
+    const inputData = {
+        userId: xss(postInfo.userId),
+        userName: xss(postInfo.userName),
+        title: xss(postInfo.title),
+        postContent: xss(postInfo.postContent),
+        tags: xss(postInfo.tags)
+    };
+
     try {
-        const updatedpost = await postData.updatePost(req.params.id, postInfo);
+        const updatedpost = await postData.updatePost(req.params.id, inputData);
         res.json(updatedpost);
     } catch (e) {
         res.sendStatus(500);
@@ -116,26 +152,31 @@ router.put('/:id', async (req, res) => {
 });
 
 router.patch('/:id', async (req, res) => {
+    const id = xss(req.params.id);
+    if (!id) {
+        res.status(400).json({ error: 'Invalid postId' });
+        return;
+    }
     const requestBody = req.body;
     let updatedObject = {};
     try {
         const oldPost = await postData.getPostById(req.params.id);
         if (requestBody.title && requestBody.title !== oldPost.title)
-            updatedObject.title = requestBody.title;
+            updatedObject.title = xss(requestBody.title);
         if (
             requestBody.postContent &&
             requestBody.postContent !== oldPost.postContent
         )
-            updatedObject.postContent = requestBody.postContent;
+            updatedObject.postContent = xss(requestBody.postContent);
         if (requestBody.tags && requestBody.tags !== oldPost.tags)
-            updatedObject.tags = requestBody.tags;
+            updatedObject.tags = xss(requestBody.tags);
         if (
             requestBody.postContent &&
             requestBody.postContent !== oldPost.postContent
         )
-            updatedObject.postContent = requestBody.postContent;
+            updatedObject.postContent = xss(requestBody.postContent);
         if (requestBody.rating && requestBody.rating !== oldPost.rating)
-            updatedObject.rating = requestBody.rating;
+            updatedObject.rating = xss(requestBody.rating);
         if (
             typeof requestBody.resolvedStatus === 'boolean' &&
             requestBody.resolvedStatus !== oldPost.resolvedStatus
@@ -147,10 +188,7 @@ router.patch('/:id', async (req, res) => {
     }
     if (Object.keys(updatedObject).length !== 0) {
         try {
-            const updatedPost = await postData.updatePost(
-                req.params.id,
-                updatedObject
-            );
+            const updatedPost = await postData.updatePost(id, updatedObject);
             res.json(updatedPost);
         } catch (e) {
             res.status(500).json({ error: e });
@@ -164,17 +202,20 @@ router.patch('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    if (!req.params.id) throw 'You must specify an ID to delete';
-
+    const id = xss(req.params.id);
+    if (!id) {
+        res.status(400).json({ error: 'Invalid postId' });
+        return;
+    }
     try {
-        await postData.getPostById(req.params.id);
+        await postData.getPostById(id);
     } catch (e) {
         res.status(404).json({ error: 'Post not found' });
         return;
     }
 
     try {
-        let deleted = await postData.deletePost(req.params.id);
+        let deleted = await postData.deletePost(id);
         res.json(deleted);
     } catch (e) {
         res.sendStatus(500);

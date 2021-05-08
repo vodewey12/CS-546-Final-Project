@@ -1,15 +1,21 @@
-// route imports
-const commentRoutes = require('./comments');
+const commentRoutes = require("./comments");
 const userRoutes = require("./users");
 const authRoutes = require('./auth');
-//
+const postRoutes = require("./posts");
+const profileRoutes = require("./profile");
+const dashboardRoutes = require("./dashboard");
+
+
 const constructorMethod = (app) => {
   app.use("/users", userRoutes);
-  app.use('/comments', commentRoutes);
-  app.use('/' , authRoutes);
-  
-  app.use('*', (req, res) => {
-      res.sendStatus(404);
+  app.use("/comments", commentRoutes);
+  app.use("/posts", postRoutes);
+  app.use("/profile", profileRoutes); // need this router to show user profile
+  app.use("/dashboard", dashboardRoutes);
+  app.use("/", profileRoutes);
+  app.use('/auth' , authRoutes);
+  app.use("*", (req, res) => {
+    res.sendStatus(404);
   });
 };
 
