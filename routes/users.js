@@ -158,4 +158,11 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
+router.get('/logout', async (req, res) => {
+  res.clearCookie('AuthCookie');
+  res.clearCookie('Build Session');
+  req.session.destroy();
+  res.send('You have logged out');
+});
+
 module.exports = router;
