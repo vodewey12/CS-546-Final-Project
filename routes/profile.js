@@ -8,12 +8,16 @@ const commentData = data.comments;  // ../data/comments.js
 
 
 router.get('/', async (req, res) => {
+  let userId = xss(req.params.id)
+  let userInfo = userData.getUserById(userId);
+
   try {
     res.render('profile/profile', {
       bootstrap4: true,
-    })  // for rendering text page
+      courses: userInfo.courses,
+      userPosts: postData.getPostsByUser(userId)
+    });  // for rendering text page
 
-    // let userInfo = userData.getUserById(userID);
     // // if I cannot get username, email etc. from req.session. I can use getUserById(userID) to get information as well
     // res.render('profile/profile', {
     //   userName: req.session.username,

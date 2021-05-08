@@ -59,8 +59,9 @@
     </div>
   </div>
 
+  {{#each userPosts}}
   <!-- a single post record goes here -->
-  {{ > profilePostCard }}
-
+    {{ > profilePostCard }}
+  {{/each}}
 
 </div>
