@@ -8,7 +8,7 @@ const commentData = data.comments;  // ../data/comments.js
 
 
 router.get('/', async (req, res) => {
-  let userId = xss(req.params.id)
+  let userId = xss(req.session.user.userId)
   let userInfo = userData.getUserById(userId);
 
   try {
