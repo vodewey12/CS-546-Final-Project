@@ -1,14 +1,40 @@
-<div class="row aSinglePost"> <!-- a single post in user profile-->
+<link rel="stylesheet" href="/public/css/dashboard.css">
 
-  <div class="col-3"></div>  <!-- for white space-->
-  <div class="col-9">  <!-- User's Post go here, I use card as post --> 
-    <div class="card .container-fluid">
-      <div class="card-body">
-        <h5 class="card-title">{{post.title}}</h5>
-        <p class="card-text">{{post.postContent}}</p>
-        <p class="card-text">{{post.tags}}</p>
-      </div>
-    </div> 
+<div class="post-cards"><br>
+  <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="avatar-image" style="width:60px">
+
+  <h4>Eren Yaeger</h4>
+  <span>Posted on January 27th, 2021</span><br>
+  <hr>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
+    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+    aliquip ex ea commodo consequat.</p>
+  <div class="chip-container">
+    <div class="chip">
+      CS 546
+    </div>
+    <div class="chip">
+      CS 546
+    </div>
+    <div class="chip">
+      CS 546
+    </div>
+    <div class="chip">
+      CS 546
+    </div>
+    <div class="chip">
+      CS 546
+    </div>
+    <div class="chip">
+      CS 546
+    </div>
+
   </div>
-
-</div><br> <!-- a single post End -->
+  <hr>
+  <div class="card-actions">
+    <button type="button" class="card-actions-button"><i class="fa fa-thumbs-up"></i>
+      Like</button>
+    <button type="button" class="card-actions-button"><i class="fa fa-comment"></i>
+      Comment</button>
+  </div>
+</div>
