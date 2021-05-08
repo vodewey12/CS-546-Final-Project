@@ -108,6 +108,7 @@ router.post("/login", async (req, res) => {
 
     bcrypt.compare(password, userData.password, function (err, results) {
       if (results == true) {
+        req.session.user = {userId : userData._id};
         res.send({
           token: "12345",
           userData,

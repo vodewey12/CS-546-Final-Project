@@ -1,0 +1,22 @@
+<form id="login-form" method="POST" action="/users/login">
+    <label for="email">Email</label>
+    <input type="email" placeholder="Enter Email" name="email" id="email" required>
+
+    <label for="password">Password</label>
+    <input type="password" placeholder="Enter Password" name="password" id="password" required>
+
+    {{#if error }}
+    <div class="form-group">
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    </div>
+    {{/if}}
+
+    <div class="form-group alert alert-danger" id="error-container" hidden>
+    </div>
+
+    <button type="submit">Login</button>
+
+
+</form>
