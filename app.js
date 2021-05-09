@@ -2,9 +2,10 @@ const express = require("express");
 const app = express();
 const configRoutes = require("./routes");
 const moment = require("moment");
-const exphbs = require("express-handlebars");
-
 const Handlebars = require("handlebars");
+
+const exphbs = require("express-handlebars");
+const session = require("express-session");
 
 const handlebarsInstance = exphbs.create({
   defaultLayout: "main",
@@ -32,6 +33,15 @@ app.engine("handlebars", handlebarsInstance.engine);
 app.set("view engine", "handlebars");
 
 // Middlewares
+
+app.use(
+  session({
+    name: "AuthCookie",
+    secret: "some secret string!",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 configRoutes(app);
 
