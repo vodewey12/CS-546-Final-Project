@@ -18,12 +18,13 @@
     },
     "homepage": "https://github.com/vodewey12/CS-546-Final-Project#readme",
     "dependencies": {
-        "mongodb": "^3.6.4",
+        "bcryptjs": "^2.4.3",
         "express": "^4.17.1",
         "express-handlebars": "^5.2.1",
         "express-session": "^1.17.0",
         "handlebars": "^4.7.3",
-        "bcryptjs": "^2.4.3",
+        "moment": "^2.29.1",
+        "mongodb": "^3.6.4",
         "uuid": "^8.3.2",
         "xss": "^1.0.6"
     }
