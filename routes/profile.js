@@ -13,9 +13,10 @@ router.get('/', async (req, res) => {
 
   try {
     res.render('profile/profile', {
-      bootstrap4: true,
+      bootstrap4: true,  // trigger bootstrap4 in main.handlebars
       courses: userInfo.courses,
-      userPosts: postData.getPostsByUser(userId)
+      userPosts: postData.getPostsByUser(userId),
+      logoutLink: 'http://localhost:3000/logout'
     });  // for rendering text page
 
     // // if I cannot get username, email etc. from req.session. I can use getUserById(userID) to get information as well
@@ -30,6 +31,7 @@ router.get('/', async (req, res) => {
     // });
   } catch (e) {
     console.log(e);
+    res.status(403).render('others/form', {hasErrors: true, error: "You did not provide a valid username and/or password.", title: "Login"});
   }
 });
 
