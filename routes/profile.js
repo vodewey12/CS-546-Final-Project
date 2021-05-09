@@ -31,7 +31,7 @@ router.get('/', async (req, res) => {
     // });
   } catch (e) {
     console.log(e);
-    res.status(403).render('others/form', {hasErrors: true, error: "You did not provide a valid username and/or password.", title: "Login"});
+    res.status(403).render('pages/register', {error: true});
   }
 });
 
