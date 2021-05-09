@@ -1,66 +1,25 @@
 <link rel="stylesheet" href="/public/css/profile.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<!-- Navigation bar -->
-<nav class="navbar navbar-dark navbar-expand-sm  fixed-top">
-  <div class="container">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Navbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="#"> Stevens Collaboration Platform</a>
-    <div class="collapse navbar-collapse" id="Navbar">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item"><a class="nav-link" href="#"> <span class=""> </span> Dashboard</a></li>
-        <li class="nav-item active"><a class="nav-link" href="./aboutus.html"> <span class=""> </span>  Profile</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"> <span class=""> </span> Notifications</a></li>
-      </ul>
-      <span class="navbar-text">
-        <a href="http://localhost:3000/logout"> logout </a>  <!-- {{logoutLink}} -->
-      </span>
-    </div>
-  </div>
-</nav><br><br><br>
-<!-- Navigation bar End -->
+{{> header}}
 
+<div class="post-container">
+  <link rel="stylesheet" href="/public/css/dashboard.css">
 
-<div class="container">
-  <div class="row row-content align-items-center">
-    <div class="col-3">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Related Tags</h5>
-          <hr>
-          <div class="courses">
-            <ul>
-              {{#each courses}}
-              <li>{{courses}}</li>
-              {{/each}}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="profile-card"><br>
 
-    <div class="col-9">
-      <div class="row userInfo">
-        <div class="col-2">
-          <img src="../../public/imgs/portrait.jpg" alt="portrait" width="150" height="150">
-        </div>
-        <div class="col-2"></div>
-        <div class="col-8">
-          <div class="card-body">
-            <h5 class="card-title">{{userName}}</h5>
-            <p class="card-text">Email: {{email}} </p>
-            <p class="card-text">Major: {{Major}} </p>
-            <p class="card-text">Graduate Year: {{gradYear}}</p>
-          </div>
-        </div>
-      </div><hr>
-      <div><h6>My Posts</h6></div>
-    </div>
+    <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="profile-image " style="
+        width:100px">
+
+    <h4>Eren Yaeger</h4>
+    <span>Software Engineer</span>
+    <h6>Graduating in 2021</h6>
+    <br>
   </div>
 
-  <!-- a single post record goes here -->
-  {{ > profilePostCard }}
+  <h4>My posts</h4>
+  <hr class="hr-create"> <!-- a single post record goes here -->
+  {{> profilePostCard}}
 
 
 </div>

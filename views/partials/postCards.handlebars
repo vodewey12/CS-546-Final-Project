@@ -1,36 +1,21 @@
 <link rel="stylesheet" href="/public/css/dashboard.css">
-
+{{#each results}}
 <div class="post-cards"><br>
     <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="avatar-image" style="width:60px">
 
-    <h4>Eren Yaeger</h4>
-    <span>Posted on January 27th, 2021</span><br>
-    <hr>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-        et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-        aliquip ex ea commodo consequat.</p>
+    <h4>{{title}}</h4>
+    <span>Posted on {{formattedDate postTime}} by {{userName}}</span><br>
+    <hr class="hr-create">
+    <p>{{postContent}}</p>
     <div class="chip-container">
+        {{#each tags}}
         <div class="chip">
-            CS 546
+            {{this}}
         </div>
-        <div class="chip">
-            CS 546
-        </div>
-        <div class="chip">
-            CS 546
-        </div>
-        <div class="chip">
-            CS 546
-        </div>
-        <div class="chip">
-            CS 546
-        </div>
-        <div class="chip">
-            CS 546
-        </div>
+        {{/each}}
 
     </div>
-    <hr>
+    <hr class="hr-create">
     <div class="card-actions">
         <button type="button" class="card-actions-button"><i class="fa fa-thumbs-up"></i>
             Like</button>
@@ -38,3 +23,4 @@
             Comment</button>
     </div>
 </div>
+{{/each}}
