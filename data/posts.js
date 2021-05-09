@@ -45,8 +45,7 @@ const exportedMethods = {
     ) {
       throw "userName, userId, title, and postContent parameters must be strings";
     }
-    if (!(Array.isArray(tags) && tags.every(stringCheck)))
-      throw "tags parameter must be an array of strings";
+    console.log("yay");
     const postCollection = await posts();
     let newPost = {
       userId: userId,
@@ -54,7 +53,7 @@ const exportedMethods = {
       title: title,
       postContent: postContent,
       tags: tags,
-      postTime: JSON.stringify(new Date()),
+      postTime: new Date(),
       rating: 0,
       resolvedStatus: false,
       commentIds: [],
