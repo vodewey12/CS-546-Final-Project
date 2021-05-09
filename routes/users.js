@@ -4,15 +4,11 @@ const userFunctions = require("./../data/users");
 const xss = require("xss");
 const e = require("express");
 const bcrypt = require("bcryptjs");
-const userFunctions = require("./../data/users");
 const postFunctions = require("./../data/posts");
 
 router.get("/", async (req, res) => {
   try {
-    let allUsersPosts = await userFunctions.getPostsByUser(id);
-    res.render("profile/profile", {
-      results: allUsersPosts,
-    }); // for rendering text page
+    res.render("profile/profile"); // for rendering text page
   } catch (e) {
     res.status(404).json({ error: e.message });
   }

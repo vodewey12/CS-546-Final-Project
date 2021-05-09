@@ -45,3 +45,7 @@
   margin-right: auto;
   border-radius: 50%;
 }
+
+.hr-create {
+  border-color: grey;
+}
