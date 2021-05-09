@@ -3,6 +3,7 @@ const app = express();
 const configRoutes = require('./routes');
 
 const exphbs = require('express-handlebars');
+const session = require('express-session');
 
 const Handlebars = require('handlebars');
 
@@ -29,6 +30,13 @@ app.engine('handlebars', handlebarsInstance.engine);
 app.set('view engine', 'handlebars');
 
 // Middlewares
+
+app.use(session({
+    name: 'AuthCookie',
+    secret: 'some secret string!',
+    resave: false,
+    saveUninitialized: true
+  }));
 
 configRoutes(app);
 

@@ -1,8 +1,10 @@
 const commentRoutes = require("./comments");
 const userRoutes = require("./users");
+const authRoutes = require('./auth');
 const postRoutes = require("./posts");
 const profileRoutes = require("./profile");
 const dashboardRoutes = require("./dashboard");
+
 
 const constructorMethod = (app) => {
   app.use("/users", userRoutes);
@@ -11,6 +13,7 @@ const constructorMethod = (app) => {
   app.use("/profile", profileRoutes); // need this router to show user profile
   app.use("/dashboard", dashboardRoutes);
   app.use("/", profileRoutes);
+  app.use('/auth' , authRoutes);
   app.use("*", (req, res) => {
     res.sendStatus(404);
   });
