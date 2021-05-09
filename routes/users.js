@@ -50,7 +50,7 @@ router.post("/create", async (req, res) => {
     return;
   }
 
-  const { username, email, major, password, gradYear } = req.body;
+  const { username, email, password , nickName , major, gradYear } = req.body;
   const error = [];
   if (!username) error.push("userName is not valid");
   if (!email) error.push("Email is not valid");
@@ -61,19 +61,35 @@ router.post("/create", async (req, res) => {
     var salt = bcrypt.genSaltSync(10);
     var hashedPw = await bcrypt.hash(password, salt);
     const inputData = {
-      username: xss(username),
+      userName: xss(username),
       email: xss(email),
       password: hashedPw,
+      nickName: xss(nickName),
       major: xss(major),
       gradYear: xss(gradYear),
     };
 
     try {
       let newUser = await userFunctions.createUser(inputData);
-      res.json(newUser);
+      //res.json(newUser);
+      res.render('pages/login' , {
+        title: 'Login',
+        partial: 'login_check_script',
+    });
     } catch (e) {
-      console.log(e.message);
-      res.status(500).json({ error: e.message });
+      //console.log(e.message);
+      //res.status(500).json({ error: e.message });
+      res.render('pages/register' , {
+        title: 'register',
+        partial: 'register_check_script',
+        error: e.message,
+        userName:username,
+        email:email,
+        password:password,
+        nickName:nickName,
+        major:major,
+        gradYear:gradYear
+    });
     }
   }
 });
@@ -108,14 +124,33 @@ router.post("/login", async (req, res) => {
 
     bcrypt.compare(password, userData.password, function (err, results) {
       if (results == true) {
+        req.session.user = {userId : userData._id};
         res.send({
           token: "12345",
           userData,
         });
-      } else res.status(404).send("Invalid Email/Password Combination");
+      } //else res.status(404).send("Invalid Email/Password Combination");
+      else{
+        res.status(404);
+        res.render('pages/login' , {
+          title: 'login',
+          partial: 'login_check_script',
+          error : "Invalid Email/Password Combination",
+          email: email,
+          password : password
+        });
+      }
     });
   } catch (e) {
-    res.status(404).json({ error: e.message });
+    //res.status(404).json({ error: e.message });
+    res.status(404);
+    res.render('pages/login' , {
+      title: 'login',
+      partial: 'login_check_script',
+      error : "Invalid Email/Password Combination",
+      email: email,
+      password : password
+    });
   }
 });
 
