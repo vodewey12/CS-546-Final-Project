@@ -3,7 +3,7 @@
         <form id="register-form" method="post" action="/users/create">
             <div class="form-group">
                 <label for="userName">UserName</label>
-                <input type="text" class="form-control" id="userName" name="username" placeholder="userName"
+                <input type="text" class="form-control" id="userName" name="userName" placeholder="userName"
                     value="{{userName}}" required>
             </div>
             <div class="form-group">
@@ -32,10 +32,16 @@
                     value="{{gradYear}}" required>
             </div>
 
-            {{#if error }}
+            {{#if hasErrors}}
             <div class="form-group">
                 <div class="alert alert-danger">
-                    {{ error }}
+                    <ul class="error-list">
+                        {{#each errors}}
+                        <li>
+                            {{this}}
+                        </li>
+                        {{/each}}
+                    </ul>
                 </div>
             </div>
             {{/if}}

@@ -38,7 +38,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/create", async (req, res) => {
+
+router.post("/create", async (req, res) => {  // register.handlebars will post form to this router
   if (
     !req.body ||
     !req.body.username ||
@@ -51,13 +52,26 @@ router.post("/create", async (req, res) => {
   }
 
   const { username, email, password , nickName , major, gradYear } = req.body;
-  const error = [];
-  if (!username) error.push("userName is not valid");
-  if (!email) error.push("Email is not valid");
 
-  if (error.length > 0) {
-    res.status(400).json({ error: error });
-  } else {
+  const errorList = [];
+  if (!username.trim()) errorList.push("userName is not valid");
+  if (!email.trim()) errorList.push("Email is not valid");
+
+  if (errorList.length > 0) {  // user register form have empty field. I wonder because register.handlebars ask 'require' for each field, it seems it will not trigger this statement
+    res.status(400).render('pages/register',{
+      title: 'register',
+      partial: 'register_check_script',
+      userName: xss(username),
+      email: xss(email),
+      password: xss(password),
+      nickName: xss(nickName),
+      major: xss(major),
+      gradYear: gradYear,
+      hasErrors: true,
+      errors: errorList
+    });
+  } 
+  else {  // user fill out all field in register form, we can create an account for them
     var salt = bcrypt.genSaltSync(10);
     var hashedPw = await bcrypt.hash(password, salt);
     const inputData = {
@@ -70,15 +84,13 @@ router.post("/create", async (req, res) => {
     };
 
     try {
-      let newUser = await userFunctions.createUser(inputData);
+      let newUser = await userFunctions.createUser(inputData);  // create an account for user in user collection
       //res.json(newUser);
-      res.render('pages/login' , {
-        title: 'Login',
-        partial: 'login_check_script',
-    });
-    } catch (e) {
+      res.render('pages/login' , {title: 'Login', partial: 'login_check_script'});  // if user have signed in, we guide them to login page 
+    } catch (e) {  // createUser() fail, render register.handlebars
       //console.log(e.message);
       //res.status(500).json({ error: e.message });
+      console.log('createUser() fail, render register form');
       res.render('pages/register' , {
         title: 'register',
         partial: 'register_check_script',
@@ -89,28 +101,30 @@ router.post("/create", async (req, res) => {
         nickName:nickName,
         major:major,
         gradYear:gradYear
-    });
+      });
     }
   }
 });
+
 
 router.delete("/:id", async (req, res) => {
   const id = xss(req.params.id);
 
   if (!id) {
-    res.status(400).json({ error: "User id is not valid" });
+    res.status(400).json({ error: "User id is not valid. You must provide userId to delete" });
     return;
   }
 
   try {
     let deleted = await userFunctions.deleteUser(id);
     if (deleted) {
-      res.json({ deleted: "true" });
+      res.json({ 'userId': id, deleted: "true" });
     }
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
+
 
 router.post("/login", async (req, res) => {
   if (!req.body.email || !req.body.password) {
@@ -119,32 +133,46 @@ router.post("/login", async (req, res) => {
   }
   const email = req.body.email;
   const password = req.body.password;
+  let crtTimeStamp = new Date().toUTCString();  // current timestamp
+
   try {
     let userData = await userFunctions.getUserbyEmail(email);
 
     bcrypt.compare(password, userData.password, function (err, results) {
       if (results == true) {
-        req.session.user = {userId : userData._id};
-        res.send({
-          token: "12345",
-          userData,
-        });
+        req.session.user = {
+          userId : userData._id, 
+          userName: userData.userName,
+          email: userData.email,
+          nickName: userData.nickName,
+          major: userData.major,
+          gradYear: userData.gradYear,
+          courses: userData.courses,
+          postId: userData.postId,
+          commentId: userData.commentId,
+        };
+        // res.send({
+        //   token: "12345",
+        //   userData,
+        // });
+        res.cookie('AuthCookie', userData.userName);  
+        console.log(`[${crtTimeStamp}]: (Authenticated User)`);
+        res.redirect('/profile');  // ❤ user input right password, we redirect them to user profile
       } //else res.status(404).send("Invalid Email/Password Combination");
       else{
-        res.status(404);
-        res.render('pages/login' , {
+        res.status(404).render('pages/login' , {
           title: 'login',
           partial: 'login_check_script',
           error : "Invalid Email/Password Combination",
           email: email,
           password : password
         });
+        console.log(`[${crtTimeStamp}]: (Non-Authenticated User)`)
       }
     });
   } catch (e) {
     //res.status(404).json({ error: e.message });
-    res.status(404);
-    res.render('pages/login' , {
+    res.status(404).render('pages/login' , {
       title: 'login',
       partial: 'login_check_script',
       error : "Invalid Email/Password Combination",
@@ -153,6 +181,7 @@ router.post("/login", async (req, res) => {
     });
   }
 });
+
 
 // update user
 router.patch("/:id", async (req, res) => {
