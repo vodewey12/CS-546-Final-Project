@@ -54,10 +54,10 @@ router.post("/create", async (req, res) => {  // register.handlebars will post f
     return;
   }
 
-  const { username, email, password , nickName , major, gradYear } = req.body;
+  const { userName, email, password , nickName , major, gradYear } = req.body;
 
   const errorList = [];
-  if (!username.trim()) errorList.push("userName is not valid");
+  if (!userName.trim()) errorList.push("userName is not valid");
   if (!email.trim()) errorList.push("Email is not valid");
 
   if (errorList.length > 0) {  // user register form have empty field. I wonder because register.handlebars ask 'require' for each field, it seems it will not trigger this statement
@@ -78,7 +78,7 @@ router.post("/create", async (req, res) => {  // register.handlebars will post f
     var salt = bcrypt.genSaltSync(10);
     var hashedPw = await bcrypt.hash(password, salt);
     const inputData = {
-      userName: xss(username),
+      userName: xss(userName),
       email: xss(email),
       password: hashedPw,
       nickName: xss(nickName),
