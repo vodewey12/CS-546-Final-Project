@@ -13,6 +13,13 @@ const constructorMethod = (app) => {
   app.use("/posts", postRoutes);
   app.use("/auth", authRoutes);
 
+  app.get('/logout', async (req, res) => {  // trigger /logout router to logout
+    res.clearCookie('AuthCookie');
+    res.clearCookie('Build Session');
+    req.session.destroy();
+    res.status(200).redirect('/auth');
+  });
+
   app.use("*", (req, res) => {
     res.sendStatus(404);
   });

@@ -231,15 +231,4 @@ router.post("/login", async (req, res) => {
 });
 
 
-router.get('/logout', async (req, res) => {  // trigger /user/logout router to logout
-  res.clearCookie('AuthCookie');
-  res.clearCookie('Build Session');
-  req.session.destroy();
-  res.send('You have logged out');
-  res.render('pages/login' , {
-    title: 'login',
-    partial: 'login_check_script',
-  });
-});
-
 module.exports = router;
