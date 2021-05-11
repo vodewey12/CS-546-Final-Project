@@ -1,27 +1,31 @@
 const express = require("express");
 const router = express.Router();
-const userFunctions = require("./../data/users");
 const xss = require("xss");
 const e = require("express");
 const bcrypt = require("bcryptjs");
+const userFunctions = require("./../data/users");
 const postFunctions = require("./../data/posts");
 
-router.get("/", async (req, res) => {
+router.get("/:id/profile", async (req, res) => {  // after user input right password and log in, they redirect to this router by way of router.post("/login")
+  const id = xss(req.params.id);
+  const userInfo = await userFunctions.getUserById(id);
+  // console.log(userInfo);
+  // console.log(await postFunctions.getPostsByUserId(id))
   try {
-    res.render("profile/profile"); // for rendering text page
+    res.render("profile/profile", {title: `${userInfo.userName}`, partial:'profile_js_script', postItems: await postFunctions.getPostsByUserId(id), USERNAME: userInfo.userName, MAJOR: userInfo.major, GRADYEAR: userInfo.gradYear});  // for rendering text page
   } catch (e) {
     res.status(404).json({ error: e.message });
   }
 });
 
-router.get("/ids", async (req, res) => {
-  try {
-    let allUserIds = await userFunctions.getAllUserIds();
-    res.json(allUserIds);
-  } catch (e) {
-    res.status(404).json({ error: e.message });
-  }
-});
+// router.get("/ids", async (req, res) => {
+//   try {
+//     let allUserIds = await userFunctions.getAllUserIds();
+//     res.json(allUserIds);
+//   } catch (e) {
+//     res.status(404).json({ error: e.message });
+//   }
+// });
 
 router.get("/:id", async (req, res) => {
   const id = xss(req.params.id);
@@ -41,8 +45,7 @@ router.get("/:id", async (req, res) => {
 
 router.post("/create", async (req, res) => {  // register.handlebars will post form to this router
   if (
-    !req.body ||
-    !req.body.username ||
+    !req.body.userName ||
     !req.body.password ||
     !req.body.major ||
     !req.body.gradYear
@@ -126,63 +129,6 @@ router.delete("/:id", async (req, res) => {
 });
 
 
-router.post("/login", async (req, res) => {
-  if (!req.body.email || !req.body.password) {
-    res.status(404).json({ error: "Must supply all fields." });
-    return;
-  }
-  const email = req.body.email;
-  const password = req.body.password;
-  let crtTimeStamp = new Date().toUTCString();  // current timestamp
-
-  try {
-    let userData = await userFunctions.getUserbyEmail(email);
-
-    bcrypt.compare(password, userData.password, function (err, results) {
-      if (results == true) {
-        req.session.user = {
-          userId : userData._id, 
-          userName: userData.userName,
-          email: userData.email,
-          nickName: userData.nickName,
-          major: userData.major,
-          gradYear: userData.gradYear,
-          courses: userData.courses,
-          postId: userData.postId,
-          commentId: userData.commentId,
-        };
-        // res.send({
-        //   token: "12345",
-        //   userData,
-        // });
-        res.cookie('AuthCookie', userData.userName);  
-        console.log(`[${crtTimeStamp}]: (Authenticated User)`);
-        res.redirect('/profile');  // ❤ user input right password, we redirect them to user profile
-      } //else res.status(404).send("Invalid Email/Password Combination");
-      else{
-        res.status(404).render('pages/login' , {
-          title: 'login',
-          partial: 'login_check_script',
-          error : "Invalid Email/Password Combination",
-          email: email,
-          password : password
-        });
-        console.log(`[${crtTimeStamp}]: (Non-Authenticated User)`)
-      }
-    });
-  } catch (e) {
-    //res.status(404).json({ error: e.message });
-    res.status(404).render('pages/login' , {
-      title: 'login',
-      partial: 'login_check_script',
-      error : "Invalid Email/Password Combination",
-      email: email,
-      password : password
-    });
-  }
-});
-
-
 // update user
 router.patch("/:id", async (req, res) => {
   const id = xss(req.params.id);
@@ -220,6 +166,80 @@ router.patch("/:id", async (req, res) => {
       res.status(500).json({ error: e.message });
     }
   }
+});
+
+
+router.post("/login", async (req, res) => {
+  if (req.session.isLogIn)
+    res.redirect(`/user/${req.session.userId}/profile`); // if user already log in, when they go to login page, they should redirect profile page instead of seeing login form
+
+  if (!req.body.email || !req.body.password) {
+    res.status(404).json({ error: "Must supply all fields." });
+    return;
+  }
+  const email = req.body.email;
+  const password = req.body.password;
+  let crtTimeStamp = new Date().toUTCString();  // current timestamp
+
+  try {
+    let userData = await userFunctions.getUserbyEmail(email);
+
+    bcrypt.compare(password, userData.password, function (err, results) {
+      if (results == true) {
+        req.session.user = {  //store current user info in session
+          userId : userData._id, 
+          userName: userData.userName,
+          email: userData.email,
+          nickName: userData.nickName,
+          major: userData.major,
+          gradYear: userData.gradYear,
+          courses: userData.courses,
+          postId: userData.postId,
+          commentId: userData.commentId,
+        };
+        // res.send({
+        //   token: "12345",
+        //   userData,
+        // });
+        req.session.isLogIn = true;  // if user already logged in, when they go to login page, they should redirect profile page instead of seeing login form
+        req.session.userId = userData._id;  // this line is for 'if (req.session.isLogIn)'
+        res.cookie('AuthCookie', userData.userName);  
+        console.log(`[${crtTimeStamp}]: ${req.method} ${req.originalUrl} (Authenticated User)`);
+        res.redirect(`/posts`);  // ❤ user input right password, we redirect them to user profile. I think it should be /user/:id/profile
+      } //else res.status(404).send("Invalid Email/Password Combination");
+      else{
+        res.status(404).render('pages/login' , {
+          title: 'login',
+          partial: 'login_check_script',
+          error : "Invalid Email/Password Combination",
+          email: email,
+          password : password
+        });
+        console.log(`[${crtTimeStamp}]: ${req.method} ${req.originalUrl} (Non-Authenticated User)`)
+      }
+    });
+  } catch (e) {
+    //res.status(404).json({ error: e.message });
+    res.status(404).render('pages/login' , {
+      title: 'login',
+      partial: 'login_check_script',
+      error : "Invalid Email/Password Combination",
+      email: email,
+      password : password
+    });
+  }
+});
+
+
+router.get('/logout', async (req, res) => {  // trigger /user/logout router to logout
+  res.clearCookie('AuthCookie');
+  res.clearCookie('Build Session');
+  req.session.destroy();
+  res.send('You have logged out');
+  res.render('pages/login' , {
+    title: 'login',
+    partial: 'login_check_script',
+  });
 });
 
 module.exports = router;

@@ -1,7 +1,33 @@
 <link rel="stylesheet" href="/public/css/profile.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-{{> header}}
+<link rel="stylesheet" href="/public/css/site.css">  
+<div class="header">  <!-- header -->
+    <a class="header-nav" onclick="openNav()" href="javascript:void(0);"><i class="fa fa-bars"
+            style="font-size: 1.5em;"></i></a>
+
+    <a href="/home" class="header-title">Stevens Collaboration Platform</a>
+    <div class="header-right">
+        <a title="My Account">
+            <img src="https://www.w3schools.com/w3images/avatar2.png" class="circle" style="height:30px;width:30px"
+                alt="Avatar">
+        </a>
+
+        <a href="/user/logout" title="Log Out" class="sign-out-button">
+            <i class="fa fa-sign-out" aria-hidden="true" style="font-size: 1.5em;"> </i>
+        </a>
+    </div>
+</div>
+
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="/home">Home</a>
+    <hr class="hr">
+    <a href="/posts">Dashboard</a>
+    <hr class="hr">
+    <a href="/user/{{userId}}/profile">Profile</a>
+
+</div>  <!-- header End -->
 
 <div class="post-container">
   <link rel="stylesheet" href="/public/css/dashboard.css">
@@ -11,15 +37,16 @@
     <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="profile-image " style="
         width:100px">
 
-    <h4>Eren Yaeger</h4>
-    <span>Software Engineer</span>
-    <h6>Graduating in 2021</h6>
+    <h4>{{USERNAME}}</h4>
+    <span>{{MAJOR}}</span>
+    <h6>Graduating in {{GRADYEAR}}</h6>
     <br>
   </div>
 
   <h4>My posts</h4>
   <hr class="hr-create"> <!-- a single post record goes here -->
-  {{> profilePostCard}}
-
+  {{#each postItems}}
+    {{> profilePostCard}}
+  {{/each}}
 
 </div>

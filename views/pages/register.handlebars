@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-12">
-        <form id="register-form" method="post" action="/users/create">
+        <form id="register-form" method="post" action="/user/create">
             <div class="form-group">
                 <label for="userName">UserName</label>
                 <input type="text" class="form-control" id="userName" name="userName" placeholder="userName"
@@ -17,7 +17,7 @@
                     value="{{password}}" required>
             </div>
             <div class="form-group">
-                <label for="nickName">Handle</label>
+                <label for="nickName">Nickname</label>
                 <input type="text" class="form-control" id="nickName" name="nickName" placeholder="nickName"
                     value="{{nickName}}" required>
             </div>
@@ -27,7 +27,7 @@
                     required>
             </div>
             <div class="form-group">
-                <label for="gradYear">Graduating Class</label>
+                <label for="gradYear">Graduating Year</label>
                 <input type="number" class="form-control" id="gradYear" name="gradYear" placeholder="gradYear"
                     value="{{gradYear}}" required>
             </div>

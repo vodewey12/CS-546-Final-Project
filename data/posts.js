@@ -36,7 +36,7 @@ const exportedMethods = {
   async getPostsByUserId(id) {
     let userId = idCheck(id);
     const postCollection = await posts();
-    const postList = await postCollection.find({ userId: userId }).toArray();
+    const postList = await postCollection.find({ userId: userId }).toArray();  // userId in post collection is Sting
     if (!postList) throw "no posts by given user found";
     return postList;
   },
@@ -59,7 +59,7 @@ const exportedMethods = {
 
     const postCollection = await posts();
     let newPost = {
-      userId: userId,
+      userId: ObjectID(userId),
       userName: userName,
       title: title,
       postContent: postContent,
