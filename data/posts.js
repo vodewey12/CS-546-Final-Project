@@ -1,16 +1,16 @@
-const mongoCollections = require("../config/mongoCollections");
+const mongoCollections = require('../config/mongoCollections');
 const posts = mongoCollections.posts;
-const users = require("./users");
-const { ObjectID } = require("mongodb");
+const users = require('./users');
+const { ObjectID } = require('mongodb');
 
 function stringCheck(string) {
-  return typeof string === "string" && string.trim().length !== 0;
+    return typeof string === 'string' && string.trim().length !== 0;
 }
 
 function idCheck(id) {
-  if (!stringCheck(id)) throw "id parameter must be a nonempty string";
-  if (!ObjectID.isValid(id)) throw "id parameter must be a valid ObjectID";
-  return ObjectID(id);
+    if (!stringCheck(id)) throw 'id parameter must be a nonempty string';
+    if (!ObjectID.isValid(id)) throw 'id parameter must be a valid ObjectID';
+    return ObjectID(id);
 }
 
 
@@ -124,6 +124,7 @@ const exportedMethods = {
     if (deletionInfo.deletedCount === 0) {
       throw `Could not delete post with id of ${id}`;
     }
+    
     return { postId: postId.toString(), deleted: true };
   },
 };
