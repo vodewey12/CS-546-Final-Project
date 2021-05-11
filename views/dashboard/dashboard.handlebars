@@ -1,7 +1,33 @@
-<link rel="stylesheet" href="/public/css/dashboard.css">
+<link rel="stylesheet" href="/public/css/profile.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-{{> header}}
+<link rel="stylesheet" href="/public/css/site.css">  
+<div class="header">  <!-- header -->
+    <a class="header-nav" onclick="openNav()" href="javascript:void(0);"><i class="fa fa-bars"
+            style="font-size: 1.5em;"></i></a>
+
+    <a href="/home" class="header-title">Stevens Collaboration Platform</a>
+    <div class="header-right">
+        <a title="My Account">
+            <img src="https://www.w3schools.com/w3images/avatar2.png" class="circle" style="height:30px;width:30px"
+                alt="Avatar">
+        </a>
+
+        <a href="/logout" title="Log Out" class="sign-out-button">
+            <i class="fa fa-sign-out" aria-hidden="true" style="font-size: 1.5em;"> </i>
+        </a>
+    </div>
+</div>
+
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="/home">Home</a>
+    <hr class="hr">
+    <a href="/posts">Dashboard</a>
+    <hr class="hr">
+    <a href="/user/{{userId}}/profile">Profile</a>
+
+</div>  <!-- header End -->
 
 <div class="post-container">
     <div class="post-cards">
@@ -33,7 +59,10 @@
             </div>
         </form>
     </div>
+
     <h4>All Posts</h4>
     <hr class="hr-create">
-    {{> postCards}}
+    {{#each postItems}}  <!-- postItems is a post list, for each post, it will use postCards.handlebars template (lecture11_code). I pass in postItems from /routers/index.js -->
+        {{> postCards}}
+    {{/each}}
 </div>

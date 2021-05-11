@@ -5,10 +5,11 @@ const xss = require("xss");
 const postData = data.posts;
 const userData = data.users;
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res) => {  // ❤ dashboard
   try {
     const postList = await postData.getAllPosts();
-    res.render("dashboard/dashboard", { results: postList });
+    res.render('dashboard/dashboard', {title:'dashboard', partial: 'dashboard_js_script', postItems: await postData.getAllPosts(), userId: req.session.user.userId })  //(lecture_11 code index.js) partial at here only for passing in client side Javascript of /public/js/dashboard.js
+    // res.render("dashboard/dashboard", { results: postList });  // if use { results: postList } pass 'results' in postCards.handlebars, we should put postCards.handlebars entirely into /views/dashboard/dashboard.handlebars, instead of putting it into partials. In this way, we maybe need refresh page
   } catch (e) {
     res.sendStatus(500);
   }

@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="/public/css/dashboard.css">
-{{#each results}}
+
+<!-- if use "#each results", we should put postCards.handlebars entirely into /views/dashboard/dashboard.handlebars, instead of putting it into partials. In this way, we maybe need refresh page -->
 <div class="post-cards"><br>
     <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="avatar-image" style="width:60px">
 
@@ -23,4 +24,3 @@
             Comment</button>
     </div>
 </div>
-{{/each}}

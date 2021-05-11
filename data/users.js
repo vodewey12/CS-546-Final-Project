@@ -72,6 +72,7 @@ async function getUserbyEmail(email) {
   return userData;
 }
 
+
 // The authUserData will come from firebase auth, but we can just seed users for now until that is set up
 async function createUser(authUserData) {
   // auth user data only consists user id, userName, email
@@ -156,6 +157,7 @@ async function createUser(authUserData) {
 }
 //-----------------------------------------------------
 
+
 async function updateUser(userId, updatedUserData) {
 
   if (!userId || typeof userId !== 'string' || userId.trim().length === 0){
@@ -230,6 +232,7 @@ async function updateUser(userId, updatedUserData) {
 
   return await this.getUserById(userId);
 }
+
 
 async function deleteUser(id) {
   
