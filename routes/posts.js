@@ -100,57 +100,57 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// router.put("/:id", async (req, res) => {
-//   let postInfo = req.body;
+router.put("/:id", async (req, res) => {
+  let postInfo = req.body;
 
-//   if (!postInfo) {
-//     res.status(400).json({
-//       error: "You must provide data to create a post",
-//     });
-//     return;
-//   }
+  if (!postInfo) {
+    res.status(400).json({
+      error: "You must provide data to create a post",
+    });
+    return;
+  }
 
-//   if (!postInfo.userId) {
-//     res.status(400).json({
-//       error: "You must provide a userId",
-//     });
-//     return;
-//   }
+  if (!postInfo.userId) {
+    res.status(400).json({
+      error: "You must provide a userId",
+    });
+    return;
+  }
 
-//   if (!postInfo.title) {
-//     res.status(400).json({ error: "You must provide a title" });
-//     return;
-//   }
+  if (!postInfo.title) {
+    res.status(400).json({ error: "You must provide a title" });
+    return;
+  }
 
-//   if (!postInfo.postContent) {
-//     res.status(400).json({
-//       error: "You must provide content for the post",
-//     });
-//     return;
-//   }
+  if (!postInfo.postContent) {
+    res.status(400).json({
+      error: "You must provide content for the post",
+    });
+    return;
+  }
 
-//   if (!postInfo.tags) {
-//     res.status(400).json({
-//       error: "You must provide a list of tags",
-//     });
-//     return;
-//   }
+  if (!postInfo.tags) {
+    res.status(400).json({
+      error: "You must provide a list of tags",
+    });
+    return;
+  }
 
-//   const inputData = {
-//     userId: xss(postInfo.userId),
-//     userName: xss(postInfo.userName),
-//     title: xss(postInfo.title),
-//     postContent: xss(postInfo.postContent),
-//     tags: xss(postInfo.tags),
-//   };
+  const inputData = {
+    userId: xss(postInfo.userId),
+    userName: xss(postInfo.userName),
+    title: xss(postInfo.title),
+    postContent: xss(postInfo.postContent),
+    tags: xss(postInfo.tags),
+  };
 
-//   try {
-//     const updatedpost = await postData.updatePost(req.params.id, inputData);
-//     res.json(updatedpost);
-//   } catch (e) {
-//     res.sendStatus(500);
-//   }
-// });
+  try {
+    const updatedpost = await postData.updatePost(req.params.id, inputData);
+    res.json(updatedpost);
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
 
 router.patch("/:id", async (req, res) => {
   const id = xss(req.params.id);
