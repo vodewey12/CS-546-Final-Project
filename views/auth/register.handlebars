@@ -1,0 +1,107 @@
+<link rel="stylesheet" href="/public/css/loginRegister.css" />
+<link rel="stylesheet" href="/public/css/dashboard.css" />
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+/>
+
+<div class="container">
+  <div class="cards">
+    <div class="login-icon">
+      <i class="fa fa-users" aria-hidden="true"></i>
+    </div>
+    <form id="register-form" method="post" action="/user/create">
+
+      <label class="form-label" for="userName">UserName</label>
+      <input
+        type="text"
+        class="form-control"
+        id="userName"
+        name="userName"
+        placeholder="userName"
+        value="{{userName}}"
+        required
+      />
+
+      <label class="form-label" for="email">Email</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        placeholder="email"
+        value="{{email}}"
+        required
+      />
+
+      <label class="form-label" for="password">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        placeholder="something.."
+        value="{{password}}"
+        required
+      />
+
+      <label class="form-label" for="nickName">Nickname</label>
+      <input
+        type="text"
+        class="form-control"
+        id="nickName"
+        name="nickName"
+        placeholder="nickName"
+        value="{{nickName}}"
+        required
+      />
+
+      <label class="form-label" for="major">Major</label>
+      <input
+        type="text"
+        class="form-control"
+        id="major"
+        name="major"
+        placeholder="major"
+        value="{{major}}"
+        required
+      />
+
+      <label class="form-label" for="gradYear">Graduating Year</label>
+      <input
+        type="number"
+        class="form-control"
+        id="gradYear"
+        name="gradYear"
+        placeholder="gradYear"
+        value="{{gradYear}}"
+        required
+      />
+
+      {{#if hasErrors}}
+
+        <div class="alert alert-danger">
+          <ul class="error-list">
+            {{#each errors}}
+              <li>
+                {{this}}
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+
+      {{/if}}
+
+      <div class="form-group alert alert-danger" id="error-container" hidden>
+      </div>
+
+      <div class="card-actions">
+        <button type="submit" class="card-actions-button">Submit</button>
+      </div>
+
+      {{! <input name='_method' value="PUT" hidden /> }}
+    </form>
+    <p>Already have an account? <a href="/auth">Log In</a></p>
+  </div>
+</div>

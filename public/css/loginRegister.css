@@ -1,0 +1,55 @@
+.cards {
+    padding: 0.01em 16px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    color: #000 !important;
+    background-color: #fff !important;
+    margin-bottom: 20px;
+
+}
+
+@media (min-width:601px) {
+
+    .container {
+        width: 58.33333%
+    }
+}
+
+.container {
+
+    padding: 0.01em 16px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+
+}
+
+
+.form-label {
+    padding: 12px 0 0 0;
+}
+
+.profile-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 50%;
+}
+
+input[type=email],
+input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 0 0 20px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.login-icon {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 15em;
+    color: #A32638;
+}

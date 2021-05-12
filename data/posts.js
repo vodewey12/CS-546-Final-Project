@@ -13,7 +13,6 @@ function idCheck(id) {
   return ObjectID(id);
 }
 
-
 const exportedMethods = {
   async getAllPosts() {
     const postCollection = await posts();
@@ -25,7 +24,8 @@ const exportedMethods = {
     return postList;
   },
 
-  async getPostsByTag(tag) {  // for filtering post by tags
+  async getPostsByTag(tag) {
+    // for filtering post by tags
     if (!tag) throw "No tag provided";
 
     const postCollection = await posts();
@@ -35,7 +35,7 @@ const exportedMethods = {
   async getPostsByUserId(id) {
     let userId = idCheck(id);
     const postCollection = await posts();
-    const postList = await postCollection.find({ userId: userId }).toArray();  // userId in post collection is Sting
+    const postList = await postCollection.find({ userId: userId }).toArray(); // userId in post collection is Sting
     if (!postList) throw "no posts by given user found";
     return postList;
   },
@@ -48,12 +48,18 @@ const exportedMethods = {
     return post;
   },
 
-
   async createPost(userId, userName, title, postContent, tags) {
     // postId, postTime, rating, resolvedStatus, commentIds will be generated
     // other parameters are received from routes
     if (arguments.length < 5) throw "not enough arguments provided";
-    if (!(stringCheck(userName) && stringCheck(userId) && stringCheck(title) && stringCheck(postContent)))
+    if (
+      !(
+        stringCheck(userName) &&
+        stringCheck(userId) &&
+        stringCheck(title) &&
+        stringCheck(postContent)
+      )
+    )
       throw "userName, userId, title, and postContent parameters must be strings";
 
     const postCollection = await posts();
@@ -62,11 +68,11 @@ const exportedMethods = {
       userName: userName,
       title: title,
       postContent: postContent,
-      tags: tags,     // [“CS546”, "CS554"]
+      tags: tags, // [“CS546”, "CS554"]
       postTime: new Date(),
       rating: 0,
       resolvedStatus: false,
-      commentIds: [],  // [“6055a6784765c78268613749”, … ]
+      commentIds: [], // [“6055a6784765c78268613749”, … ]
     };
     const newInsertInformation = await postCollection.insertOne(newPost);
     if (newInsertInformation.insertedCount === 0) throw "Insert failed!";
@@ -74,8 +80,8 @@ const exportedMethods = {
     return await this.getPostByPostId(newID);
   },
 
-
-  async updatePost(id, updatedPost) {  // user edits a post
+  async updatePost(id, updatedPost) {
+    // user edits a post
     // title, postContent, tags, rating, resolvedStatus can be updated
     // postTime will be updated as well
     let postId = idCheck(id);
@@ -92,7 +98,11 @@ const exportedMethods = {
       postUpdateInfo.postContent = updatedPost.postContent;
     }
     if (updatedPost.tags) {
-      if (!(Array.isArray(updatedPost.tags) && updatedPost.tags.every(stringCheck)))
+      if (
+        !(
+          Array.isArray(updatedPost.tags) && updatedPost.tags.every(stringCheck)
+        )
+      )
         throw "tags attribute must be an array of strings";
       postUpdateInfo.tags = updatedPost.tags;
     }
@@ -108,22 +118,44 @@ const exportedMethods = {
     }
     const postCollection = await posts();
     const updateInfo = await postCollection.updateOne(
-      { _id: postId, postTime: new Date() },
+      { _id: postId, postTime: JSON.stringify(new Date()) },
       { $set: postUpdateInfo }
     );
     if (!updateInfo && !updateInfo.modifiedCount) throw "Update failed";
     return await this.getPostByPostId(postId.toString());
   },
 
-
   async deletePost(id) {
     let postId = idCheck(id);
     const postCollection = await posts();
-    const deletionInfo = await postCollection.deleteOne({_id: postId,});  //https://stackoverflow.com/questions/42715591/mongodb-difference-remove-vs-findoneanddelete-vs-deleteone/42715715
+    const deletionInfo = await postCollection.deleteOne({ _id: postId }); //https://stackoverflow.com/questions/42715591/mongodb-difference-remove-vs-findoneanddelete-vs-deleteone/42715715
     if (deletionInfo.deletedCount === 0) {
       throw `Could not delete post with id of ${id}`;
     }
     return { postId: postId.toString(), deleted: true };
+  },
+
+  async addComment(commentId, postId) {
+    if (!postId || !ObjectID.isValid(postId)) {
+      throw new Error("Post ID is invalid.");
+    }
+
+    if (!commentId || !ObjectID.isValid(commentId)) {
+      throw new Error("Post ID is invalid.");
+    }
+    try {
+      const postCollection = await posts();
+      const post = await postCollection.updateOne(
+        { _id: ObjectID(postId) },
+        {
+          $push: {
+            commentIds: commentId,
+          },
+        }
+      );
+    } catch (error) {
+      throw new Error(error.message);
+    }
   },
 };
 
