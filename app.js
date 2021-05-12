@@ -43,14 +43,6 @@ app.use(
   })
 );
 
-app.use("/user/:id", (req, res, next) => {
-  // update user themself information
-  if (req.method == "POST") {
-    req.method = "PATCH";
-  }
-  next();
-});
-
 app.use("/posts/:id", (req, res, next) => {
   // user submit form to update their post
   // console.log(req);

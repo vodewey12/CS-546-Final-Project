@@ -12,7 +12,7 @@ async function getAllUsers() {
 
   allUserData.forEach((user) => {
     user._id = user._id.toString();
-  })
+  });
 
   return allUserData;
 }
@@ -32,8 +32,7 @@ async function getAllUserIds() {
 }
 
 async function getUserById(userID) {
-
-  if (!userID || typeof userID !== 'string' || userID.trim().length === 0){
+  if (!userID || typeof userID !== "string" || userID.trim().length === 0) {
     throw "userID must be a non-empty string";
   }
 
@@ -54,8 +53,7 @@ async function getUserById(userID) {
 }
 
 async function getUserbyEmail(email) {
-
-  if (!email || typeof email !== 'string' || email.trim().length === 0){
+  if (!email || typeof email !== "string" || email.trim().length === 0) {
     throw "email must be a non-empty string";
   }
   email = email.toLowerCase();
@@ -72,47 +70,71 @@ async function getUserbyEmail(email) {
   return userData;
 }
 
-
 // The authUserData will come from firebase auth, but we can just seed users for now until that is set up
 async function createUser(authUserData) {
   // auth user data only consists user id, userName, email
   // id should be coming from auth, i think
 
-  if (!authUserData || typeof authUserData !== 'object' || Array.isArray(authUserData)){
-    throw 'authUserData is a required object parameter.';
-  } 
+  if (
+    !authUserData ||
+    typeof authUserData !== "object" ||
+    Array.isArray(authUserData)
+  ) {
+    throw "authUserData is a required object parameter.";
+  }
 
-  if (!authUserData.userName || typeof authUserData.userName !== 'string' || authUserData.userName.trim().length === 0){
-    throw 'username is a required non-empty string parameter.';
-  } 
+  if (
+    !authUserData.userName ||
+    typeof authUserData.userName !== "string" ||
+    authUserData.userName.trim().length === 0
+  ) {
+    throw "username is a required non-empty string parameter.";
+  }
 
   if (!authUserData.email) throw new Error("User email is not valid");
 
   let email = authUserData.email;
-  let emailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-  if (typeof email !== 'string' || !email.match(emailformat)){
-    throw 'Invalid email';
+  let emailformat =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  if (typeof email !== "string" || !email.match(emailformat)) {
+    throw "Invalid email";
   }
 
-  if (!authUserData.password || typeof authUserData.password !== 'string' || authUserData.password.trim().length === 0){
-    throw 'password is a required non-empty string parameter.';
-  } 
+  if (
+    !authUserData.password ||
+    typeof authUserData.password !== "string" ||
+    authUserData.password.trim().length === 0
+  ) {
+    throw "password is a required non-empty string parameter.";
+  }
 
-  if (!authUserData.nickName || typeof authUserData.nickName !== 'string' || authUserData.nickName.trim().length === 0){
-    throw 'nickName is a required non-empty string parameter.';
-  } 
+  if (
+    !authUserData.nickName ||
+    typeof authUserData.nickName !== "string" ||
+    authUserData.nickName.trim().length === 0
+  ) {
+    throw "nickName is a required non-empty string parameter.";
+  }
 
-  if (!authUserData.major || typeof authUserData.major !== 'string' || authUserData.major.trim().length === 0){
-    throw 'major is a required non-empty string parameter.';
-  } 
+  if (
+    !authUserData.major ||
+    typeof authUserData.major !== "string" ||
+    authUserData.major.trim().length === 0
+  ) {
+    throw "major is a required non-empty string parameter.";
+  }
 
   let yearFormat = /20\d\d/gm;
-  if(!authUserData.gradYear || typeof authUserData.gradYear !== 'string' || authUserData.gradYear.trim().length === 0){
-    throw 'gradYear is a required string parameter'  // storing as strings since we won't do date calculations
+  if (
+    !authUserData.gradYear ||
+    typeof authUserData.gradYear !== "string" ||
+    authUserData.gradYear.trim().length === 0
+  ) {
+    throw "gradYear is a required string parameter"; // storing as strings since we won't do date calculations
   }
   let gradYear = authUserData.gradYear;
-  if(!gradYear.match(yearFormat)){
-    throw 'invalid gradYear';
+  if (!gradYear.match(yearFormat)) {
+    throw "invalid gradYear";
   }
 
   const users = await usersCollection();
@@ -152,59 +174,81 @@ async function createUser(authUserData) {
   if (newUser.insertedCount === 0) {
     throw new Error(`Unable to add user into database`);
   }
-
   return await this.getUserById(newUser.insertedId.toString());
 }
 //-----------------------------------------------------
 
-
 async function updateUser(userId, updatedUserData) {
-
-  if (!userId || typeof userId !== 'string' || userId.trim().length === 0){
+  if (!userId || typeof userId !== "string" || userId.trim().length === 0) {
     throw "userId must be a non-empty string";
   }
 
   if (!ObjectId(userId)) {
     throw new Error("User id is not valid");
   }
-  
-  if (!updatedUserData || typeof updatedUserData !== 'object' || Array.isArray(updatedUserData)){
-    throw 'updatedUserData is a required object parameter.';
-  } 
 
-  if (updatedUserData.username && (typeof updatedUserData.username !== 'string' || updatedUserData.username.trim().length === 0)){
-    throw 'username is a required non-empty string parameter.';
-  } 
+  if (
+    !updatedUserData ||
+    typeof updatedUserData !== "object" ||
+    Array.isArray(updatedUserData)
+  ) {
+    throw "updatedUserData is a required object parameter.";
+  }
+
+  if (
+    updatedUserData.username &&
+    (typeof updatedUserData.username !== "string" ||
+      updatedUserData.username.trim().length === 0)
+  ) {
+    throw "username is a required non-empty string parameter.";
+  }
 
   let email = updatedUserData.email;
-  if (email){
-    let emailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (typeof email !== 'string' || !email.match(emailformat)){
-      throw 'Invalid email';
+  if (email) {
+    let emailformat =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (typeof email !== "string" || !email.match(emailformat)) {
+      throw "Invalid email";
     }
     updatedUserData.email = updatedUserData.email.toLowerCase();
   }
-  
-  if (updatedUserData.password && (typeof updatedUserData.password !== 'string' || updatedUserData.password.trim().length === 0)){
-    throw 'password is a required non-empty string parameter.';
-  } 
 
-  if (updatedUserData.nickName && (typeof updatedUserData.nickName !== 'string' || updatedUserData.nickName.trim().length === 0)){
-    throw 'nickName is a required non-empty string parameter.';
-  } 
+  if (
+    updatedUserData.password &&
+    (typeof updatedUserData.password !== "string" ||
+      updatedUserData.password.trim().length === 0)
+  ) {
+    throw "password is a required non-empty string parameter.";
+  }
 
-  if (updatedUserData.major && (typeof updatedUserData.major !== 'string' || updatedUserData.major.trim().length === 0)){
-    throw 'major is a required non-empty string parameter.';
-  } 
+  if (
+    updatedUserData.nickName &&
+    (typeof updatedUserData.nickName !== "string" ||
+      updatedUserData.nickName.trim().length === 0)
+  ) {
+    throw "nickName is a required non-empty string parameter.";
+  }
+
+  if (
+    updatedUserData.major &&
+    (typeof updatedUserData.major !== "string" ||
+      updatedUserData.major.trim().length === 0)
+  ) {
+    throw "major is a required non-empty string parameter.";
+  }
 
   let yearFormat = /20\d\d/gm;
-  if(updatedUserData.gradYear && (typeof updatedUserData.gradYear !== 'string' || updatedUserData.gradYear.trim().length === 0)){
-    throw 'gradYear is a required string parameter'  // storing as strings since we won't do date calculations
+  if (
+    updatedUserData.gradYear &&
+    (typeof updatedUserData.gradYear !== "string" ||
+      updatedUserData.gradYear.trim().length === 0)
+  ) {
+    throw "gradYear is a required string parameter"; // storing as strings since we won't do date calculations
   }
-  if(updatedUserData.gradYear){
+  if (updatedUserData.gradYear) {
     let gradYear = updatedUserData.gradYear;
-    if(!gradYear.match(yearFormat)){
-      throw 'invalid gradYear';
+    if (!gradYear.match(yearFormat)) {
+      throw "invalid gradYear";
     }
   }
 
@@ -233,10 +277,8 @@ async function updateUser(userId, updatedUserData) {
   return await this.getUserById(userId);
 }
 
-
 async function deleteUser(id) {
-  
-  if (!id || typeof id !== 'string' || id.trim().length === 0){
+  if (!id || typeof id !== "string" || id.trim().length === 0) {
     throw "userId must be a non-empty string";
   }
 
