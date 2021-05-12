@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="/public/css/loginRegister.css" />
+<link rel="stylesheet" href="/public/css/dashboard.css" />
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+/>
+
+<div class="container">
+  <div class="cards">
+    <div class="login-icon">
+      <i class="fa fa-users" aria-hidden="true"></i>
+    </div>
+    <form id="login-form" method="POST" action="/user/login">
+      <label class="form-label" for="Email"><b>Email</b></label>
+      <input
+        type="email"
+        placeholder="Enter Email"
+        name="email"
+        id="email"
+        value="{{email}}"
+        placeholder="email"
+        required
+      />
+
+      <label class="form-label" for="password">Password</label>
+      <input
+        type="password"
+        placeholder="Enter Password"
+        name="password"
+        id="password"
+        value="{{password}}"
+        placeholder="password"
+        required
+      />
+
+      {{#if error}}
+        <div class="form-group">
+          <div class="alert alert-danger">
+            {{error}}
+          </div>
+        </div>
+      {{/if}}
+
+      <div class="form-group alert alert-danger" id="error-container" hidden>
+      </div>
+      <div class="card-actions">
+        <button type="submit" class="card-actions-button">Login</button>
+      </div>
+
+      <p>Don't have an account yet?<a href="/auth/register">Sign Up</a></p>
+
+    </form>
+  </div>
+</div>
