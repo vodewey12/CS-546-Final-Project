@@ -36,13 +36,12 @@ app.set("view engine", "handlebars");
 
 app.use(
   session({
-    name: 'Build Session',
-    secret: 'some secret string!',
+    name: "Build Session",
+    secret: "some secret string!",
     resave: false,
     saveUninitialized: true,
   })
 );
-
 
 configRoutes(app);
 

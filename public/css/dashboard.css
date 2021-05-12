@@ -32,15 +32,12 @@
 
 
 
-.w3-right {
-    float: right !important
+.card-content {
+    overflow-wrap: break-word;
 }
 
-
-.card-actions {
-    margin-bottom: 16px !important;
-
-
+.card-ations-form {
+    display: inline-block;
 }
 
 .card-actions-button {
@@ -95,4 +92,8 @@ label {
 
 .hr-create {
     border-color: #000;
+}
+
+.comment-date {
+    width: 10px;
 }

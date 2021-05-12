@@ -6,13 +6,21 @@ const bcrypt = require("bcryptjs");
 const userFunctions = require("./../data/users");
 const postFunctions = require("./../data/posts");
 
-router.get("/:id/profile", async (req, res) => {  // after user input right password and log in, they redirect to this router by way of router.post("/login")
+router.get("/:id/profile", async (req, res) => {
+  // after user input right password and log in, they redirect to this router by way of router.post("/login")
   const id = xss(req.params.id);
   const userInfo = await userFunctions.getUserById(id);
   // console.log(userInfo);
   // console.log(await postFunctions.getPostsByUserId(id))
   try {
-    res.render("profile/profile", {title: `${userInfo.userName}`, partial:'profile_js_script', postItems: await postFunctions.getPostsByUserId(id), userId: req.session.user.userId, USERNAME: userInfo.userName, MAJOR: userInfo.major, GRADYEAR: userInfo.gradYear});  // for rendering text page
+    res.render("profile/profile", {
+      title: `${userInfo.userName}`,
+      partial: "profile_js_script",
+      postItems: await postFunctions.getPostsByUserId(id),
+      USERNAME: userInfo.userName,
+      MAJOR: userInfo.major,
+      GRADYEAR: userInfo.gradYear,
+    }); // for rendering text page
   } catch (e) {
     res.status(404).json({ error: e.message });
   }
@@ -42,8 +50,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-
-router.post("/create", async (req, res) => {  // register.handlebars will post form to this router
+router.post("/create", async (req, res) => {
+  // register.handlebars will post form to this router
   if (
     !req.body.userName ||
     !req.body.password ||
@@ -54,16 +62,17 @@ router.post("/create", async (req, res) => {  // register.handlebars will post f
     return;
   }
 
-  const { userName, email, password , nickName , major, gradYear } = req.body;
+  const { userName, email, password, nickName, major, gradYear } = req.body;
 
   const errorList = [];
   if (!userName.trim()) errorList.push("userName is not valid");
   if (!email.trim()) errorList.push("Email is not valid");
 
-  if (errorList.length > 0) {  // user register form have empty field. I wonder because register.handlebars ask 'require' for each field, it seems it will not trigger this statement
-    res.status(400).render('pages/register',{
-      title: 'register',
-      partial: 'register_check_script',
+  if (errorList.length > 0) {
+    // user register form have empty field. I wonder because register.handlebars ask 'require' for each field, it seems it will not trigger this statement
+    res.status(400).render("pages/register", {
+      title: "register",
+      partial: "register_check_script",
       userName: xss(username),
       email: xss(email),
       password: xss(password),
@@ -71,10 +80,10 @@ router.post("/create", async (req, res) => {  // register.handlebars will post f
       major: xss(major),
       gradYear: gradYear,
       hasErrors: true,
-      errors: errorList
+      errors: errorList,
     });
-  } 
-  else {  // user fill out all field in register form, we can create an account for them
+  } else {
+    // user fill out all field in register form, we can create an account for them
     var salt = bcrypt.genSaltSync(10);
     var hashedPw = await bcrypt.hash(password, salt);
     const inputData = {
@@ -87,47 +96,51 @@ router.post("/create", async (req, res) => {  // register.handlebars will post f
     };
 
     try {
-      let newUser = await userFunctions.createUser(inputData);  // create an account for user in user collection
+      let newUser = await userFunctions.createUser(inputData); // create an account for user in user collection
       //res.json(newUser);
-      res.render('pages/login' , {title: 'Login', partial: 'login_check_script'});  // if user have signed in, we guide them to login page 
-    } catch (e) {  // createUser() fail, render register.handlebars
+      res.render("pages/login", {
+        title: "Login",
+        partial: "login_check_script",
+      }); // if user have signed in, we guide them to login page
+    } catch (e) {
+      // createUser() fail, render register.handlebars
       //console.log(e.message);
       //res.status(500).json({ error: e.message });
-      console.log('createUser() fail, render register form');
-      res.render('pages/register' , {
-        title: 'register',
-        partial: 'register_check_script',
+      console.log("createUser() fail, render register form");
+      res.render("pages/register", {
+        title: "register",
+        partial: "register_check_script",
         error: e.message,
-        userName:username,
-        email:email,
-        password:password,
-        nickName:nickName,
-        major:major,
-        gradYear:gradYear
+        userName: username,
+        email: email,
+        password: password,
+        nickName: nickName,
+        major: major,
+        gradYear: gradYear,
       });
     }
   }
 });
 
-
 router.delete("/:id", async (req, res) => {
   const id = xss(req.params.id);
 
   if (!id) {
-    res.status(400).json({ error: "User id is not valid. You must provide userId to delete" });
+    res.status(400).json({
+      error: "User id is not valid. You must provide userId to delete",
+    });
     return;
   }
 
   try {
     let deleted = await userFunctions.deleteUser(id);
     if (deleted) {
-      res.json({ 'userId': id, deleted: "true" });
+      res.json({ userId: id, deleted: "true" });
     }
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
-
 
 // update user
 router.patch("/:id", async (req, res) => {
@@ -168,10 +181,8 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-
 router.post("/login", async (req, res) => {
-  if (req.session.isLogIn)
-    res.redirect(`/user/${req.session.userId}/profile`); // if user already log in, when they go to login page, they should redirect profile page instead of seeing login form
+  if (req.session.isLogIn) res.redirect(`/user/${req.session.userId}/profile`); // if user already log in, when they go to login page, they should redirect profile page instead of seeing login form
 
   if (!req.body.email || !req.body.password) {
     res.status(404).json({ error: "Must supply all fields." });
@@ -179,15 +190,16 @@ router.post("/login", async (req, res) => {
   }
   const email = req.body.email;
   const password = req.body.password;
-  let crtTimeStamp = new Date().toUTCString();  // current timestamp
+  let crtTimeStamp = new Date().toUTCString(); // current timestamp
 
   try {
     let userData = await userFunctions.getUserbyEmail(email);
 
     bcrypt.compare(password, userData.password, function (err, results) {
       if (results == true) {
-        req.session.user = {  //store current user info in session
-          userId : userData._id, 
+        req.session.user = {
+          //store current user info in session
+          userId: userData._id,
           userName: userData.userName,
           email: userData.email,
           nickName: userData.nickName,
@@ -201,34 +213,37 @@ router.post("/login", async (req, res) => {
         //   token: "12345",
         //   userData,
         // });
-        req.session.isLogIn = true;  // if user already logged in, when they go to login page, they should redirect profile page instead of seeing login form
-        req.session.userId = userData._id;  // this line is for 'if (req.session.isLogIn)'
-        res.cookie('AuthCookie', userData.userName);  
-        console.log(`[${crtTimeStamp}]: ${req.method} ${req.originalUrl} (Authenticated User)`);
-        res.redirect(`/posts`);  // ❤ user input right password, we redirect them to user profile. I think it should be /user/:id/profile
+        req.session.isLogIn = true; // if user already logged in, when they go to login page, they should redirect profile page instead of seeing login form
+        req.session.userId = userData._id; // this line is for 'if (req.session.isLogIn)'
+        res.cookie("AuthCookie", userData.userName);
+        console.log(
+          `[${crtTimeStamp}]: ${req.method} ${req.originalUrl} (Authenticated User)`
+        );
+        res.redirect(`/posts`); // ❤ user input right password, we redirect them to user profile. I think it should be /user/:id/profile
       } //else res.status(404).send("Invalid Email/Password Combination");
-      else{
-        res.status(404).render('pages/login' , {
-          title: 'login',
-          partial: 'login_check_script',
-          error : "Invalid Email/Password Combination",
+      else {
+        res.status(404).render("pages/login", {
+          title: "login",
+          partial: "login_check_script",
+          error: "Invalid Email/Password Combination",
           email: email,
-          password : password
+          password: password,
         });
-        console.log(`[${crtTimeStamp}]: ${req.method} ${req.originalUrl} (Non-Authenticated User)`)
+        console.log(
+          `[${crtTimeStamp}]: ${req.method} ${req.originalUrl} (Non-Authenticated User)`
+        );
       }
     });
   } catch (e) {
     //res.status(404).json({ error: e.message });
-    res.status(404).render('pages/login' , {
-      title: 'login',
-      partial: 'login_check_script',
-      error : "Invalid Email/Password Combination",
+    res.status(404).render("pages/login", {
+      title: "login",
+      partial: "login_check_script",
+      error: "Invalid Email/Password Combination",
       email: email,
-      password : password
+      password: password,
     });
   }
 });
-
 
 module.exports = router;
