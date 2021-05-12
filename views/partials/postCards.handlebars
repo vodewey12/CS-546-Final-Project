@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="/public/css/dashboard.css" />
 
+<!-- if use "#each results", we should put postCards.handlebars entirely into /views/dashboard/dashboard.handlebars, instead of putting it into partials. In this way, we maybe need refresh page -->
 <div class="post-cards"><br />
   <img
     src="https://www.w3schools.com/w3images/avatar2.png"
@@ -11,35 +12,42 @@
   <h4>{{title}}</h4>
   <span>Posted on {{formattedDate postTime}} by {{userName}}</span><br />
   <hr />
-  <div class="card-content">
-    <p>{{postContent}}</p>
-    <div class="chip-container">
-      {{#each tags}}
-        <div class="chip">
-          {{this}}
-        </div>
-      {{/each}}
-    </div>
+  <p>{{postContent}}</p>
+  <div class="chip-container">
+    {{#each tags}}
+      <div class="chip">
+        {{this}}
+      </div>
+    {{/each}}
+
   </div>
   <hr />
   <div class="card-actions">
-    <form
-      style="width:18%; float:left; overflow:hidden; margin-right:10px"
-      action=""
-    >
+    <form class="card-ations-form" action="">
       <button type="button" class="card-actions-button"><i
           class="fa fa-thumbs-up"
         ></i>
         Like</button>
     </form>
-    <form
-      style="width:18% clear:right; overflow:hidden; margin-right:10px"
-      action="/posts/{{_id}}"
-    >
+    <form class="card-ations-form" action="/posts/{{_id}}">
       <button type="submit" class="card-actions-button"><i
           class="fa fa-comment"
         ></i>
         Comment</button>
     </form>
+    {{#if user}}
+      <form class="card-ations-form" action="">
+        <button type="button" class="card-actions-button"><i
+            class="fa fa-edit"
+          ></i>
+          Edit</button>
+      </form>
+      <form class="card-ations-form" action="">
+        <button type="button" class="card-actions-button"><i
+            class="fa fa-trash"
+          ></i>
+          Delete</button>
+      </form>
+    {{/if}}
   </div>
 </div>

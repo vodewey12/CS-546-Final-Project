@@ -36,6 +36,10 @@
     overflow-wrap: break-word;
 }
 
+.card-ations-form {
+    display: inline-block;
+}
+
 .card-actions-button {
 
     border: none;
