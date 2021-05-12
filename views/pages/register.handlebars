@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col-sm-12">
+        <form id="register-form" method="post" action="/user/create">
+            <div class="form-group">
+                <label for="userName">UserName</label>
+                <input type="text" class="form-control" id="userName" name="userName" placeholder="userName"
+                    value="{{userName}}" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="email" value="{{email}}"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="something.."
+                    value="{{password}}" required>
+            </div>
+            <div class="form-group">
+                <label for="nickName">Nickname</label>
+                <input type="text" class="form-control" id="nickName" name="nickName" placeholder="nickName"
+                    value="{{nickName}}" required>
+            </div>
+            <div class="form-group">
+                <label for="major">Major</label>
+                <input type="text" class="form-control" id="major" name="major" placeholder="major" value="{{major}}"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="gradYear">Graduating Year</label>
+                <input type="number" class="form-control" id="gradYear" name="gradYear" placeholder="gradYear"
+                    value="{{gradYear}}" required>
+            </div>
+
+            {{#if hasErrors}}
+            <div class="form-group">
+                <div class="alert alert-danger">
+                    <ul class="error-list">
+                        {{#each errors}}
+                        <li>
+                            {{this}}
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+            {{/if}}
+
+            <div class="form-group alert alert-danger" id="error-container" hidden>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+
+            {{!-- <input name='_method' value="PUT" hidden /> --}}
+        </form>
+    </div>
+</div>
+
+<p>Already have an account? <a href="/auth">Log In</a></p>

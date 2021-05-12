@@ -1,31 +1,31 @@
 const express = require("express");
 const router = express.Router();
-const userFunctions = require("./../data/users");
 const xss = require("xss");
 const e = require("express");
 const bcrypt = require("bcryptjs");
 const userFunctions = require("./../data/users");
 const postFunctions = require("./../data/posts");
 
-router.get("/", async (req, res) => {
+router.get("/:id/profile", async (req, res) => {  // after user input right password and log in, they redirect to this router by way of router.post("/login")
+  const id = xss(req.params.id);
+  const userInfo = await userFunctions.getUserById(id);
+  // console.log(userInfo);
+  // console.log(await postFunctions.getPostsByUserId(id))
   try {
-    let allUsersPosts = await userFunctions.getPostsByUser(id);
-    res.render("profile/profile", {
-      results: allUsersPosts,
-    }); // for rendering text page
+    res.render("profile/profile", {title: `${userInfo.userName}`, partial:'profile_js_script', postItems: await postFunctions.getPostsByUserId(id), userId: req.session.user.userId, USERNAME: userInfo.userName, MAJOR: userInfo.major, GRADYEAR: userInfo.gradYear});  // for rendering text page
   } catch (e) {
     res.status(404).json({ error: e.message });
   }
 });
 
-router.get("/ids", async (req, res) => {
-  try {
-    let allUserIds = await userFunctions.getAllUserIds();
-    res.json(allUserIds);
-  } catch (e) {
-    res.status(404).json({ error: e.message });
-  }
-});
+// router.get("/ids", async (req, res) => {
+//   try {
+//     let allUserIds = await userFunctions.getAllUserIds();
+//     res.json(allUserIds);
+//   } catch (e) {
+//     res.status(404).json({ error: e.message });
+//   }
+// });
 
 router.get("/:id", async (req, res) => {
   const id = xss(req.params.id);
@@ -42,10 +42,10 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/create", async (req, res) => {
+
+router.post("/create", async (req, res) => {  // register.handlebars will post form to this router
   if (
-    !req.body ||
-    !req.body.username ||
+    !req.body.userName ||
     !req.body.password ||
     !req.body.major ||
     !req.body.gradYear
@@ -54,74 +54,80 @@ router.post("/create", async (req, res) => {
     return;
   }
 
-  const { username, email, major, password, gradYear } = req.body;
-  const error = [];
-  if (!username) error.push("userName is not valid");
-  if (!email) error.push("Email is not valid");
+  const { userName, email, password , nickName , major, gradYear } = req.body;
 
-  if (error.length > 0) {
-    res.status(400).json({ error: error });
-  } else {
+  const errorList = [];
+  if (!userName.trim()) errorList.push("userName is not valid");
+  if (!email.trim()) errorList.push("Email is not valid");
+
+  if (errorList.length > 0) {  // user register form have empty field. I wonder because register.handlebars ask 'require' for each field, it seems it will not trigger this statement
+    res.status(400).render('pages/register',{
+      title: 'register',
+      partial: 'register_check_script',
+      userName: xss(username),
+      email: xss(email),
+      password: xss(password),
+      nickName: xss(nickName),
+      major: xss(major),
+      gradYear: gradYear,
+      hasErrors: true,
+      errors: errorList
+    });
+  } 
+  else {  // user fill out all field in register form, we can create an account for them
     var salt = bcrypt.genSaltSync(10);
     var hashedPw = await bcrypt.hash(password, salt);
     const inputData = {
-      username: xss(username),
+      userName: xss(userName),
       email: xss(email),
       password: hashedPw,
+      nickName: xss(nickName),
       major: xss(major),
       gradYear: xss(gradYear),
     };
 
     try {
-      let newUser = await userFunctions.createUser(inputData);
-      res.json(newUser);
-    } catch (e) {
-      console.log(e.message);
-      res.status(500).json({ error: e.message });
+      let newUser = await userFunctions.createUser(inputData);  // create an account for user in user collection
+      //res.json(newUser);
+      res.render('pages/login' , {title: 'Login', partial: 'login_check_script'});  // if user have signed in, we guide them to login page 
+    } catch (e) {  // createUser() fail, render register.handlebars
+      //console.log(e.message);
+      //res.status(500).json({ error: e.message });
+      console.log('createUser() fail, render register form');
+      res.render('pages/register' , {
+        title: 'register',
+        partial: 'register_check_script',
+        error: e.message,
+        userName:username,
+        email:email,
+        password:password,
+        nickName:nickName,
+        major:major,
+        gradYear:gradYear
+      });
     }
   }
 });
+
 
 router.delete("/:id", async (req, res) => {
   const id = xss(req.params.id);
 
   if (!id) {
-    res.status(400).json({ error: "User id is not valid" });
+    res.status(400).json({ error: "User id is not valid. You must provide userId to delete" });
     return;
   }
 
   try {
     let deleted = await userFunctions.deleteUser(id);
     if (deleted) {
-      res.json({ deleted: "true" });
+      res.json({ 'userId': id, deleted: "true" });
     }
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
-router.post("/login", async (req, res) => {
-  if (!req.body.email || !req.body.password) {
-    res.status(404).json({ error: "Must supply all fields." });
-    return;
-  }
-  const email = req.body.email;
-  const password = req.body.password;
-  try {
-    let userData = await userFunctions.getUserbyEmail(email);
-
-    bcrypt.compare(password, userData.password, function (err, results) {
-      if (results == true) {
-        res.send({
-          token: "12345",
-          userData,
-        });
-      } else res.status(404).send("Invalid Email/Password Combination");
-    });
-  } catch (e) {
-    res.status(404).json({ error: e.message });
-  }
-});
 
 // update user
 router.patch("/:id", async (req, res) => {
@@ -161,5 +167,68 @@ router.patch("/:id", async (req, res) => {
     }
   }
 });
+
+
+router.post("/login", async (req, res) => {
+  if (req.session.isLogIn)
+    res.redirect(`/user/${req.session.userId}/profile`); // if user already log in, when they go to login page, they should redirect profile page instead of seeing login form
+
+  if (!req.body.email || !req.body.password) {
+    res.status(404).json({ error: "Must supply all fields." });
+    return;
+  }
+  const email = req.body.email;
+  const password = req.body.password;
+  let crtTimeStamp = new Date().toUTCString();  // current timestamp
+
+  try {
+    let userData = await userFunctions.getUserbyEmail(email);
+
+    bcrypt.compare(password, userData.password, function (err, results) {
+      if (results == true) {
+        req.session.user = {  //store current user info in session
+          userId : userData._id, 
+          userName: userData.userName,
+          email: userData.email,
+          nickName: userData.nickName,
+          major: userData.major,
+          gradYear: userData.gradYear,
+          courses: userData.courses,
+          postId: userData.postId,
+          commentId: userData.commentId,
+        };
+        // res.send({
+        //   token: "12345",
+        //   userData,
+        // });
+        req.session.isLogIn = true;  // if user already logged in, when they go to login page, they should redirect profile page instead of seeing login form
+        req.session.userId = userData._id;  // this line is for 'if (req.session.isLogIn)'
+        res.cookie('AuthCookie', userData.userName);  
+        console.log(`[${crtTimeStamp}]: ${req.method} ${req.originalUrl} (Authenticated User)`);
+        res.redirect(`/posts`);  // ❤ user input right password, we redirect them to user profile. I think it should be /user/:id/profile
+      } //else res.status(404).send("Invalid Email/Password Combination");
+      else{
+        res.status(404).render('pages/login' , {
+          title: 'login',
+          partial: 'login_check_script',
+          error : "Invalid Email/Password Combination",
+          email: email,
+          password : password
+        });
+        console.log(`[${crtTimeStamp}]: ${req.method} ${req.originalUrl} (Non-Authenticated User)`)
+      }
+    });
+  } catch (e) {
+    //res.status(404).json({ error: e.message });
+    res.status(404).render('pages/login' , {
+      title: 'login',
+      partial: 'login_check_script',
+      error : "Invalid Email/Password Combination",
+      email: email,
+      password : password
+    });
+  }
+});
+
 
 module.exports = router;

@@ -9,6 +9,11 @@ async function getAllUsers() {
   if (allUserData === null) {
     throw new Error("No users found in database");
   }
+
+  allUserData.forEach((user) => {
+    user._id = user._id.toString();
+  })
+
   return allUserData;
 }
 
@@ -17,7 +22,7 @@ async function getAllUserIds() {
   const allUserIds = await users
     .find({}, { _id: 1 })
     .map(function (item) {
-      return item._id;
+      return item._id.toString();
     })
     .toArray();
   if (allUserIds === null) {
@@ -27,6 +32,11 @@ async function getAllUserIds() {
 }
 
 async function getUserById(userID) {
+
+  if (!userID || typeof userID !== 'string' || userID.trim().length === 0){
+    throw "userID must be a non-empty string";
+  }
+
   if (!ObjectId.isValid(userID)) {
     throw new Error("Given user id is not valid");
   }
@@ -39,10 +49,17 @@ async function getUserById(userID) {
     );
   }
 
+  userData._id = userData._id.toString();
   return userData;
 }
 
 async function getUserbyEmail(email) {
+
+  if (!email || typeof email !== 'string' || email.trim().length === 0){
+    throw "email must be a non-empty string";
+  }
+  email = email.toLowerCase();
+
   const users = await usersCollection();
   let userData = await users.findOne({ email: email });
   if (!userData) {
@@ -51,16 +68,52 @@ async function getUserbyEmail(email) {
     );
   }
 
+  userData._id = userData._id.toString();
   return userData;
 }
+
 
 // The authUserData will come from firebase auth, but we can just seed users for now until that is set up
 async function createUser(authUserData) {
   // auth user data only consists user id, userName, email
   // id should be coming from auth, i think
 
-  if (!authUserData.username) throw new Error("User userName is empty");
+  if (!authUserData || typeof authUserData !== 'object' || Array.isArray(authUserData)){
+    throw 'authUserData is a required object parameter.';
+  } 
+
+  if (!authUserData.userName || typeof authUserData.userName !== 'string' || authUserData.userName.trim().length === 0){
+    throw 'username is a required non-empty string parameter.';
+  } 
+
   if (!authUserData.email) throw new Error("User email is not valid");
+
+  let email = authUserData.email;
+  let emailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  if (typeof email !== 'string' || !email.match(emailformat)){
+    throw 'Invalid email';
+  }
+
+  if (!authUserData.password || typeof authUserData.password !== 'string' || authUserData.password.trim().length === 0){
+    throw 'password is a required non-empty string parameter.';
+  } 
+
+  if (!authUserData.nickName || typeof authUserData.nickName !== 'string' || authUserData.nickName.trim().length === 0){
+    throw 'nickName is a required non-empty string parameter.';
+  } 
+
+  if (!authUserData.major || typeof authUserData.major !== 'string' || authUserData.major.trim().length === 0){
+    throw 'major is a required non-empty string parameter.';
+  } 
+
+  let yearFormat = /20\d\d/gm;
+  if(!authUserData.gradYear || typeof authUserData.gradYear !== 'string' || authUserData.gradYear.trim().length === 0){
+    throw 'gradYear is a required string parameter'  // storing as strings since we won't do date calculations
+  }
+  let gradYear = authUserData.gradYear;
+  if(!gradYear.match(yearFormat)){
+    throw 'invalid gradYear';
+  }
 
   const users = await usersCollection();
 
@@ -83,11 +136,12 @@ async function createUser(authUserData) {
   });
 
   let userData = {
-    userName: authUserData.username,
-    email: authUserData.email,
+    userName: authUserData.userName,
+    email: authUserData.email.toLowerCase(), // for case insensitive log in
     password: authUserData.password,
+    nickName: authUserData.nickName,
     major: authUserData.major,
-    gradYear: authUserData.year,
+    gradYear: authUserData.gradYear,
     courses: [],
     postId: [],
     commentId: [],
@@ -99,16 +153,59 @@ async function createUser(authUserData) {
     throw new Error(`Unable to add user into database`);
   }
 
-  return await this.getUserById(newUser._id);
+  return await this.getUserById(newUser.insertedId.toString());
 }
 //-----------------------------------------------------
 
+
 async function updateUser(userId, updatedUserData) {
+
+  if (!userId || typeof userId !== 'string' || userId.trim().length === 0){
+    throw "userId must be a non-empty string";
+  }
+
   if (!ObjectId(userId)) {
     throw new Error("User id is not valid");
   }
-  if (updatedUserData.userName && !updatedUserData.userName) {
-    throw new Error("Updated user name is not valid");
+  
+  if (!updatedUserData || typeof updatedUserData !== 'object' || Array.isArray(updatedUserData)){
+    throw 'updatedUserData is a required object parameter.';
+  } 
+
+  if (updatedUserData.username && (typeof updatedUserData.username !== 'string' || updatedUserData.username.trim().length === 0)){
+    throw 'username is a required non-empty string parameter.';
+  } 
+
+  let email = updatedUserData.email;
+  if (email){
+    let emailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (typeof email !== 'string' || !email.match(emailformat)){
+      throw 'Invalid email';
+    }
+    updatedUserData.email = updatedUserData.email.toLowerCase();
+  }
+  
+  if (updatedUserData.password && (typeof updatedUserData.password !== 'string' || updatedUserData.password.trim().length === 0)){
+    throw 'password is a required non-empty string parameter.';
+  } 
+
+  if (updatedUserData.nickName && (typeof updatedUserData.nickName !== 'string' || updatedUserData.nickName.trim().length === 0)){
+    throw 'nickName is a required non-empty string parameter.';
+  } 
+
+  if (updatedUserData.major && (typeof updatedUserData.major !== 'string' || updatedUserData.major.trim().length === 0)){
+    throw 'major is a required non-empty string parameter.';
+  } 
+
+  let yearFormat = /20\d\d/gm;
+  if(updatedUserData.gradYear && (typeof updatedUserData.gradYear !== 'string' || updatedUserData.gradYear.trim().length === 0)){
+    throw 'gradYear is a required string parameter'  // storing as strings since we won't do date calculations
+  }
+  if(updatedUserData.gradYear){
+    let gradYear = updatedUserData.gradYear;
+    if(!gradYear.match(yearFormat)){
+      throw 'invalid gradYear';
+    }
   }
 
   let users = await usersCollection();
@@ -136,12 +233,20 @@ async function updateUser(userId, updatedUserData) {
   return await this.getUserById(userId);
 }
 
+
 async function deleteUser(id) {
-  if (!id) throw new Error("User id is not valid");
+  
+  if (!id || typeof id !== 'string' || id.trim().length === 0){
+    throw "userId must be a non-empty string";
+  }
+
+  if (!ObjectId(id)) {
+    throw new Error("User id is not valid");
+  }
 
   const users = await usersCollection();
 
-  let removedUser = await users.removeOne({ _id: id });
+  let removedUser = await users.removeOne({ _id: ObjectId(id) });
 
   if (removedUser.deletedCount === 0) {
     throw new Error(`Unable to delete user with id : ${id} from database`);

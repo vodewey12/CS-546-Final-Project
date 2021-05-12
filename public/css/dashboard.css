@@ -93,7 +93,6 @@ label {
 }
 
 
-
-.hr {
-    margin-bottom: 0px;
+.hr-create {
+    border-color: #000;
 }

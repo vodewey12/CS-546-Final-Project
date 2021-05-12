@@ -1,14 +1,25 @@
 const commentRoutes = require("./comments");
 const userRoutes = require("./users");
+const authRoutes = require("./auth");
 const postRoutes = require("./posts");
-const profileRoutes = require("./profile");
+const data = require('../data');
+const userData = data.users;  // ../data/users.js
+const postData = data.posts;  // ../data/posts.js
+const commentData = data.comments;  // ../data/comments.js
 
 const constructorMethod = (app) => {
-  app.use("/users", userRoutes);
+  app.use("/user", userRoutes);
   app.use("/comments", commentRoutes);
   app.use("/posts", postRoutes);
-  app.use("/profile", profileRoutes); // need this router to show user profile
-  app.use("/", profileRoutes);
+  app.use("/auth", authRoutes);
+
+  app.get('/logout', async (req, res) => {  // trigger /logout router to logout
+    res.clearCookie('AuthCookie');
+    res.clearCookie('Build Session');
+    req.session.destroy();
+    res.status(200).redirect('/auth');
+  });
+
   app.use("*", (req, res) => {
     res.sendStatus(404);
   });
