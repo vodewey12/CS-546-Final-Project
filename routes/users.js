@@ -12,7 +12,7 @@ router.get("/:id/profile", async (req, res) => {  // after user input right pass
   // console.log(userInfo);
   // console.log(await postFunctions.getPostsByUserId(id))
   try {
-    res.render("profile/profile", {title: `${userInfo.userName}`, partial:'profile_js_script', postItems: await postFunctions.getPostsByUserId(id), USERNAME: userInfo.userName, MAJOR: userInfo.major, GRADYEAR: userInfo.gradYear});  // for rendering text page
+    res.render("profile/profile", {title: `${userInfo.userName}`, partial:'profile_js_script', postItems: await postFunctions.getPostsByUserId(id), userId: req.session.user.userId, USERNAME: userInfo.userName, MAJOR: userInfo.major, GRADYEAR: userInfo.gradYear});  // for rendering text page
   } catch (e) {
     res.status(404).json({ error: e.message });
   }
