@@ -3,7 +3,6 @@ const router = express.Router();
 const data = require("../data");
 const xss = require("xss");
 const postData = data.posts;
-const userData = data.users;
 const commentData = data.comments;
 router.get("/", async (req, res) => {
   // ❤ dashboard
@@ -12,7 +11,6 @@ router.get("/", async (req, res) => {
     for (let post of postList) {
       if (post.userId == req.session.user.userId) {
         post.user = true;
-        console.log(post);
       }
     }
     res.render("dashboard/dashboard", {
@@ -20,7 +18,6 @@ router.get("/", async (req, res) => {
       partial: "dashboard_js_script",
       postItems: postList,
       userId: req.session.user.userId,
-      user: true,
     }); //(lecture_11 code index.js) partial at here only for passing in client side Javascript of /public/js/dashboard.js
     // res.render("dashboard/dashboard", { results: postList });  // if use { results: postList } pass 'results' in postCards.handlebars, we should put postCards.handlebars entirely into /views/dashboard/dashboard.handlebars, instead of putting it into partials. In this way, we maybe need refresh page
   } catch (e) {
@@ -70,7 +67,9 @@ router.post("/", async (req, res) => {
     });
     return;
   }
-
+  for (let tag of postInfo.tags){
+    tag = xss(tag);
+  }
   try {
     const newPost = await postData.createPost(
       xss(postInfo.userId),
@@ -161,13 +160,16 @@ router.put("/:id", async (req, res) => {
     });
     return;
   }
+  for (let tag of postInfo.tags){
+    tag = xss(tag);
+  }
 
   const inputData = {
     userId: xss(postInfo.userId),
     userName: xss(postInfo.userName),
     title: xss(postInfo.title),
     postContent: xss(postInfo.postContent),
-    tags: xss(postInfo.tags),
+    tags: postInfo.tags,
   };
 
   try {
@@ -196,7 +198,12 @@ router.patch("/:id", async (req, res) => {
     )
       updatedObject.postContent = xss(requestBody.postContent);
     if (requestBody.tags && requestBody.tags !== oldPost.tags)
-      updatedObject.tags = xss(requestBody.tags);
+      {
+        for (let tag of requestBody.tags){
+          tag = xss(tag);
+        }
+        updatedObject.tags = requestBody.tags;
+      }
     if (
       requestBody.postContent &&
       requestBody.postContent !== oldPost.postContent
