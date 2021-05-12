@@ -1,26 +1,45 @@
-<link rel="stylesheet" href="/public/css/dashboard.css">
+<link rel='stylesheet' href='/public/css/dashboard.css' />
 
 <!-- if use "#each results", we should put postCards.handlebars entirely into /views/dashboard/dashboard.handlebars, instead of putting it into partials. In this way, we maybe need refresh page -->
-<div class="post-cards"><br>
-    <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="avatar-image" style="width:60px">
+<div class='post-cards'><br />
+    <img
+        src='https://www.w3schools.com/w3images/avatar2.png'
+        alt='Avatar'
+        class='avatar-image'
+        style='width:60px'
+    />
 
     <h4>{{title}}</h4>
-    <span>Posted on {{formattedDate postTime}} by {{userName}}</span><br>
-    <hr>
+    <span>Posted on {{formattedDate postTime}} by {{userName}}</span><br />
+    <hr />
     <p>{{postContent}}</p>
-    <div class="chip-container">
+    <div class='chip-container'>
         {{#each tags}}
-        <div class="chip">
-            {{this}}
-        </div>
+            <div class='chip'>
+                {{this}}
+            </div>
         {{/each}}
 
     </div>
-    <hr>
-    <div class="card-actions">
-        <button type="button" class="card-actions-button"><i class="fa fa-thumbs-up"></i>
+    <hr />
+    <div class='card-actions'>
+        <button type='button' class='card-actions-button'><i
+                class='fa fa-thumbs-up'
+            ></i>
             Like</button>
-        <button type="button" class="card-actions-button"><i class="fa fa-comment"></i>
+        <button type='button' class='card-actions-button'><i
+                class='fa fa-comment'
+            ></i>
             Comment</button>
+        {{#if user}}
+            <button type='button' class='card-actions-button'><i
+                    class='fa fa-edit'
+                ></i>
+                Edit</button>
+            <button type='button' class='card-actions-button'><i
+                    class='fa fa-trash'
+                ></i>
+                Delete</button>
+        {{/if}}
     </div>
 </div>
