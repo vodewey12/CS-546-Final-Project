@@ -37,16 +37,18 @@
     border-radius: 50%;
 }
 
-input {
+input[type=email],
+input[type=password] {
     width: 100%;
     padding: 12px 20px;
-    margin: 0 0 5px 0;
+    margin: 0 0 20px 0;
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
 }
 
 .login-icon {
+    margin-top: 30px;
     text-align: center;
     font-size: 15em;
     color: #A32638;

@@ -32,15 +32,8 @@
 
 
 
-.w3-right {
-    float: right !important
-}
-
-
-.card-actions {
-    margin-bottom: 16px !important;
-
-
+.card-content {
+    overflow-wrap: break-word;
 }
 
 .card-actions-button {
@@ -95,4 +88,8 @@ label {
 
 .hr-create {
     border-color: #000;
+}
+
+.comment-date {
+    width: 10px;
 }
