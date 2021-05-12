@@ -32,7 +32,6 @@
         } 
 
         if(errors){
-            console.log('hello');
             event.preventDefault();
             errorDiv.empty();
             for(let error of errorList){

@@ -9,7 +9,7 @@ router.get("/" , async (req, res) => {
         return ;
     }else {
         res.render('pages/login' , {
-            title: 'login',
+            title: 'Login',
             partial: 'login_check_script',
         });
         return;
