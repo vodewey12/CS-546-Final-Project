@@ -43,39 +43,6 @@ app.use(
   })
 );
 
-app.use("/posts/:id", (req, res, next) => {
-  // user submit form to update their post
-  // console.log(req);
-  if (req.method == "POST") {
-    req.method = "PATCH";
-  }
-  next();
-});
-
-app.use("/comments/markSol", (req, res, next) => {
-  // user click button to mark comments as solution
-  if (req.method == "POST") {
-    req.method = "PATCH";
-  }
-  next();
-});
-
-app.use("/comments/upvote", (req, res, next) => {
-  // user click button to upvote comments
-  if (req.method == "POST") {
-    req.method = "PATCH";
-  }
-  next();
-});
-
-app.use("/comments/downvote", (req, res, next) => {
-  // user click button to downvote comments
-  if (req.method == "POST") {
-    req.method = "PATCH";
-  }
-  next();
-});
-
 configRoutes(app);
 
 app.listen(3000, () => {
