@@ -108,7 +108,7 @@ const exportedMethods = {
     }
     const postCollection = await posts();
     const updateInfo = await postCollection.updateOne(
-      { _id: postId, postTime: new Date() },
+      { _id: postId, postTime: JSON.stringify(new Date()) },
       { $set: postUpdateInfo }
     );
     if (!updateInfo && !updateInfo.modifiedCount) throw "Update failed";
