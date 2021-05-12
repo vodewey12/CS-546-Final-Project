@@ -36,57 +36,53 @@ app.set("view engine", "handlebars");
 
 app.use(
   session({
-    name: 'Build Session',
-    secret: 'some secret string!',
+    name: "Build Session",
+    secret: "some secret string!",
     resave: false,
     saveUninitialized: true,
   })
 );
 
-
-app.use('/user/:id', (req, res, next) => {  // update user themself information
-  if (req.method == 'POST') {  
-    req.method = 'PATCH';
+app.use("/user/:id", (req, res, next) => {
+  // update user themself information
+  if (req.method == "POST") {
+    req.method = "PATCH";
   }
   next();
 });
 
-
-app.use('/posts/:id', (req, res, next) => {  // user submit form to update their post 
+app.use("/posts/:id", (req, res, next) => {
+  // user submit form to update their post
   // console.log(req);
-  if (req.method == 'POST') {  
-    req.method = 'PATCH';
+  if (req.method == "POST") {
+    req.method = "PATCH";
   }
   next();
 });
 
-
-app.use('/comments/markSol', (req, res, next) => {  // user click button to mark comments as solution
-  if (req.method == 'POST') {  
-    req.method = 'PATCH';
+app.use("/comments/markSol", (req, res, next) => {
+  // user click button to mark comments as solution
+  if (req.method == "POST") {
+    req.method = "PATCH";
   }
   next();
 });
 
-
-app.use('/comments/upvote', (req, res, next) => {  // user click button to upvote comments
-  if (req.method == 'POST') {  
-    req.method = 'PATCH';
+app.use("/comments/upvote", (req, res, next) => {
+  // user click button to upvote comments
+  if (req.method == "POST") {
+    req.method = "PATCH";
   }
   next();
 });
 
-
-app.use('/comments/downvote', (req, res, next) => {  // user click button to downvote comments
-  if (req.method == 'POST') {  
-    req.method = 'PATCH';
+app.use("/comments/downvote", (req, res, next) => {
+  // user click button to downvote comments
+  if (req.method == "POST") {
+    req.method = "PATCH";
   }
   next();
 });
-
-
-app.use('/')
-
 
 configRoutes(app);
 
