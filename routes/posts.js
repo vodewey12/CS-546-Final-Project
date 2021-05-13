@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
     for (let post of postList) {
       if (post.userId == req.session.user.userId) {
         post.user = true;
-        console.log(post);
+        // console.log(post);
       }
     }
     res.render("dashboard/dashboard", {
@@ -99,7 +99,7 @@ router.get("/userposts/:id", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {  // ❤ render comments that belong to corresponding post
   const id = xss(req.params.id);
   if (!id) {
     res.status(400).json({ error: "Invalid postId" });

@@ -35,7 +35,8 @@
         ></i>
         Comment</button>
     </form>
-    {{#if user}}
+
+    {{#if user}}  <!-- user can just edit and delete their own post -->
       <form class="card-ations-form" action="">
         <button type="button" class="card-actions-button"><i
             class="fa fa-edit"

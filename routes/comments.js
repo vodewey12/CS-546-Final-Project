@@ -65,7 +65,23 @@ router.post("/", async (req, res) => {
       commentThatPost._id,
       aCommentData.postId
     );
-    res.status(200).json(commentThatPost);
+
+    // ❤ fix comments give you json error
+    const post = await postData.getPostByPostId(aCommentData.postId);
+
+    let comments = [];
+    for (i in post.commentIds) {
+      comments.push(
+        await commentData.getCommentByCommentId(post.commentIds[i])
+      );
+    }
+    res.render("partials/comments", {
+      title: "comments",
+      postItems: post,
+      comments: comments,
+      userId: req.session.user.userId,
+      userName: req.session.user.userName,
+    });
   } catch (e) {
     res.status(500).json({ error: "createComments() fails" });
   }
