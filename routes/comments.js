@@ -77,6 +77,7 @@ router.post("/", async (req, res) => {
     }
     res.render("partials/comments", {
       title: "comments",
+      partial: "comments_js_script",
       postItems: post,
       comments: comments,
       userId: req.session.user.userId,

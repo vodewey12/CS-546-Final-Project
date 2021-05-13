@@ -116,6 +116,7 @@ router.get("/:id", async (req, res) => {  // ❤ render comments that belong to 
     }
     res.render("partials/comments", {
       title: "comments",
+      partial: "comments_js_script",
       postItems: post,
       comments: comments,
       userId: req.session.user.userId,
