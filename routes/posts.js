@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
     });
     return;
   }
-
+  /*
   if (!postInfo.userId) {
     res.status(400).json({
       error: "You must provide a userId",
@@ -48,7 +48,7 @@ router.post("/", async (req, res) => {
     });
     return;
   }
-
+  */
   if (!postInfo.title) {
     res.status(400).json({ error: "You must provide a title" });
     return;
@@ -72,8 +72,8 @@ router.post("/", async (req, res) => {
   }
   try {
     const newPost = await postData.createPost(
-      xss(postInfo.userId),
-      xss(postInfo.userName),
+      req.session.user.userId,
+      req.session.user.userName,
       xss(postInfo.title),
       xss(postInfo.postContent),
       postInfo.tags
@@ -134,7 +134,7 @@ router.put("/:id", async (req, res) => {
     });
     return;
   }
-
+  /*
   if (!postInfo.userId) {
     res.status(400).json({
       error: "You must provide a userId",
@@ -146,7 +146,7 @@ router.put("/:id", async (req, res) => {
     res.status(400).json({ error: "You must provide a title" });
     return;
   }
-
+  */
   if (!postInfo.postContent) {
     res.status(400).json({
       error: "You must provide content for the post",
@@ -165,8 +165,8 @@ router.put("/:id", async (req, res) => {
   }
 
   const inputData = {
-    userId: xss(postInfo.userId),
-    userName: xss(postInfo.userName),
+    userId: req.session.user.userId,
+    userName: req.session.user.userName,
     title: xss(postInfo.title),
     postContent: xss(postInfo.postContent),
     tags: postInfo.tags,
