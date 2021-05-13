@@ -11,15 +11,18 @@
 
   <h4>{{title}}</h4>
   <span>Posted on {{formattedDate postTime}} by {{userName}}</span><br />
-  <hr />
-  <p>{{postContent}}</p>
-  <div class="chip-container">
-    {{#each tags}}
-      <div class="chip">
-        {{this}}
-      </div>
-    {{/each}}
 
+  <hr />
+  <div class="card-content">
+    <p>{{postContent}}</p>
+    <div class="chip-container">
+      {{#each tags}}
+        <div class="chip">
+          {{this}}
+        </div>
+      {{/each}}
+
+    </div>
   </div>
   <hr />
   <div class="card-actions">
