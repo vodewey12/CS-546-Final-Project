@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
       title: "dashboard",
       partial: "dashboard_js_script",
       postItems: postList,
-      userId: req.session.user.userId,
+      currUserId: req.session.user.userId,
       user: true,
     }); //(lecture_11 code index.js) partial at here only for passing in client side Javascript of /public/js/dashboard.js
     // res.render("dashboard/dashboard", { results: postList });  // if use { results: postList } pass 'results' in postCards.handlebars, we should put postCards.handlebars entirely into /views/dashboard/dashboard.handlebars, instead of putting it into partials. In this way, we maybe need refresh page

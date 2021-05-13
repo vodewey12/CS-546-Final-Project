@@ -101,24 +101,28 @@ async function main() {
     //comment1:
     const comment1 = await comments.createComments(
         "I learn a lot in CS546.",  //comContent
+        user1._id,
         "Songhan Yu",  //userName
     );
 
     //comment2:
     const comment2 = await comments.createComments(
         "Lab assignment will due in next week.",  //comContent
+        user2._id,
         "Tom Cruise",  //userName
     );
 
     //comment3:
     const comment3 = await comments.createComments(
         "I will make my website as ugly as possible.",  //comContent
+        user3._id,
         "Scarlett Johansson",  //userName
     );
 
     //comment4:
     const comment4 = await comments.createComments(
         "Go and see Sherlock.",  //comContent
+        user3._id,
         "Benedict Cumberbatch",  //userName
     );
 

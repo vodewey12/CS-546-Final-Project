@@ -8,6 +8,10 @@
   <span>Posted on {{formattedDate postTime}} by {{userName}}</span><br />
   <hr />
   <p>{{postContent}}</p>
+
+  <p>{{_id}}</p>
+
+
   <div class="chip-container">
     {{#each tags}}
     <div class="chip">
@@ -19,7 +23,7 @@
   <hr />
   <div class="card-actions">
 
-    <form class="card-ations-form" id="like-form" action="">
+    <form class="card-ations-form like-form" action="">
       {{#if liked}}
       <button type="submit" class="card-actions-button"><i class="fa fa-thumbs-up" id="like"></i>
         Like</button>
@@ -27,6 +31,9 @@
       <button type="submit" class="card-actions-button"><i class="fa fa-thumbs-up" id="not-like"></i>
         Like</button>
       {{/if}}
+
+      <input type="hidden" id="post_id" name="post_id" value="{{_id}}">
+
     </form>
 
     <form class="card-ations-form" action="/posts/{{_id}}">

@@ -1,13 +1,13 @@
 (function($) {
 
    
-    let likeForm = $('#like-form');
+    let likeForm = $('.like-form');
   
     likeForm.submit(function(event){
 
-        event.preventDefault(); // for now
-
-        let button = likeForm.children().children();
+        event.preventDefault(); 
+        let eventForm = event.target;
+        let button =  $(event.target).children().children();
         
         let prevColor = button.css("color");
 
@@ -16,5 +16,11 @@
         } else{
             button.css("color" , "blue");
         }
+
+        // items for db query
+        let userId = document.querySelector('input[name="user_id"]').value;
+        let postId = eventForm.querySelector('input[name="post_id"]').value;
+        console.log(userId);
+        console.log(postId);
     });
 })(window.jQuery);
