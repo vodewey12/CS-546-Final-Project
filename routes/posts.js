@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const data = require("../data");
 const xss = require("xss");
+const { Router } = require("express");
 const postData = data.posts;
 const userData = data.users;
 const commentData = data.comments;
@@ -12,7 +13,6 @@ router.get("/", async (req, res) => {
     for (let post of postList) {
       if (post.userId == req.session.user.userId) {
         post.user = true;
-        console.log(post);
       }
     }
     res.render("dashboard/dashboard", {
@@ -225,6 +225,28 @@ router.patch("/:id", async (req, res) => {
       error:
         "No fields have been changed from their inital values, so no update has occurred",
     });
+  }
+});
+
+router.post("/resolve", async (req, res) => {
+  console.log(req.body);
+
+  const postId = xss(req.body.postId);
+  const commentId = xss(req.body.commentId);
+  if (!postId) {
+    res.status(400).json({ error: "Invalid postId" });
+    return;
+  }
+  if (!commentId) {
+    res.status(400).json({ error: "Invalid commentId" });
+    return;
+  }
+  const requestBody = req.body;
+  try {
+    await postData.resolvePosts(postId);
+    await commentData.markCommentSol(commentId);
+  } catch (e) {
+    res.status(404).json({ error: e });
   }
 });
 

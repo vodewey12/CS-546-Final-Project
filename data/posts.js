@@ -118,7 +118,7 @@ const exportedMethods = {
     }
     const postCollection = await posts();
     const updateInfo = await postCollection.updateOne(
-      { _id: postId, postTime: JSON.stringify(new Date()) },
+      { _id: postId, postTime: new Date() },
       { $set: postUpdateInfo }
     );
     if (!updateInfo && !updateInfo.modifiedCount) throw "Update failed";
@@ -150,6 +150,23 @@ const exportedMethods = {
         {
           $push: {
             commentIds: commentId,
+          },
+        }
+      );
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+
+  async resolvePosts(id) {
+    let postId = idCheck(id);
+    try {
+      const postCollection = await posts();
+      const updateInfo = await postCollection.updateOne(
+        { _id: postId },
+        {
+          $set: {
+            resolvedStatus: true,
           },
         }
       );
