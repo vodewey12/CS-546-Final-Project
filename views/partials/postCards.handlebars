@@ -36,14 +36,14 @@
         Comment</button>
     </form>
     {{#if user}}
-      <form class="card-ations-form" action="">
-        <button type="button" class="card-actions-button"><i
+      <form class="card-ations-form" action="/posts/{{_id}}" method="PUT">
+        <button type="submit" class="card-actions-button"><i
             class="fa fa-edit"
           ></i>
           Edit</button>
       </form>
-      <form class="card-ations-form" action="">
-        <button type="button" class="card-actions-button"><i
+      <form class="card-ations-form" action="/posts/{{_id}}" method="DELETE">
+        <button type="submit" class="card-actions-button"><i
             class="fa fa-trash"
           ></i>
           Delete</button>
