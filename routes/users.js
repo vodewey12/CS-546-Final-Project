@@ -79,10 +79,10 @@ router.post("/create", async (req, res) => {
 
   if (errorList.length > 0) {
     // user register form have empty field. I wonder because register.handlebars ask 'require' for each field, it seems it will not trigger this statement
-    res.status(400).render("pages/register", {
+    res.status(400).render("auth/register", {
       title: "register",
       partial: "register_check_script",
-      userName: xss(username),
+      userName: xss(userName),
       email: xss(email),
       password: xss(password),
       nickName: xss(nickName),
@@ -107,7 +107,7 @@ router.post("/create", async (req, res) => {
     try {
       let newUser = await userFunctions.createUser(inputData); // create an account for user in user collection
       //res.json(newUser);
-      res.render("pages/login", {
+      res.render("auth/login", {
         title: "Login",
         partial: "login_check_script",
       }); // if user have signed in, we guide them to login page
@@ -116,11 +116,11 @@ router.post("/create", async (req, res) => {
       //console.log(e.message);
       //res.status(500).json({ error: e.message });
       console.log("createUser() fail, render register form");
-      res.render("pages/register", {
+      res.render("auth/register", {
         title: "register",
         partial: "register_check_script",
         error: e.message,
-        userName: username,
+        userName: userName,
         email: email,
         password: password,
         nickName: nickName,
@@ -231,7 +231,7 @@ router.post("/login", async (req, res) => {
         res.redirect(`/posts`); // ❤ user input right password, we redirect them to user profile. I think it should be /user/:id/profile
       } //else res.status(404).send("Invalid Email/Password Combination");
       else {
-        res.status(404).render("pages/login", {
+        res.status(404).render("auth/login", {
           title: "login",
           partial: "login_check_script",
           error: "Invalid Email/Password Combination",
@@ -245,7 +245,7 @@ router.post("/login", async (req, res) => {
     });
   } catch (e) {
     //res.status(404).json({ error: e.message });
-    res.status(404).render("pages/login", {
+    res.status(404).render("auth/login", {
       title: "login",
       partial: "login_check_script",
       error: "Invalid Email/Password Combination",
