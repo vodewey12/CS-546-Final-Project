@@ -20,7 +20,25 @@
         res.forEach((data) => {
           var list = $("<li>");
           var a = $("<a id=" + data._id + " href=/posts/" + data._id + " >");
-          a.text(data.title);
+          if (data.resolvedStatus) {
+            a.text(
+              "[Resolved] " +
+                data.title +
+                " posted by " +
+                data.userName +
+                " on " +
+                moment(data.postTime).format("MM/DD/YYYY")
+            );
+          } else {
+            a.text(
+              "[Unresolved] " +
+                data.title +
+                " posted by " +
+                data.userName +
+                " on " +
+                moment(data.postTime).format("MM/DD/YYYY")
+            );
+          }
           list.append(a);
           $posts.append(list);
         });

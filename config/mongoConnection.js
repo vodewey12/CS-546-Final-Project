@@ -21,7 +21,6 @@ module.exports = async () => {
       .collection("posts");
     postCollection.createIndex({ title: "text" });
     const indexes = await postCollection.indexes();
-    console.log(indexes);
     _db = await _connection.db(mongoConfig.database);
   }
   return _db;
