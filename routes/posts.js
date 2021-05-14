@@ -31,6 +31,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   let postInfo = req.body;
+  console.log(postInfo);
 
   if (!postInfo) {
     res.status(400).json({
@@ -267,7 +268,7 @@ router.delete("/:id", async (req, res) => {
 
   try {
     let deleted = await postData.deletePost(id);
-    res.json(deleted);
+    res.status(200).json(deleted);
   } catch (e) {
     res.sendStatus(500);
   }
