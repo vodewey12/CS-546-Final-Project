@@ -20,6 +20,10 @@ const constructorMethod = (app) => {
     res.status(200).redirect("/auth");
   });
 
+  app.use("/", async (req, res) => {
+    res.redirect("/auth");
+  });
+
   app.use("*", (req, res) => {
     res.sendStatus(404);
   });

@@ -68,7 +68,6 @@
             {{this}}
           </div>
         {{/each}}
-
       </div>
       {{#if postItems.resolvedStatus}}{{else}}
         <hr />
@@ -121,11 +120,11 @@
           {{#if isSolution}}
           <h5>[Answer] {{comContent}}</h5>
           {{else}}
-                    <h5> {{comContent}}</h5>
-
+          <h5> {{comContent}}</h5>
           {{/if}}
           <h6>Commented on {{formattedDate postTime}} by {{userName}}</h6>
           {{#if ../postItems.resolvedStatus}}{{else}}
+            {{#ifEquals userId ../postItems._id}}
             <form method="POST" action="/posts/resolve">
               <input
                 type="hidden"
@@ -146,6 +145,7 @@
 
                 Mark as Resolved</button>
             </form>
+            {{/ifEquals}}
           {{/if}}
           <hr />
         </div>
