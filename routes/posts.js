@@ -248,6 +248,7 @@ router.post("/resolve", async (req, res) => {
   try {
     await postData.resolvePosts(postId);
     await commentData.markCommentSol(commentId);
+    res.redirect("/");
   } catch (e) {
     res.status(404).json({ error: e });
   }
