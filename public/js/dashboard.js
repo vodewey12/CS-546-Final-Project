@@ -22,5 +22,11 @@
         let postId = eventForm.querySelector('input[name="post_id"]').value;
         console.log(userId);
         console.log(postId);
+
+        // send ajax request
+        $.post("/user/like" , 
+        {   userId: userId,
+            postId: postId
+        });
     });
 })(window.jQuery);

@@ -246,4 +246,35 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/like", async (req, res) => {
+
+  console.log("route hit");
+
+  if (!req.session.isLogIn){
+    res.status(401);
+    res.redirect('/auth');
+    return;
+  }
+
+  if (!req.body.userId || !req.body.postId) {
+    res.status(404).json({ error: "Must supply all fields." });
+    return;
+  }
+
+  let userId = xss(req.body.userId);
+  let postId = xss(req.body.postId);
+
+  console.log(userId);
+  console.log(postId);
+
+  try{
+    let updatedUser = await userFunctions.updateLikedPosts(userId, postId);
+    res.status(200).json(updatedUser);
+  }catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e.message });
+  }
+
+});
+
 module.exports = router;
