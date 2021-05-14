@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
     for (let post of postList) {
       if (post.userId == req.session.user.userId) {
         post.user = true;
-        console.log(post);
+        // console.log(post);
       }
     }
     res.render("dashboard/dashboard", {
@@ -99,7 +99,7 @@ router.get("/userposts/:id", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {  // ❤ render comments that belong to corresponding post
   const id = xss(req.params.id);
   if (!id) {
     res.status(400).json({ error: "Invalid postId" });
@@ -116,6 +116,7 @@ router.get("/:id", async (req, res) => {
     }
     res.render("partials/comments", {
       title: "comments",
+      partial: "comments_js_script",
       postItems: post,
       comments: comments,
       userId: req.session.user.userId,
@@ -243,10 +244,40 @@ router.delete("/:id", async (req, res) => {
 
   try {
     let deleted = await postData.deletePost(id);
-    res.json(deleted);
+    console.log(deleted);
+    res.redirect(`/${id}`)
   } catch (e) {
     res.sendStatus(500);
   }
 });
+
+
+// router.get("/tags", async (req, res) => {  //search bar for tag to hit this router and pass in tag 
+//   const tagInfo = req.body;
+
+//   if (!tagInfo || !tagInfo.tags) {
+//     res.status(400).json({
+//       error: "You must provide tags in search bar to search",
+//     });
+//     return;
+//   }
+
+//   const postListByTags = await postData.getPostsByTag(tagInfo.tags);
+
+//   for (let post of postListByTags) {
+//     if (post.userId == req.session.user.userId) {
+//       post.user = true;
+//       // console.log(post);
+//     }
+//   }
+//   res.render("dashboard/dashboard", {
+//     title: "dashboard",
+//     partial: "dashboard_js_script",
+//     postItems:  postListByTags,
+//     userId: req.session.user.userId,
+//     user: true,
+//   });
+// });
+
 
 module.exports = router;
