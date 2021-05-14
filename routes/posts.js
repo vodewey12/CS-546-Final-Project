@@ -63,11 +63,12 @@ router.post("/", async (req, res) => {
 
   if (!postInfo.tags) {
     res.status(400).json({
-      error: "You must provide a list of tags",
+      error: "You must provide a list of tags each separated by a comma then space",
     });
     return;
   }
-  for (let tag of postInfo.tags){
+  let tags = postInfo.tags.split(', ');
+  for (let tag of tags){
     tag = xss(tag);
   }
   try {
@@ -76,9 +77,9 @@ router.post("/", async (req, res) => {
       req.session.user.userName,
       xss(postInfo.title),
       xss(postInfo.postContent),
-      postInfo.tags
+      tags
     );
-    res.json(newPost);
+    res.redirect('/posts/');
   } catch (e) {
     res.sendStatus(500);
   }
