@@ -81,13 +81,12 @@ const exportedMethods = {
   },
   async searchPosts(searchTerm) {
     if (!searchTerm) throw "No search term provided";
-    const searchedPosts = await postCollection.find({
-      $text: { $search: searchTerm },
-    });
-    console.log("yay");
-    if (searchedPosts) {
-      return searchedPosts;
-    } else return [];
+    const postCollection = await posts();
+    var phrase = '"' + searchTerm + '"';
+    const searchedPosts = await postCollection
+      .aggregate([{ $match: { $text: { $search: phrase } } }])
+      .toArray();
+    return searchedPosts;
   },
   async updatePost(id, updatedPost) {
     // user edits a post

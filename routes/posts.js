@@ -31,7 +31,6 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   let postInfo = req.body;
-  console.log(postInfo);
 
   if (!postInfo) {
     res.status(400).json({
@@ -232,6 +231,19 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
+router.post("/search", async (req, res) => {
+  const searchTerm = xss(req.body.searchTerm);
+  if (!searchTerm) {
+    res.status(400).json({ error: "Invalid Search Term" });
+  }
+  try {
+    const searchedPosts = await postData.searchPosts(searchTerm);
+    res.json(searchedPosts)
+  } catch (e) {
+    res.status(500).json({ error: "Can't Find Any Posts" });
+  }
+});
+
 router.post("/resolve", async (req, res) => {
   const postId = xss(req.body.postId);
   const commentId = xss(req.body.commentId);
@@ -258,7 +270,7 @@ router.delete("/:id", async (req, res) => {
   if (!id) {
     res.status(400).json({ error: "Invalid postId" });
     return;
-  }
+    }
   try {
     await postData.getPostById(id);
   } catch (e) {
