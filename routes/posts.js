@@ -231,14 +231,14 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-router.post("/search", async (req, res) => {
-  const searchTerm = xss(req.body.searchTerm);
+router.get("/search/:searchterm", async (req, res) => {
+  const searchTerm = xss(req.params.searchterm);
   if (!searchTerm) {
     res.status(400).json({ error: "Invalid Search Term" });
   }
   try {
     const searchedPosts = await postData.searchPosts(searchTerm);
-    res.json(searchedPosts)
+    res.json(searchedPosts);
   } catch (e) {
     res.status(500).json({ error: "Can't Find Any Posts" });
   }
@@ -270,7 +270,7 @@ router.delete("/:id", async (req, res) => {
   if (!id) {
     res.status(400).json({ error: "Invalid postId" });
     return;
-    }
+  }
   try {
     await postData.getPostById(id);
   } catch (e) {
