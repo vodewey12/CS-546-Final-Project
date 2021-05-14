@@ -23,7 +23,6 @@ const handlebarsInstance = exphbs.create({
       return moment(date).format("MMM DD, YYYY");
     },
     ifEquals: function (arg1, arg2, options) {
-      console.log(arg1, arg2);
       return arg1 == arg2 ? options.fn(this) : options.inverse(this);
     },
   },

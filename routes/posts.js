@@ -232,8 +232,6 @@ router.patch("/:id", async (req, res) => {
 });
 
 router.post("/resolve", async (req, res) => {
-  console.log(req.body);
-
   const postId = xss(req.body.postId);
   const commentId = xss(req.body.commentId);
   if (!postId) {
