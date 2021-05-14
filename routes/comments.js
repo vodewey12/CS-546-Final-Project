@@ -75,14 +75,7 @@ router.post("/", async (req, res) => {
         await commentData.getCommentByCommentId(post.commentIds[i])
       );
     }
-    res.render("partials/comments", {
-      title: "comments",
-      partial: "comments_js_script",
-      postItems: post,
-      comments: comments,
-      userId: req.session.user.userId,
-      userName: req.session.user.userName,
-    });
+    res.redirect("/posts/" + aCommentData.postId);
   } catch (e) {
     res.status(500).json({ error: "createComments() fails" });
   }

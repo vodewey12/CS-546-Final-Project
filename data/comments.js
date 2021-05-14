@@ -152,7 +152,6 @@ module.exports = {
 
     solComment.comContent = currentComment.comContent;
     solComment.userName = currentComment.userName;
-    solComment.postTime = Date(); // update comment time
     solComment.rating = currentComment.rating;
     solComment.isSolution = true; // we regard the comment is solution, so mark it as 'true'
 

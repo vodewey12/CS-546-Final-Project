@@ -22,6 +22,9 @@ const handlebarsInstance = exphbs.create({
     formattedDate: function (date) {
       return moment(date).format("MMM DD, YYYY");
     },
+    ifEquals: function (arg1, arg2, options) {
+      return arg1 == arg2 ? options.fn(this) : options.inverse(this);
+    },
   },
   partialsDir: ["views/partials/"],
 });

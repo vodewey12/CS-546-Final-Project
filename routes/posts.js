@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const data = require("../data");
 const xss = require("xss");
+const { Router } = require("express");
 const postData = data.posts;
 const userData = data.users;
 const commentData = data.comments;
@@ -19,7 +20,7 @@ router.get("/", async (req, res) => {
       title: "dashboard",
       partial: "dashboard_js_script",
       postItems: postList,
-      userId: req.session.user.userId,
+      sessionUserId: req.session.user.userId,
       user: true,
     }); //(lecture_11 code index.js) partial at here only for passing in client side Javascript of /public/js/dashboard.js
     // res.render("dashboard/dashboard", { results: postList });  // if use { results: postList } pass 'results' in postCards.handlebars, we should put postCards.handlebars entirely into /views/dashboard/dashboard.handlebars, instead of putting it into partials. In this way, we maybe need refresh page
@@ -99,7 +100,8 @@ router.get("/userposts/:id", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {  // ❤ render comments that belong to corresponding post
+router.get("/:id", async (req, res) => {
+  // ❤ render comments that belong to corresponding post
   const id = xss(req.params.id);
   if (!id) {
     res.status(400).json({ error: "Invalid postId" });
@@ -119,7 +121,7 @@ router.get("/:id", async (req, res) => {  // ❤ render comments that belong to 
       partial: "comments_js_script",
       postItems: post,
       comments: comments,
-      userId: req.session.user.userId,
+      sessionUserId: req.session.user.userId,
       userName: req.session.user.userName,
     });
   } catch (e) {
@@ -229,6 +231,27 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
+router.post("/resolve", async (req, res) => {
+  const postId = xss(req.body.postId);
+  const commentId = xss(req.body.commentId);
+  if (!postId) {
+    res.status(400).json({ error: "Invalid postId" });
+    return;
+  }
+  if (!commentId) {
+    res.status(400).json({ error: "Invalid commentId" });
+    return;
+  }
+  const requestBody = req.body;
+  try {
+    await postData.resolvePosts(postId);
+    await commentData.markCommentSol(commentId);
+    res.redirect("/" + postId);
+  } catch (e) {
+    res.status(404).json({ error: e });
+  }
+});
+
 router.delete("/:id", async (req, res) => {
   const id = xss(req.params.id);
   if (!id) {
@@ -250,8 +273,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-
-// router.get("/tags", async (req, res) => {  //search bar for tag to hit this router and pass in tag 
+// router.get("/tags", async (req, res) => {  //search bar for tag to hit this router and pass in tag
 //   const tagInfo = req.body;
 
 //   if (!tagInfo || !tagInfo.tags) {
@@ -277,6 +299,5 @@ router.delete("/:id", async (req, res) => {
 //     user: true,
 //   });
 // });
-
 
 module.exports = router;
