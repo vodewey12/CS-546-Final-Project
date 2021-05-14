@@ -124,7 +124,7 @@
           {{/if}}
           <h6>Commented on {{formattedDate postTime}} by {{userName}}</h6>
           {{#if ../postItems.resolvedStatus}}{{else}}
-            {{#ifEquals userId ../postItems.userId}}
+            {{#ifEquals ../sessionUserId ../postItems.userId}}
             <form method="POST" action="/posts/resolve">
               <input
                 type="hidden"
