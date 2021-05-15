@@ -4,7 +4,6 @@ const data = require("../data");
 const xss = require("xss");
 const { Router } = require("express");
 const postData = data.posts;
-const userData = data.users;
 const commentData = data.comments;
 router.get("/", async (req, res) => {
   // ❤ dashboard
@@ -31,58 +30,33 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   let postInfo = req.body;
-
-  if (!postInfo) {
-    res.status(400).json({
-      error: "You must provide data to create a post",
+  if (!postInfo || !postInfo.title || !postInfo.postContent || !postInfo.tags) {
+    res.status(400).render("dashboard/dashboard", {
+      title: "dashboard",
+      partial: "dashboard_js_script",
+      hasErrors: true,
+      error: "Must supply all fields.",
+      userId: req.session.user.userId,
     });
-    return;
-  }
-
-  if (!postInfo.userId) {
-    res.status(400).json({
-      error: "You must provide a userId",
-    });
-    return;
-  }
-
-  if (!postInfo.userName) {
-    res.status(400).json({
-      error: "You must provide a userId",
-    });
-    return;
-  }
-
-  if (!postInfo.title) {
-    res.status(400).json({ error: "You must provide a title" });
-    return;
-  }
-
-  if (!postInfo.postContent) {
-    res.status(400).json({
-      error: "You must provide content for the post",
-    });
-    return;
-  }
-
-  if (!postInfo.tags) {
-    res.status(400).json({
-      error: "You must provide a list of tags",
-    });
-    return;
-  }
-
-  try {
-    const newPost = await postData.createPost(
-      xss(postInfo.userId),
-      xss(postInfo.userName),
-      xss(postInfo.title),
-      xss(postInfo.postContent),
-      postInfo.tags
-    );
-    res.json(newPost);
-  } catch (e) {
-    res.sendStatus(500);
+    //res.status(404).json({ error: 'Must supply all fields.' });
+    //return;
+  } else {
+    let tags = postInfo.tags.split(", ");
+    for (let tag of tags) {
+      tag = xss(tag);
+    }
+    try {
+      await postData.createPost(
+        req.session.user.userId,
+        req.session.user.userName,
+        xss(postInfo.title),
+        xss(postInfo.postContent),
+        tags
+      );
+      res.redirect("/posts/");
+    } catch (e) {
+      res.sendStatus(500);
+    }
   }
 });
 
@@ -138,7 +112,7 @@ router.put("/:id", async (req, res) => {
     });
     return;
   }
-
+  /*
   if (!postInfo.userId) {
     res.status(400).json({
       error: "You must provide a userId",
@@ -150,7 +124,7 @@ router.put("/:id", async (req, res) => {
     res.status(400).json({ error: "You must provide a title" });
     return;
   }
-
+  */
   if (!postInfo.postContent) {
     res.status(400).json({
       error: "You must provide content for the post",
@@ -164,13 +138,16 @@ router.put("/:id", async (req, res) => {
     });
     return;
   }
+  for (let tag of postInfo.tags) {
+    tag = xss(tag);
+  }
 
   const inputData = {
-    userId: xss(postInfo.userId),
-    userName: xss(postInfo.userName),
+    userId: req.session.user.userId,
+    userName: req.session.user.userName,
     title: xss(postInfo.title),
     postContent: xss(postInfo.postContent),
-    tags: xss(postInfo.tags),
+    tags: postInfo.tags,
   };
 
   try {
@@ -198,8 +175,12 @@ router.patch("/:id", async (req, res) => {
       requestBody.postContent !== oldPost.postContent
     )
       updatedObject.postContent = xss(requestBody.postContent);
-    if (requestBody.tags && requestBody.tags !== oldPost.tags)
-      updatedObject.tags = xss(requestBody.tags);
+    if (requestBody.tags && requestBody.tags !== oldPost.tags) {
+      for (let tag of requestBody.tags) {
+        tag = xss(tag);
+      }
+      updatedObject.tags = requestBody.tags;
+    }
     if (
       requestBody.postContent &&
       requestBody.postContent !== oldPost.postContent
