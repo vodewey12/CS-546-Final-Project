@@ -44,29 +44,34 @@
     <div id="create-card" class="post-cards">
         <h2>Create Posts</h2>
         <hr class="hr-create">
-        <form>
+        <form action="/posts/" method="POST">
             <div class="create-post-forms">
                 <div class="row">
                     <div>
-                        <input type="text" id="fname" name="firstname" placeholder="Post Title..">
+                        <input type="text" id="title" name="title" placeholder="Post Title.." required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-75">
-                        <textarea id="subject" name="subject" placeholder="Post Content.."
-                            style="height:100px"></textarea>
+                        <textarea id="postContent" name="postContent" placeholder="Post Content.."
+                            style="height:100px" required></textarea>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-75">
-                        <input type="text" id="lname" name="lastname" placeholder="Tags..">
+                        <input type="text" id="tags" name="tags" placeholder="Tags.." required>
                     </div>
                 </div>
 
             </div>
+            {{#if hasErrors}}
+          <div class="alert alert-danger">
+            {{error}}
+          </div>
+      {{/if}}
             <div class="card-actions">
-                <button type="button" class="card-actions-button"><i class="fa fa-plus"></i>
-                    Posts</button>
+                <button type="submit" class="card-actions-button"><i class="fa fa-plus"></i>
+                    Create</button>
             </div>
         </form>
     </div>
