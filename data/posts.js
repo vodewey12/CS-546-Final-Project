@@ -132,6 +132,7 @@ const exportedMethods = {
           title: updatedPost.title,
           postContent: updatedPost.postContent,
           tags: updatedPost.tags,
+          rating: updatedPost.rating,
           usersLiked: updatedPost.usersLiked
         },
       }
@@ -235,7 +236,7 @@ const exportedMethods = {
       updatedUsersLiked.push(user_id);
     }
    
-    return await this.updatePost(post_id , {usersLiked : updatedUsersLiked});
+    return await this.updatePost(post_id , {usersLiked : updatedUsersLiked, rating: updatedUsersLiked.length});
     
     
   }
