@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {  // create post function in dashboard
     //res.status(404).json({ error: 'Must supply all fields.' });
     //return;
   } else {
-    let tags = postInfo.tags.split(", ");
+    let tags = postInfo.tags.split(",");
     for (let tag of tags) {
       tag = xss(tag);
     }
@@ -209,7 +209,7 @@ router.post("/edit/:id", async (req, res) => {  // edit button function
     let updatedObject = {};
     updatedObject.title = xss(req.body.title);
     updatedObject.postContent = xss(req.body.postContent);
-    let tags = req.body.tags.split(", ");
+    let tags = req.body.tags.split(",");
     for (let tag of tags) {
       tag = xss(tag);
     }
