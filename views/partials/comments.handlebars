@@ -9,7 +9,7 @@
 
   <a href="/home" class="header-title">Stevens Collaboration Platform</a>
   <div class="header-right">
-    <a title="My Account">
+    <a href="/user/{{sessionUserId}}/profile" title="My Account">
       <img src="https://www.w3schools.com/w3images/avatar2.png" class="circle" style="height:30px;width:30px"
         alt="Avatar" />
     </a>
@@ -27,7 +27,7 @@
   <hr class="hr" />
   <a href="/posts">Dashboard</a>
   <hr class="hr" />
-  <a href="/user/{{userId}}/profile">Profile</a>
+  <a href="/user/{{sessionUserId}}/profile">Profile</a>
 
 </div>
 <!-- header End -->
