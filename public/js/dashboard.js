@@ -2,45 +2,29 @@
 
    
     let likeForm = $('.like-form');
+
+
   
     likeForm.submit(function(event){
 
         event.preventDefault(); 
         let eventForm = event.target;
-        let button =  $(event.target).children().children();
-        console.log(button.children());
         
-        let prevColor = button.css("color");
+        let theSpans = eventForm.querySelectorAll('button > span');
+        let curId = theSpans[0].id;
+        let curCountsText = theSpans[1].innerText;
+        let likeCount = parseInt(curCountsText);
 
-        let countText = eventForm.querySelector('button > span').innerText;
-        let likes = parseInt(countText);
-        
 
-        let theSpan = eventForm.querySelector('button > span');
-        let theFrame = eventForm.querySelector('button > i');
-        
-        console.log(likes);
-
-       
-
-        if(theFrame.style.color !== 'white'){ // blue
-            //button.css("color" , "white");
-            
-            let plural = likes-1 > 1 ? 'Likes' : 'Like';
-            theSpan.style.color = 'white';
-            theSpan.innerText = `${likes-1} ${plural}`;
-            theFrame.style.color = "white";
-           
-           
-        } else{
-            //button.css("color" , "blue");
-            
-            let plural = likes+1 > 1 ? 'Likes' : 'Like';
-            theSpan.style.color = 'white';
-            theSpan.innerText = `${likes+1} ${plural}`;
-            theFrame.style.color = "blue";
-           
-           
+        if(curId === 'like'){
+          // decrease case
+          theSpans[0].id = 'not-like';
+          let plural = likeCount-1 > 1 ? 'Likes' : 'Like';
+          theSpans[1].innerText = `${likeCount-1} ${plural}`;
+        }else{
+          theSpans[0].id = 'like';
+          let plural = likeCount+1 > 1 ? 'Likes' : 'Like';
+          theSpans[1].innerText = `${likeCount+1} ${plural}`;
         }
 
         // items for db query
