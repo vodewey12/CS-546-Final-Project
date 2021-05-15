@@ -20,8 +20,6 @@
         // items for db query
         let userId = document.querySelector('input[name="user_id"]').value;
         let postId = eventForm.querySelector('input[name="post_id"]').value;
-        console.log(userId);
-        console.log(postId);
 
         // send ajax request
         $.post("/user/like" , 

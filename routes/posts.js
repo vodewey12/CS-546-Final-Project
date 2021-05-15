@@ -9,12 +9,17 @@ router.get("/", async (req, res) => {
   // ❤ dashboard
   try {
     const postList = await postData.getAllPosts();
+    const userInfo = await userData.getUserById(req.session.user.userId);
+    const likedPosts = userInfo.likedPosts;
+    
     for (let post of postList) {
       if (post.userId == req.session.user.userId) {
         post.user = true;
         console.log(post);
       }
+      post.isLiked = likedPosts.includes(post._id);
     }
+
     res.render("dashboard/dashboard", {
       title: "dashboard",
       partial: "dashboard_js_script",
@@ -24,6 +29,7 @@ router.get("/", async (req, res) => {
     }); //(lecture_11 code index.js) partial at here only for passing in client side Javascript of /public/js/dashboard.js
     // res.render("dashboard/dashboard", { results: postList });  // if use { results: postList } pass 'results' in postCards.handlebars, we should put postCards.handlebars entirely into /views/dashboard/dashboard.handlebars, instead of putting it into partials. In this way, we maybe need refresh page
   } catch (e) {
+    console.log(e);
     res.sendStatus(500);
   }
 });

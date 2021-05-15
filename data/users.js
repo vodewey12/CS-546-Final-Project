@@ -309,7 +309,6 @@ async function deleteUser(id) {
 
 async function updateLikedPosts(userId , postId){
 
-  console.log("db hit");
   if (
     !userId ||
     typeof userId !== "string" ||
@@ -347,7 +346,6 @@ async function updateLikedPosts(userId , postId){
     updatedlikedPosts.push(postId);
   }
 
-  console.log('reached the end');
   return await this.updateUser(userId , {likedPosts : updatedlikedPosts});
 }
 
