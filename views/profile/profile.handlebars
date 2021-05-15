@@ -8,16 +8,14 @@
 
     <a href="/posts" class="header-title">Stevens Collaboration Platform</a>
 
-    <form class="header-middle" style="margin:5px 0px 0px 7%; display: inline-block;">  <!-- search form-->
-        <div>
-            <div class="input-group" style="height:30px;width:400px">
-                <input id="tags" name="tags" type="text" class="form-control" placeholder="Search for tags">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-default">Search</button>
-                </span>
-            </div>
-        </div>
-    </form>
+    <div class="search-container">
+        <form id="search" class="search-form">  <!-- search form-->
+            <label class="search-label" id="searchLabel" for="searchTerm">
+                <input type="text" id="searchTerm" name="searchTerm" class="form-control" style="width: 400px;" placeholder="Search for title of posts">
+            </label>
+            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
 
     <div class="header-right">
         <a href="/user/{{userId}}/profile" title="My Account">
@@ -42,23 +40,29 @@
 </div>  <!-- header End -->
 
 <div class="post-container">
-  <link rel="stylesheet" href="/public/css/dashboard.css">
+  <div id="create-card" class="">
+    <link rel="stylesheet" href="/public/css/dashboard.css">
 
-  <div class="profile-card"><br>
+    <div class="profile-card"><br>
 
-    <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="profile-image " style="
-        width:100px">
+        <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="profile-image " style="
+            width:100px">
 
-    <h4>{{USERNAME}}</h4>
-    <span>{{MAJOR}}</span>
-    <h6>Graduating in {{GRADYEAR}}</h6>
-    <br>
+        <h4>{{USERNAME}}</h4>
+        <span>{{MAJOR}}</span>
+        <h6>Graduating in {{GRADYEAR}}</h6>
+        <br>
+    </div>
   </div>
 
-  <h4>My posts</h4>
-  <hr class="hr-create"> <!-- a single post record goes here -->
-  {{#each postItems}}
-    {{> postCards}}
-  {{/each}}
+    <div id="main-posts">
+        <h4>My posts</h4>
+        <hr class="hr-create"> <!-- a single post record goes here -->
+        {{#each postItems}}
+            {{> postCards}}
+        {{/each}}
+    </div>
+
+  <div id="post" hidden></div>
 
 </div>
