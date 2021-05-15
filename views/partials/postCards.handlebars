@@ -8,18 +8,24 @@
     class="avatar-image"
     style="width:60px"
   />
-
-  <h4>{{title}}</h4>
+  {{#if resolvedStatus}}
+    <h4>[Resolved] {{title}}</h4>
+  {{else}}
+    <h4>[Unresolved] {{title}}</h4>
+  {{/if}}
   <span>Posted on {{formattedDate postTime}} by {{userName}}</span><br />
-  <hr />
-  <p>{{postContent}}</p>
-  <div class="chip-container">
-    {{#each tags}}
-      <div class="chip">
-        {{this}}
-      </div>
-    {{/each}}
 
+  <hr />
+  <div class="card-content">
+    <p>{{postContent}}</p>
+    <div class="chip-container">
+      {{#each tags}}
+        <div class="chip">
+          {{this}}
+        </div>
+      {{/each}}
+
+    </div>
   </div>
   <hr />
   <div class="card-actions">
@@ -35,7 +41,9 @@
         ></i>
         Comment</button>
     </form>
+
     {{#if user}}
+      <!-- user can just edit and delete their own post -->
       <form class="card-ations-form" action="">
         <button type="button" class="card-actions-button"><i
             class="fa fa-edit"

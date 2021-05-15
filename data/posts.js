@@ -79,7 +79,15 @@ const exportedMethods = {
     const newID = newInsertInformation.insertedId.toString();
     return await this.getPostByPostId(newID);
   },
-
+  async searchPosts(searchTerm) {
+    if (!searchTerm) throw "No search term provided";
+    const postCollection = await posts();
+    var phrase = '"' + searchTerm + '"';
+    const searchedPosts = await postCollection
+      .aggregate([{ $match: { $text: { $search: phrase } } }])
+      .toArray();
+    return searchedPosts;
+  },
   async updatePost(id, updatedPost) {
     // user edits a post
     // title, postContent, tags, rating, resolvedStatus can be updated
@@ -118,7 +126,7 @@ const exportedMethods = {
     }
     const postCollection = await posts();
     const updateInfo = await postCollection.updateOne(
-      { _id: postId, postTime: JSON.stringify(new Date()) },
+      { _id: postId, postTime: new Date() },
       { $set: postUpdateInfo }
     );
     if (!updateInfo && !updateInfo.modifiedCount) throw "Update failed";
@@ -150,6 +158,23 @@ const exportedMethods = {
         {
           $push: {
             commentIds: commentId,
+          },
+        }
+      );
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+
+  async resolvePosts(id) {
+    let postId = idCheck(id);
+    try {
+      const postCollection = await posts();
+      const updateInfo = await postCollection.updateOne(
+        { _id: postId },
+        {
+          $set: {
+            resolvedStatus: true,
           },
         }
       );
