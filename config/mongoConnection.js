@@ -2,7 +2,7 @@ const MongoClient = require("mongodb").MongoClient;
 const settings = {
   mongoConfig: {
     serverUrl: "mongodb://localhost:27017/",
-    database: "Group34_Academic_Collaboration_Platform", //database name
+    database: "Group34_Stevens_Collaboration_Platform", //database name
   },
 };
 const mongoConfig = settings.mongoConfig;
@@ -16,11 +16,13 @@ module.exports = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+    /*
     const postCollection = _connection
       .db(mongoConfig.database)
       .collection("posts");
     postCollection.createIndex({ title: "text" });
     const indexes = await postCollection.indexes();
+    */
     _db = await _connection.db(mongoConfig.database);
   }
   return _db;

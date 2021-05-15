@@ -22,7 +22,7 @@ const handlebarsInstance = exphbs.create({
     formattedDate: function (date) {
       return moment(date).format("MMM DD, YYYY");
     },
-    ifEquals: function (arg1, arg2, options) {
+    ifEquals: function (arg1, arg2, options) {  // https://stackoverflow.com/questions/34252817/handlebarsjs-check-if-a-string-is-equal-to-a-value
       return arg1 == arg2 ? options.fn(this) : options.inverse(this);
     },
     print: function (arg1) {

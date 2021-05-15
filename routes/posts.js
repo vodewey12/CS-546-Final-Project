@@ -41,7 +41,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res) => {  // create post function in dashboard
   let postInfo = req.body;
   if (!postInfo || !postInfo.title || !postInfo.postContent || !postInfo.tags) {
     res.status(400).render("dashboard/dashboard", {
@@ -54,7 +54,7 @@ router.post("/", async (req, res) => {
     //res.status(404).json({ error: 'Must supply all fields.' });
     //return;
   } else {
-    let tags = postInfo.tags.split(", ");
+    let tags = postInfo.tags.split(",");
     for (let tag of tags) {
       tag = xss(tag);
     }
@@ -192,7 +192,7 @@ router.get("/edit/:id", async (req, res) => {
   }
 });
 
-router.post("/edit/:id", async (req, res) => {
+router.post("/edit/:id", async (req, res) => {  // edit button function
   const id = xss(req.params.id);
   if (!id) {
     res.status(400).json({ error: "Invalid postId" });
@@ -224,7 +224,7 @@ router.post("/edit/:id", async (req, res) => {
     let updatedObject = {};
     updatedObject.title = xss(req.body.title);
     updatedObject.postContent = xss(req.body.postContent);
-    let tags = req.body.tags.split(", ");
+    let tags = req.body.tags.split(",");
     for (let tag of tags) {
       tag = xss(tag);
     }
@@ -325,28 +325,28 @@ router.post("/resolve", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
-  const id = xss(req.params.id);
-  if (!id) {
-    res.status(400).json({ error: "Invalid postId" });
-    return;
-  }
-  try {
-    await postData.getPostById(id);
-  } catch (e) {
-    res.status(404).json({ error: "Post not found" });
-    return;
-  }
+// router.delete("/:id", async (req, res) => {
+//   const id = xss(req.params.id);
+//   if (!id) {
+//     res.status(400).json({ error: "Invalid postId" });
+//     return;
+//   }
+//   try {
+//     await postData.getPostById(id);
+//   } catch (e) {
+//     res.status(404).json({ error: "Post not found" });
+//     return;
+//   }
 
-  try {
-    let deleted = await postData.deletePost(id);
-    res.status(200).json(deleted);
-  } catch (e) {
-    res.sendStatus(500);
-  }
-});
+//   try {
+//     let deleted = await postData.deletePost(id);
+//     res.status(200).json(deleted);
+//   } catch (e) {
+//     res.sendStatus(500);
+//   }
+// });
 
-router.post("/delete/:id", async (req, res) => {
+router.post("/delete/:id", async (req, res) => {  // delete button function
   const id = xss(req.params.id);
   if (!id) {
     res.status(400).json({ error: "Invalid postId" });
