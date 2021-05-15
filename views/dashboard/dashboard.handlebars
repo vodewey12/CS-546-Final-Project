@@ -53,6 +53,11 @@
                 </div>
 
             </div>
+            {{#if hasErrors}}
+          <div class="alert alert-danger">
+            {{error}}
+          </div>
+      {{/if}}
             <div class="card-actions">
                 <button type="submit" class="card-actions-button"><i class="fa fa-plus"></i>
                     Create</button>
