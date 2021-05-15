@@ -12,14 +12,20 @@ router.get("/", async (req, res) => {
     const postList = await postData.getAllPosts();
     const userInfo = await userData.getUserById(req.session.user.userId);
     const likedPosts = userInfo.likedPosts;
-    
+
     for (let post of postList) {
       if (post.userId == req.session.user.userId) {
         post.user = true;
         // console.log(post);
       }
+      let numLikes = post.usersLiked.length;
+      if(numLikes > 1){
+        post.likeCount = `${numLikes} Likes`;
+      }else{
+        post.likeCount = `${numLikes} Like`;
+      }
       post.isLiked = likedPosts.includes(post._id);
-      post.likeCount = "3 Likes";
+      
     }
 
     res.render("dashboard/dashboard", {

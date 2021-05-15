@@ -121,9 +121,6 @@ const exportedMethods = {
       throw 'usersLiked must be an array.';
     }
 
-    if(updatedPost.usersLiked){
-      postUpdateInfo.usersLiked = updatedPost.usersLiked;
-    }
 
     const postCollection = await posts();
     const previousInfo = await postCollection.findOne({ _id: postId });
@@ -135,10 +132,11 @@ const exportedMethods = {
           title: updatedPost.title,
           postContent: updatedPost.postContent,
           tags: updatedPost.tags,
+          usersLiked: updatedPost.usersLiked
         },
       }
     );
-    console.log('should be updated');
+
     if (!updateInfo && !updateInfo.modifiedCount){
       throw "Update failed";
     }
@@ -236,7 +234,7 @@ const exportedMethods = {
     }else{ // insert
       updatedUsersLiked.push(user_id);
     }
-    console.log(updatedUsersLiked);
+   
     return await this.updatePost(post_id , {usersLiked : updatedUsersLiked});
     
     
