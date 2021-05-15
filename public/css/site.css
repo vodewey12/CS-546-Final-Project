@@ -23,6 +23,11 @@
     border-radius: 4px;
 }
 
+
+.header-title {
+    display: none
+}
+
 .header a.logo {
     font-size: 25px;
     font-weight: bold;
@@ -87,6 +92,7 @@
 }
 
 @media screen and (max-height: 450px) {
+
     .sidenav {
         padding-top: 15px;
     }
@@ -94,4 +100,11 @@
     .sidenav a {
         font-size: 18px;
     }
+}
+
+@media (min-width:601px) {
+    .header-title {
+        display: inline
+    }
+
 }

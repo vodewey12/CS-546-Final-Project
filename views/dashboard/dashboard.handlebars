@@ -9,22 +9,19 @@
 
     <a href="/posts" class="header-title">Stevens Collaboration Platform</a>
 
-
-    <form class="header-middle" style="margin:5px 0px 0px 7%; display: inline-block;">  <!-- search form-->
-        <div>
-            <div class="input-group" style="height:30px;width:400px">
-                <input id="tags" name="tags" type="text" class="form-control" placeholder="Search for tags">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-default">Search</button>
-                </span>
-            </div>
-        </div>
-    </form>
-
+    <div class="search-container">
+        <form id="search" class="search-form">
+            <!-- search form-->
+            <label class="search-label" id="searchLabel" for="searchTerm">
+                <input type="text" id="searchTerm" name="searchTerm" class="form-control" style="width: 400px;" placeholder="Search for title of posts">
+            </label>
+            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
     <div class="header-right">
         <a href="/user/{{userId}}/profile" title="My Account">
-            <img src="https://www.w3schools.com/w3images/avatar2.png" class="circle" style="height:30px;width:30px; display: inline-block;"
-                alt="Avatar">
+            <img src="https://www.w3schools.com/w3images/avatar2.png" class="circle"
+                style="height:30px;width:30px; display: inline-block;" alt="Avatar">
         </a>
 
         <a href="/logout" title="Log Out" class="sign-out-button">
@@ -44,7 +41,7 @@
 </div> <!-- header End -->
 
 <div class="post-container">
-    <div class="post-cards">
+    <div id="create-card" class="post-cards">
         <h2>Create Posts</h2>
         <hr class="hr-create">
         <form>
@@ -73,12 +70,17 @@
             </div>
         </form>
     </div>
+    <div id="main-posts">
+        <h4>All Posts</h4>
+         <input type="hidden" id="user_id" name="user_id" value="{{currUserId}}">
+        <hr class="hr-create">
+        {{#each postItems}}
+        <!-- postItems is a post list, for each post, it will use postCards.handlebars template (lecture11_code). I pass in postItems from /routers/index.js -->
+        {{> postCards}}
+        {{/each}}
+    </div>
 
-    <h4>All Posts</h4>
-    <input type="hidden" id="user_id" name="user_id" value="{{currUserId}}">
-    <hr class="hr-create">
-    {{#each postItems}}
-    <!-- postItems is a post list, for each post, it will use postCards.handlebars template (lecture11_code). I pass in postItems from /routers/index.js -->
-    {{> postCards}}
-    {{/each}}
+    <div id="post" hidden>
+
+    </div>
 </div>
