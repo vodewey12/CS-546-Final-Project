@@ -12,13 +12,10 @@ router.get("/", async (req, res) => {
     const postList = await postData.getAllPosts();
     const userInfo = await userData.getUserById(req.session.user.userId);
     const likedPosts = userInfo.likedPosts;
-    
-    for (let post of postList) {
-      if (post.userId == req.session.user.userId) {
-        post.user = true;
-        // console.log(post);
+    if (postList) {
+      for (let post of postList) {
+        post.isLiked = likedPosts.includes(post._id);
       }
-      post.isLiked = likedPosts.includes(post._id);
     }
 
     res.render("dashboard/dashboard", {
@@ -26,7 +23,6 @@ router.get("/", async (req, res) => {
       partial: "dashboard_js_script",
       postItems: postList,
       sessionUserId: req.session.user.userId,
-      user: true,
     }); //(lecture_11 code index.js) partial at here only for passing in client side Javascript of /public/js/dashboard.js
     // res.render("dashboard/dashboard", { results: postList });  // if use { results: postList } pass 'results' in postCards.handlebars, we should put postCards.handlebars entirely into /views/dashboard/dashboard.handlebars, instead of putting it into partials. In this way, we maybe need refresh page
   } catch (e) {
@@ -162,6 +158,27 @@ router.put("/:id", async (req, res) => {
     res.json(updatedpost);
   } catch (e) {
     res.sendStatus(500);
+  }
+});
+
+router.get("/posts/edit/:id", async (req, res) => {
+  // ❤ render comments that belong to corresponding post
+  const id = xss(req.params.id);
+  if (!id) {
+    res.status(400).json({ error: "Invalid postId" });
+    return;
+  }
+  try {
+    const post = await postData.getPostByPostId(id);
+    res.render("partials/edit", {
+      title: "edit",
+      partial: "edit_js_script",
+      postItems: post,
+      sessionUserId: req.session.user.userId,
+      userName: req.session.user.userName,
+    });
+  } catch (e) {
+    res.status(404).json({ error: "Post not found" });
   }
 });
 
