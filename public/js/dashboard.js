@@ -8,19 +8,39 @@
         event.preventDefault(); 
         let eventForm = event.target;
         let button =  $(event.target).children().children();
+        console.log(button.children());
         
         let prevColor = button.css("color");
 
         let countText = eventForm.querySelector('button > span').innerText;
         let likes = parseInt(countText);
+        
+
+        let theSpan = eventForm.querySelector('button > span');
+        let theFrame = eventForm.querySelector('button > i');
+        
         console.log(likes);
 
-        if(prevColor !== 'rgb(255, 255, 255)'){ // blue
-            button.css("color" , "white");
-            eventForm.querySelector('button > span').innerText = `${likes-1} Like`;
+       
+
+        if(theFrame.style.color !== 'white'){ // blue
+            //button.css("color" , "white");
+            
+            let plural = likes-1 > 1 ? 'Likes' : 'Like';
+            theSpan.style.color = 'white';
+            theSpan.innerText = `${likes-1} ${plural}`;
+            theFrame.style.color = "white";
+           
+           
         } else{
-            button.css("color" , "blue");
-            eventForm.querySelector('button > span').innerText = `${likes+1} Like`;
+            //button.css("color" , "blue");
+            
+            let plural = likes+1 > 1 ? 'Likes' : 'Like';
+            theSpan.style.color = 'white';
+            theSpan.innerText = `${likes+1} ${plural}`;
+            theFrame.style.color = "blue";
+           
+           
         }
 
         // items for db query
