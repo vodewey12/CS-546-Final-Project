@@ -79,7 +79,15 @@ const exportedMethods = {
     const newID = newInsertInformation.insertedId.toString();
     return await this.getPostByPostId(newID);
   },
-
+  async searchPosts(searchTerm) {
+    if (!searchTerm) throw "No search term provided";
+    const postCollection = await posts();
+    var phrase = '"' + searchTerm + '"';
+    const searchedPosts = await postCollection
+      .aggregate([{ $match: { $text: { $search: phrase } } }])
+      .toArray();
+    return searchedPosts;
+  },
   async updatePost(id, updatedPost) {
     // user edits a post
     // title, postContent, tags, rating, resolvedStatus can be updated

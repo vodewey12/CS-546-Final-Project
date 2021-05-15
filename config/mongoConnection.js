@@ -16,8 +16,12 @@ module.exports = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+    const postCollection = _connection
+      .db(mongoConfig.database)
+      .collection("posts");
+    postCollection.createIndex({ title: "text" });
+    const indexes = await postCollection.indexes();
     _db = await _connection.db(mongoConfig.database);
   }
-
   return _db;
 };
