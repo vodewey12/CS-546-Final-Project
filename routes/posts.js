@@ -345,31 +345,5 @@ router.post("/delete/:id", async (req, res) => {
     res.sendStatus(500);
   }
 });
-// router.get("/tags", async (req, res) => {  //search bar for tag to hit this router and pass in tag
-//   const tagInfo = req.body;
-
-//   if (!tagInfo || !tagInfo.tags) {
-//     res.status(400).json({
-//       error: "You must provide tags in search bar to search",
-//     });
-//     return;
-//   }
-
-//   const postListByTags = await postData.getPostsByTag(tagInfo.tags);
-
-//   for (let post of postListByTags) {
-//     if (post.userId == req.session.user.userId) {
-//       post.user = true;
-//       // console.log(post);
-//     }
-//   }
-//   res.render("dashboard/dashboard", {
-//     title: "dashboard",
-//     partial: "dashboard_js_script",
-//     postItems:  postListByTags,
-//     userId: req.session.user.userId,
-//     user: true,
-//   });
-// });
 
 module.exports = router;
