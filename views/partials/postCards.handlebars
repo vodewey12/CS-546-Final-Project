@@ -64,8 +64,12 @@
           ></i>
           Edit</button>
       </form>
-      <form class="card-ations-form" action="">
-        <button type="button" class="card-actions-button"><i
+      <form
+        class="card-ations-form"
+        method="POST"
+        action="posts/delete/{{_id}}"
+      >
+        <button type="submit" class="card-actions-button"><i
             class="fa fa-trash"
           ></i>
           Delete</button>

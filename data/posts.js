@@ -16,7 +16,10 @@ function idCheck(id) {
 const exportedMethods = {
   async getAllPosts() {
     const postCollection = await posts();
-    const postList = await postCollection.find({}).toArray();
+    const postList = await postCollection
+      .find({})
+      .sort({ postTime: -1 })
+      .toArray();
     if (!postList) throw "No posts in system!";
     postList.forEach((post) => {
       post._id = post._id.toString();

@@ -331,6 +331,20 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.post("/delete/:id", async (req, res) => {
+  const id = xss(req.params.id);
+  if (!id) {
+    res.status(400).json({ error: "Invalid postId" });
+    return;
+  }
+  try {
+    await postData.getPostByPostId(id);
+    let deleted = await postData.deletePost(id);
+    res.redirect("/posts");
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
 // router.get("/tags", async (req, res) => {  //search bar for tag to hit this router and pass in tag
 //   const tagInfo = req.body;
 
