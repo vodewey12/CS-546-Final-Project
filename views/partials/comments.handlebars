@@ -1,26 +1,17 @@
 <link rel="stylesheet" href="/public/css/dashboard.css" />
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
 <link rel="stylesheet" href="/public/css/site.css" />
 <div class="header">
   <!-- header -->
-  <a class="header-nav" onclick="openNav()" href="javascript:void(0);"><i
-      class="fa fa-bars"
-      style="font-size: 1.5em;"
-    ></i></a>
+  <a class="header-nav" onclick="openNav()" href="javascript:void(0);"><i class="fa fa-bars"
+      style="font-size: 1.5em;"></i></a>
 
   <a href="/home" class="header-title">Stevens Collaboration Platform</a>
   <div class="header-right">
     <a title="My Account">
-      <img
-        src="https://www.w3schools.com/w3images/avatar2.png"
-        class="circle"
-        style="height:30px;width:30px"
-        alt="Avatar"
-      />
+      <img src="https://www.w3schools.com/w3images/avatar2.png" class="circle" style="height:30px;width:30px"
+        alt="Avatar" />
     </a>
 
     <a href="/logout" title="Log Out" class="sign-out-button">
@@ -43,113 +34,75 @@
 
 <div class="post-container">
   {{#if postItems}}
-    <div class="post-cards"><br />
-      <img
-        src="https://www.w3schools.com/w3images/avatar2.png"
-        alt="Avatar"
-        class="avatar-image"
-        style="width:60px"
-      />
-      {{#if postItems.resolvedStatus}}
-        <h4>[Resolved] {{postItems.title}}</h4>
-      {{else}}
-        <h4>[Unresolved] {{postItems.title}}</h4>
-      {{/if}}
+  <div class="post-cards"><br />
+    <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="avatar-image" style="width:60px" />
+    {{#if postItems.resolvedStatus}}
+    <h4>[Resolved] {{postItems.title}}</h4>
+    {{else}}
+    <h4>[Unresolved] {{postItems.title}}</h4>
+    {{/if}}
 
-      <span>Posted on
-        {{formattedDate postTime}}
-        by
-        {{postItems.userName}}</span><br />
-      <hr />
+    <span>Posted on
+      {{formattedDate postTime}}
+      by
+      {{postItems.userName}}</span><br />
+    <hr />
+    <div class="card-content">
       <p>{{postItems.postContent}}</p>
       <div class="chip-container">
         {{#each postItems.tags}}
-          <div class="chip">
-            {{this}}
-          </div>
+        <div class="chip">
+          {{this}}
+        </div>
         {{/each}}
       </div>
-      {{#if postItems.resolvedStatus}}{{else}}
-        <hr />
-        <div class="card-actions">
-          <form method="POST" action="/comments">
-            <div class="create-post-forms">
-              <div class="row">
-                <textarea
-                  id="comContent"
-                  name="comContent"
-                  value="comContent"
-                  placeholder="Comment.."
-                  style="height:100px"
-                ></textarea>
-              </div>
-              <input
-                type="hidden"
-                id="postId"
-                name="postId"
-                value={{postItems._id}}
-              />
-              <input type="hidden" id="userId" name="userId" value={{userId}} />
-              <input
-                type="hidden"
-                id="userName"
-                name="userName"
-                value={{userName}}
-              />
-
-            </div>
-            <div class="card-actions">
-              <button type="submit" class="card-actions-button"><i
-                  class="fa fa-plus"
-                ></i>
-                Comment</button>
-            </div>
-          </form>
-        </div>
-      {{/if}}
-
-      <hr />
-      {{#each comments}}
-        <div>
-          <img
-            src="https://www.w3schools.com/w3images/avatar2.png"
-            alt="Avatar"
-            class="avatar-image"
-            style="width:30px"
-          />
-          {{#if isSolution}}
-          <h5>[Answer] {{comContent}}</h5>
-          {{else}}
-          <h5> {{comContent}}</h5>
-          {{/if}}
-          <h6>Commented on {{formattedDate postTime}} by {{userName}}</h6>
-          {{#if ../postItems.resolvedStatus}}{{else}}
-            {{#ifEquals ../sessionUserId ../postItems.userId}}
-            <form method="POST" action="/posts/resolve">
-              <input
-                type="hidden"
-                id="postId"
-                name="postId"
-                value={{../postItems._id}}
-              />
-              <input
-                type="hidden"
-                id="commentId"
-                name="commentId"
-                value={{_id}}
-              />
-              <button type="submit" class="card-actions-button"><i
-                  class="fa fa-check"
-                  aria-hidden="true"
-                ></i>
-
-                Mark as Resolved</button>
-            </form>
-            {{/ifEquals}}
-          {{/if}}
-          <hr />
-        </div>
-      {{/each}}
     </div>
+    {{#if postItems.resolvedStatus}}{{else}}
+    <hr />
+    <div class="card-actions">
+      <form method="POST" action="/comments">
+        <div class="create-post-forms">
+          <div class="row">
+            <textarea id="comContent" name="comContent" value="comContent" placeholder="Comment.."
+              style="height:100px" required></textarea>
+          </div>
+          <input type="hidden" id="postId" name="postId" value={{postItems._id}} />
+          <input type="hidden" id="userId" name="userId" value={{userId}} />
+          <input type="hidden" id="userName" name="userName" value={{userName}} />
+
+        </div>
+        <div class="card-actions">
+          <button type="submit" class="card-actions-button"><i class="fa fa-plus"></i>
+            Comment</button>
+        </div>
+      </form>
+    </div>
+    {{/if}}
+
+    <hr />
+    {{#each comments}}
+    <div>
+      <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="avatar-image" style="width:30px" />
+      {{#if isSolution}}
+      <h5>[Answer] {{comContent}}</h5>
+      {{else}}
+      <h5> {{comContent}}</h5>
+      {{/if}}
+      <h6>Commented on {{formattedDate postTime}} by {{userName}}</h6>
+      {{#if ../postItems.resolvedStatus}}{{else}}
+      {{#ifEquals ../sessionUserId ../postItems.userId}}
+      <form method="POST" action="/posts/resolve">
+        <input type="hidden" id="postId" name="postId" value={{../postItems._id}} />
+        <input type="hidden" id="commentId" name="commentId" value={{_id}} />
+        <button type="submit" class="card-actions-button"><i class="fa fa-check" aria-hidden="true"></i>
+
+          Mark as Resolved</button>
+      </form>
+      {{/ifEquals}}
+      {{/if}}
+      <hr />
+    </div>
+    {{/each}}
+  </div>
   {{/if}}
 </div>
