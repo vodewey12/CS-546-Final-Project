@@ -29,16 +29,22 @@
   </div>
   <hr />
   <div class="card-actions">
-    <form class="card-ations-form" action="">
-      <button type="button" class="card-actions-button"><i
-          class="fa fa-thumbs-up"
-        ></i>
+
+    <form class="card-ations-form like-form" action="">
+      {{#if isLiked}}
+      <button type="submit" class="card-actions-button"><i class="fa fa-thumbs-up" id="like"></i>
         Like</button>
+      {{else}}
+      <button type="submit" class="card-actions-button"><i class="fa fa-thumbs-up" id="not-like"></i>
+        Like</button>
+      {{/if}}
+
+      <input type="hidden" id="post_id" name="post_id" value="{{_id}}">
+    
     </form>
+
     <form class="card-ations-form" action="/posts/{{_id}}">
-      <button type="submit" class="card-actions-button"><i
-          class="fa fa-comment"
-        ></i>
+      <button type="submit" class="card-actions-button"><i class="fa fa-comment"></i>
         Comment</button>
     </form>
 

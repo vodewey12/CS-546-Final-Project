@@ -167,6 +167,7 @@ async function createUser(authUserData) {
     courses: [],
     postId: [],
     commentId: [],
+    likedPosts: [], // ids of posts the user liked
   };
 
   let newUser = await users.insertOne(userData);
@@ -252,22 +253,31 @@ async function updateUser(userId, updatedUserData) {
     }
   }
 
+  if(updatedUserData.likedPosts && !Array.isArray(updatedUserData.likedPosts)){
+    throw "likedPosts must be an array";
+  }
+
   let users = await usersCollection();
 
   // Check to see if the username is taken
-  sameUserNames = await users
+  if(updatedUserData.userName){ // optional item
+    
+    sameUserNames = await users
     .find({ userName: updatedUserData.userName })
     .toArray();
-  sameUserNames.forEach((user) => {
-    if (
-      updatedUserData.userName.toLowerCase() === user.userName.toLowerCase()
-    ) {
-      throw new Error("userName is already taken");
-    }
-  });
+    
+    sameUserNames.forEach((user) => {
+      if (
+        updatedUserData.userName.toLowerCase() === user.userName.toLowerCase()
+      ) {
+        throw new Error("userName is already taken");
+      }
+    });
+  }
+  
 
   let updatedUser = await users.updateOne(
-    { _id: userId },
+    { _id: ObjectId(userId) },
     { $set: updatedUserData }
   );
   if (!updatedUser.modifiedCount && !updatedUser.matchedCount) {
@@ -297,6 +307,48 @@ async function deleteUser(id) {
   return true;
 }
 
+async function updateLikedPosts(userId , postId){
+
+  if (
+    !userId ||
+    typeof userId !== "string" ||
+    userId.trim().length === 0
+  ) {
+    throw "userId is a required non-empty string parameter.";
+  }
+
+  if (
+    !postId ||
+    typeof postId !== "string" ||
+    postId.trim().length === 0
+  ) {
+    throw "postId is a required non-empty string parameter.";
+  }
+
+  const userInfo = await this.getUserById(userId);
+  const updatedlikedPosts = userInfo.likedPosts;
+
+  let found = false;
+  let postIndex;
+  let i = 0;
+  for(let post of updatedlikedPosts){
+    if(post === postId){
+      found = true;
+      postIndex = i;
+      break;
+    }
+    i++;
+  }
+
+  if(found){ // delete
+    updatedlikedPosts.splice(postIndex , 1);
+  }else{ // insert
+    updatedlikedPosts.push(postId);
+  }
+
+  return await this.updateUser(userId , {likedPosts : updatedlikedPosts});
+}
+
 module.exports = {
   getAllUsers,
   getAllUserIds,
@@ -305,4 +357,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getUserbyEmail,
+  updateLikedPosts
 };

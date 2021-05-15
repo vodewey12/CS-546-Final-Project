@@ -77,6 +77,7 @@
     </div>
     <div id="main-posts">
         <h4>All Posts</h4>
+         <input type="hidden" id="user_id" name="user_id" value="{{sessionUserId}}">
         <hr class="hr-create">
         {{#each postItems}}
         <!-- postItems is a post list, for each post, it will use postCards.handlebars template (lecture11_code). I pass in postItems from /routers/index.js -->

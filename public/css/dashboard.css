@@ -1,122 +1,124 @@
 ﻿.post-container {
-
-    padding: 0.01em 16px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    max-width: 600px;
-    margin-top: 20px;
-
+  padding: 0.01em 16px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
 }
 
-.search-container {
+@media (min-width: 601px) {
+  .post-container {
+    width: 58.33333%;
+  }
+  .search-container {
     display: inline-block;
     margin: 0 auto;
     width: 67%;
-}
+  }
 
-.search-form {
+  .search-form {
     margin: 5px 0 0 0;
     padding: 0;
     text-align: center;
-
+  }
 }
-
 
 .search-label {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
-@media (min-width:601px) {
-
-    .post-container {
-        width: 58.33333%
-    }
+@media (min-width: 601px) {
+  .post-container {
+    width: 58.33333%;
+  }
 }
 
 .post-cards {
-    padding: 0.01em 16px;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-    color: #000 !important;
-    background-color: #fff !important;
-    margin-bottom: 20px;
+  padding: 0.01em 16px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  color: #000 !important;
+  background-color: #fff !important;
+  margin-bottom: 20px;
 }
 
 .avatar-image {
-    border-radius: 50%;
-    float: left !important;
-    margin-right: 16px !important
+  border-radius: 50%;
+  float: left !important;
+  margin-right: 16px !important;
 }
 
-
-
 .card-content {
-    -ms-word-break: break-all;
-    word-break: break-all;
-    word-break: break-word;
+  overflow-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
 }
 
 .card-ations-form {
-    display: inline-block;
+  display: inline-block;
 }
 
-
-
 .card-actions-button {
-
-    border: none;
-    display: inline-block;
-    padding: 8px 16px;
-    vertical-align: middle;
-    overflow: hidden;
-    text-decoration: none;
-    color: white;
-    background-color: #A32638;
-    text-align: center;
-    cursor: pointer;
-    white-space: nowrap
+  border: none;
+  display: inline-block;
+  padding: 8px 16px;
+  vertical-align: middle;
+  overflow: hidden;
+  text-decoration: none;
+  color: white;
+  background-color: #a32638;
+  text-align: center;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .chip {
-    display: inline-block;
-    padding: 0 10px;
-    height: 20px;
-    font-size: 10px;
-    line-height: 20px;
-    border-radius: 25px;
-    background-color: #f1f1f1;
+  display: inline-block;
+  padding: 0 10px;
+  height: 20px;
+  font-size: 10px;
+  line-height: 20px;
+  border-radius: 25px;
+  background-color: #f1f1f1;
 }
 
 .create-post-forms {
-    padding: 15px;
+  padding: 15px;
 }
 
 .row {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
-input[type=text],
+input[type='text'],
 select,
 textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: vertical;
-
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
 }
 
 label {
-    padding: 12px 12px 12px 0;
-    display: inline-block;
+  padding: 12px 12px 12px 0;
+  display: inline-block;
 }
 
-
 .hr-create {
-    border-color: #000;
+  border-color: #000;
 }
 
 .comment-date {
-    width: 10px;
+  width: 10px;
+}
+
+#like {
+  color: blue;
+}
+
+#not-like {
+  color: white;
 }
