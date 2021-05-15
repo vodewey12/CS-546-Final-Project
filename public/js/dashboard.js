@@ -11,20 +11,33 @@
         
         let prevColor = button.css("color");
 
+        let countText = eventForm.querySelector('button > span').innerText;
+        let likes = parseInt(countText);
+        console.log(likes);
+
         if(prevColor !== 'rgb(255, 255, 255)'){ // blue
             button.css("color" , "white");
+            eventForm.querySelector('button > span').innerText = `${likes-1} Like`;
         } else{
             button.css("color" , "blue");
+            eventForm.querySelector('button > span').innerText = `${likes+1} Like`;
         }
 
         // items for db query
         let userId = document.querySelector('input[name="user_id"]').value;
         let postId = eventForm.querySelector('input[name="post_id"]').value;
 
+
         // send ajax request
         $.post("/user/like" , 
         {   userId: userId,
             postId: postId
+        });
+
+        $.post("/posts/like",
+        {
+          userId: userId,
+          postId: postId
         });
     });
 

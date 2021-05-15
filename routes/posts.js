@@ -19,6 +19,7 @@ router.get("/", async (req, res) => {
         // console.log(post);
       }
       post.isLiked = likedPosts.includes(post._id);
+      post.likeCount = "3 Likes";
     }
 
     res.render("dashboard/dashboard", {
@@ -300,5 +301,35 @@ router.delete("/:id", async (req, res) => {
 //     user: true,
 //   });
 // });
+
+router.post("/like", async (req, res) => {
+
+
+  console.log("route hit");
+
+  if (!req.session.isLogIn){
+    res.status(401);
+    res.redirect('/auth');
+    return;
+  }
+
+  if (!req.body.userId || !req.body.postId) {
+    res.status(404).json({ error: "Must supply all fields." });
+    return;
+  }
+
+  let userId = xss(req.body.userId);
+  let postId = xss(req.body.postId);
+
+
+  try{
+    let updatedPost = await postData.updateUsersLiked(postId , userId);
+    res.status(200).json(updatedPost);
+  }catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e.message });
+  }
+
+});
 
 module.exports = router;
