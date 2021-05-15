@@ -88,22 +88,20 @@ const exportedMethods = {
       .toArray();
     return searchedPosts;
   },
+
   async updatePost(id, updatedPost) {
     // user edits a post
     // title, postContent, tags, rating, resolvedStatus can be updated
     // postTime will be updated as well
     let postId = idCheck(id);
-
     let postUpdateInfo = {};
     if (updatedPost.title) {
       if (!stringCheck(updatedPost.title))
         throw "title attribute must be a nonempty string";
-      postUpdateInfo.title = updatedPost.title;
     }
     if (updatedPost.postContent) {
       if (!stringCheck(updatedPost.postContent))
         throw "postContent attribute must be a nonempty string";
-      postUpdateInfo.postContent = updatedPost.postContent;
     }
     if (updatedPost.tags) {
       if (
@@ -112,22 +110,19 @@ const exportedMethods = {
         )
       )
         throw "tags attribute must be an array of strings";
-      postUpdateInfo.tags = updatedPost.tags;
-    }
-    if (updatedPost.rating) {
-      if (!(stringCheck(updatedPost.rating) && typeof rating == "number"))
-        throw "rating attribute must be a nonempty string number";
-      postUpdateInfo.rating = updatedPost.rating;
-    }
-    if (updatedPost.resolvedStatus) {
-      if (typeof updatedPost.resolvedStatus !== "boolean")
-        throw "resolvedStatus attribute must be a boolean";
-      postUpdateInfo.resolvedStatus = updatedPost.resolvedStatus;
     }
     const postCollection = await posts();
+    const previousInfo = await postCollection.findOne({ _id: postId });
     const updateInfo = await postCollection.updateOne(
-      { _id: postId, postTime: new Date() },
-      { $set: postUpdateInfo }
+      { _id: postId },
+      {
+        $set: {
+          postTime: new Date(),
+          title: updatedPost.title,
+          postContent: updatedPost.postContent,
+          tags: updatedPost.tags,
+        },
+      }
     );
     if (!updateInfo && !updateInfo.modifiedCount) throw "Update failed";
     return await this.getPostByPostId(postId.toString());

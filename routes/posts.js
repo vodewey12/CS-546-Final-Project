@@ -12,14 +12,9 @@ router.get("/", async (req, res) => {
     const postList = await postData.getAllPosts();
     const userInfo = await userData.getUserById(req.session.user.userId);
     const likedPosts = userInfo.likedPosts;
-    if (postList) {
-      for (let post of postList) {
-        post.isLiked = likedPosts.includes(post._id);
-      }
-    }
 
     res.render("dashboard/dashboard", {
-      title: "dashboard",
+      title: "Dashboard",
       partial: "dashboard_js_script",
       postItems: postList,
       sessionUserId: req.session.user.userId,
@@ -94,7 +89,7 @@ router.get("/:id", async (req, res) => {
       );
     }
     res.render("partials/comments", {
-      title: "comments",
+      title: "Comments",
       partial: "comments_js_script",
       postItems: post,
       comments: comments,
@@ -161,7 +156,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.get("/posts/edit/:id", async (req, res) => {
+router.get("/edit/:id", async (req, res) => {
   // ❤ render comments that belong to corresponding post
   const id = xss(req.params.id);
   if (!id) {
@@ -171,7 +166,7 @@ router.get("/posts/edit/:id", async (req, res) => {
   try {
     const post = await postData.getPostByPostId(id);
     res.render("partials/edit", {
-      title: "edit",
+      title: "Edit",
       partial: "edit_js_script",
       postItems: post,
       sessionUserId: req.session.user.userId,
@@ -179,6 +174,51 @@ router.get("/posts/edit/:id", async (req, res) => {
     });
   } catch (e) {
     res.status(404).json({ error: "Post not found" });
+  }
+});
+
+router.post("/edit/:id", async (req, res) => {
+  const id = xss(req.params.id);
+  if (!id) {
+    res.status(400).json({ error: "Invalid postId" });
+    return;
+  }
+  try {
+    const oldPost = await postData.getPostByPostId(req.params.id);
+    if (!req.params || !id) {
+      throw "Post ID not provided for edit!";
+    }
+    if (!req.body) {
+      throw "No request body provided!";
+    }
+    if (req.body.title && typeof req.body.title != "string") {
+      return res.status(400).json({
+        error: "Invalid post title, cannot be empty, type should be string.",
+      });
+    }
+    if (req.body.postContent && typeof req.body.postContent != "string") {
+      return res.status(400).json({
+        error: "Invalid post body, cannot be empty, type should be string.",
+      });
+    }
+    if (req.body.tags && typeof req.body.tags != "string") {
+      return res.status(400).json({
+        error: "Invalid tags, cannot be empty, type should be string.",
+      });
+    }
+    let updatedObject = {};
+    updatedObject.title = xss(req.body.title);
+    updatedObject.postContent = xss(req.body.postContent);
+    let tags = req.body.tags.split(", ");
+    for (let tag of tags) {
+      tag = xss(tag);
+    }
+    updatedObject.tags = tags;
+    const editedPost = await postData.updatePost(id, updatedObject);
+    res.redirect("/posts/" + id);
+  } catch (error) {
+    res.status(404).json({ error: "Post not found" });
+    return;
   }
 });
 
