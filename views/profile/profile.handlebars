@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="/public/css/profile.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/public/css/dashboard.css">
 
 <link rel="stylesheet" href="/public/css/site.css">  
 <div class="header">  <!-- header -->
@@ -20,7 +21,7 @@
     </form>
 
     <div class="header-right">
-        <a href="/user/{{userId}}/profile" title="My Account">
+        <a href="/user/{{sessionUserId}}/profile" title="My Account">
             <img src="https://www.w3schools.com/w3images/avatar2.png" class="circle" style="height:30px;width:30px"
                 alt="Avatar">
         </a>
@@ -37,28 +38,33 @@
     <hr class="hr">
     <a href="/posts">Dashboard</a>
     <hr class="hr">
-    <a href="/user/{{userId}}/profile">Profile</a>
+    <a href="/user/{{sessionUserId}}/profile">Profile</a>
 
 </div>  <!-- header End -->
 
 <div class="post-container">
-  <link rel="stylesheet" href="/public/css/dashboard.css">
+    <div class="profile-card"><br>
 
-  <div class="profile-card"><br>
+        <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="profile-image " style="
+            width:100px">
 
-    <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="profile-image " style="
-        width:100px">
+        <h4>{{USERNAME}}</h4>
+        <span>{{MAJOR}}</span>
+        <h6>Graduating in {{GRADYEAR}}</h6>
+        <br>
+    </div>
 
-    <h4>{{USERNAME}}</h4>
-    <span>{{MAJOR}}</span>
-    <h6>Graduating in {{GRADYEAR}}</h6>
-    <br>
-  </div>
+    <div id="main-posts">
+        <h4>My Posts</h4>
+        <input type="hidden" id="user_id" name="user_id" value="{{sessionUserId}}">
+        <hr class="hr-create" style="margin-bottom: 20px;">
+        {{#each postItems}}
+        <!-- postItems is a post list, for each post, it will use postCards.handlebars template (lecture11_code). I pass in postItems from /routers/index.js -->
 
-  <h4>My posts</h4>
-  <hr class="hr-create"> <!-- a single post record goes here -->
-  {{#each postItems}}
-    {{> postCards}}
-  {{/each}}
+        {{> postCards sessionUserId=../sessionUserId}}
+        {{/each}}
+    </div>
+
+    <div id="post" hidden>
 
 </div>

@@ -27,7 +27,7 @@ router.get("/:id/profile", async (req, res) => {
       USERNAME: userInfo.userName,
       MAJOR: userInfo.major,
       GRADYEAR: userInfo.gradYear,
-      userId: req.session.user.userId,
+      sessionUserId: req.session.user.userId,
       user: true,
     }); // for rendering text page
   } catch (e) {
