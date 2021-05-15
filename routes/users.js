@@ -6,20 +6,29 @@ const bcrypt = require("bcryptjs");
 const userFunctions = require("./../data/users");
 const postFunctions = require("./../data/posts");
 
+
 router.get("/:id/profile", async (req, res) => {
   // after user input right password and log in, they redirect to this router by way of router.post("/login")
   const id = xss(req.params.id);
   const userInfo = await userFunctions.getUserById(id);
+  const postList = await postFunctions.getPostsByUserId(id);
+  for (let post of postList) {
+    if (post.userId == req.session.user.userId) {
+      post.user = true;
+    }
+  }
   // console.log(userInfo);
   // console.log(await postFunctions.getPostsByUserId(id))
   try {
     res.render("profile/profile", {
       title: `${userInfo.userName}`,
       partial: "profile_js_script",
-      postItems: await postFunctions.getPostsByUserId(id),
+      postItems: postList,
       USERNAME: userInfo.userName,
       MAJOR: userInfo.major,
       GRADYEAR: userInfo.gradYear,
+      userId: req.session.user.userId,
+      user: true,
     }); // for rendering text page
   } catch (e) {
     res.status(404).json({ error: e.message });

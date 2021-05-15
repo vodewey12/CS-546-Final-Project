@@ -50,7 +50,12 @@
         class="avatar-image"
         style="width:60px"
       />
-      <h4>{{postItems.title}}</h4>
+      {{#if postItems.resolvedStatus}}
+        <h4>[Resolved] {{postItems.title}}</h4>
+      {{else}}
+        <h4>[Unresolved] {{postItems.title}}</h4>
+      {{/if}}
+
       <span>Posted on
         {{formattedDate postTime}}
         by
@@ -63,44 +68,45 @@
             {{this}}
           </div>
         {{/each}}
-
       </div>
-      <hr />
-      <div class="card-actions">
-        <form method="POST" action="/comments">
-          <div class="create-post-forms">
-            <div class="row">
-              <textarea
-                id="comContent"
-                name="comContent"
-                value="comContent"
-                placeholder="Comment.."
-                style="height:100px"
-              ></textarea>
+      {{#if postItems.resolvedStatus}}{{else}}
+        <hr />
+        <div class="card-actions">
+          <form method="POST" action="/comments">
+            <div class="create-post-forms">
+              <div class="row">
+                <textarea
+                  id="comContent"
+                  name="comContent"
+                  value="comContent"
+                  placeholder="Comment.."
+                  style="height:100px"
+                ></textarea>
+              </div>
+              <input
+                type="hidden"
+                id="postId"
+                name="postId"
+                value={{postItems._id}}
+              />
+              <input type="hidden" id="userId" name="userId" value={{userId}} />
+              <input
+                type="hidden"
+                id="userName"
+                name="userName"
+                value={{userName}}
+              />
+
             </div>
-            <input
-              type="hidden"
-              id="postId"
-              name="postId"
-              value={{postItems._id}}
-            />
-            <input type="hidden" id="userId" name="userId" value={{userId}} />
-            <input
-              type="hidden"
-              id="userName"
-              name="userName"
-              value={{userName}}
-            />
-
-          </div>
-          <div class="card-actions">
-            <button type="submit" class="card-actions-button"><i
-                class="fa fa-plus"
-              ></i>
-              Comment</button>
-          </div>
-        </form>
-      </div>
+            <div class="card-actions">
+              <button type="submit" class="card-actions-button"><i
+                  class="fa fa-plus"
+                ></i>
+                Comment</button>
+            </div>
+          </form>
+        </div>
+      {{/if}}
 
       <hr />
       {{#each comments}}
@@ -111,8 +117,36 @@
             class="avatar-image"
             style="width:30px"
           />
-          <h5>{{comContent}}</h5>
+          {{#if isSolution}}
+          <h5>[Answer] {{comContent}}</h5>
+          {{else}}
+          <h5> {{comContent}}</h5>
+          {{/if}}
           <h6>Commented on {{formattedDate postTime}} by {{userName}}</h6>
+          {{#if ../postItems.resolvedStatus}}{{else}}
+            {{#ifEquals ../sessionUserId ../postItems.userId}}
+            <form method="POST" action="/posts/resolve">
+              <input
+                type="hidden"
+                id="postId"
+                name="postId"
+                value={{../postItems._id}}
+              />
+              <input
+                type="hidden"
+                id="commentId"
+                name="commentId"
+                value={{_id}}
+              />
+              <button type="submit" class="card-actions-button"><i
+                  class="fa fa-check"
+                  aria-hidden="true"
+                ></i>
+
+                Mark as Resolved</button>
+            </form>
+            {{/ifEquals}}
+          {{/if}}
           <hr />
         </div>
       {{/each}}

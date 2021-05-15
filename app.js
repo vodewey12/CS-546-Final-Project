@@ -22,6 +22,9 @@ const handlebarsInstance = exphbs.create({
     formattedDate: function (date) {
       return moment(date).format("MMM DD, YYYY");
     },
+    ifEquals: function (arg1, arg2, options) {
+      return arg1 == arg2 ? options.fn(this) : options.inverse(this);
+    },
   },
   partialsDir: ["views/partials/"],
 });
@@ -47,5 +50,5 @@ configRoutes(app);
 
 app.listen(3000, () => {
   console.log("We've now got a server!");
-  console.log("Your routes will be running on http://localhost:3000/auth");
+  console.log("Your routes will be running on http://localhost:3000/");
 });
