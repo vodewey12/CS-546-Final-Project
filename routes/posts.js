@@ -5,6 +5,7 @@ const xss = require("xss");
 const { Router } = require("express");
 const postData = data.posts;
 const commentData = data.comments;
+const userData = data.users;
 router.get("/", async (req, res) => {
   // ❤ dashboard
   try {

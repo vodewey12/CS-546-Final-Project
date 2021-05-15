@@ -11,30 +11,28 @@
   .post-container {
     width: 58.33333%;
   }
-.search-container {
+  .search-container {
     display: inline-block;
     margin: 0 auto;
     width: 67%;
-}
+  }
 
-.search-form {
+  .search-form {
     margin: 5px 0 0 0;
     padding: 0;
     text-align: center;
-
+  }
 }
-
 
 .search-label {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
-@media (min-width:601px) {
-
-    .post-container {
-        width: 58.33333%
-    }
+@media (min-width: 601px) {
+  .post-container {
+    width: 58.33333%;
+  }
 }
 
 .post-cards {
@@ -53,16 +51,14 @@
 
 .card-content {
   overflow-wrap: break-word;
-    -ms-word-break: break-all;
-    word-break: break-all;
-    word-break: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
 }
 
 .card-ations-form {
   display: inline-block;
 }
-
-
 
 .card-actions-button {
   border: none;
