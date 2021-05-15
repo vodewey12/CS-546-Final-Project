@@ -1,0 +1,109 @@
+<link rel="stylesheet" href="/public/css/profile.css" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+/>
+<link rel="stylesheet" href="/public/css/dashboard.css" />
+
+<link rel="stylesheet" href="/public/css/site.css" />
+<div class="header">
+  <!-- header -->
+  <a class="header-nav" onclick="openNav()" href="javascript:void(0);"><i
+      class="fa fa-bars"
+      style="font-size: 1.5em;"
+    ></i></a>
+
+  <a href="/posts" class="header-title">Stevens Collaboration Platform</a>
+
+  <div class="header-right">
+    <a href="/user/{{sessionUserId}}/profile" title="My Account">
+      <img
+        src="https://www.w3schools.com/w3images/avatar2.png"
+        class="circle"
+        style="height:30px;width:30px; display: inline-block;"
+        alt="Avatar"
+      />
+    </a>
+
+    <a href="/logout" title="Log Out" class="sign-out-button">
+      <i class="fa fa-sign-out" aria-hidden="true" style="font-size: 1.5em;">
+      </i>
+    </a>
+  </div>
+</div>
+
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="/auth">Home</a>
+  <hr class="hr" />
+  <a href="/posts">Dashboard</a>
+  <hr class="hr" />
+  <a href="/user/{{sessionUserId}}/profile">Profile</a>
+
+</div>
+<!-- header End -->
+
+<div class="post-container">
+  <div id="create-card" class="post-cards">
+    <h2>Edit Your Posts</h2>
+    <hr class="hr-create" />
+    <form action="/posts/edit/{{postItems._id}}" method="POST">
+      <div class="create-post-forms">
+        <div class="row">
+          <div>
+            <input
+              type="text"
+              id="postId"
+              name="postId"
+              value={{postItems._id}}
+              hidden
+            />
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value="{{postItems.title}}"
+              required
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-75">
+            <textarea
+              id="postContent"
+              name="postContent"
+              placeholder="Post Content.."
+              style="height:100px"
+              required
+            >{{postItems.postContent}}</textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-75">
+            <input
+              type="text"
+              id="tags"
+              name="tags"
+              value={{postItems.tags}}
+              placeholder="Tags.."
+              required
+            />
+          </div>
+        </div>
+
+      </div>
+      {{#if hasErrors}}
+        <div class="alert alert-danger">
+          {{error}}
+        </div>
+      {{/if}}
+      <div class="card-actions">
+        <button type="submit" class="card-actions-button"><i
+            class="fa fa-edit"
+          ></i>
+          Finish Edit</button>
+      </div>
+    </form>
+  </div>
+
+</div>

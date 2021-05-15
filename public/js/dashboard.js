@@ -48,7 +48,7 @@
   $search.submit(function (e) {
     e.preventDefault();
     var inputVal = $("input[name=searchTerm]").val();
-    if (inputVal === undefined || inputVal === "" || inputVal === null) {
+    if (inputVal === undefined || inputVal === "" || inputVal === null || !inputVal.trim()) {
       throw "No value provided";
     }
     if (inputVal) {

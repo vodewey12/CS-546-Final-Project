@@ -39,29 +39,35 @@
        <span>{{likeCount}}</span></button>
       {{/if}}
 
-      <input type="hidden" id="post_id" name="post_id" value="{{_id}}">
-    
+      <input type="hidden" id="post_id" name="post_id" value="{{_id}}" />
+
     </form>
 
     <form class="card-ations-form" action="/posts/{{_id}}">
-      <button type="submit" class="card-actions-button"><i class="fa fa-comment"></i>
+      <button type="submit" class="card-actions-button"><i
+          class="fa fa-comment"
+        ></i>
         Comment</button>
     </form>
 
-    {{#if user}}
-      <!-- user can just edit and delete their own post -->
-      <form class="card-ations-form" action="">
-        <button type="button" class="card-actions-button"><i
+    {{#ifEquals userId sessionUserId}}
+
+      <form class="card-ations-form" action="/posts/edit/{{_id}}">
+        <button type="submit" class="card-actions-button"><i
             class="fa fa-edit"
           ></i>
           Edit</button>
       </form>
-      <form class="card-ations-form" action="">
-        <button type="button" class="card-actions-button"><i
+      <form
+        class="card-ations-form"
+        method="POST"
+        action="posts/delete/{{_id}}"
+      >
+        <button type="submit" class="card-actions-button"><i
             class="fa fa-trash"
           ></i>
           Delete</button>
       </form>
-    {{/if}}
+    {{/ifEquals}}
   </div>
 </div>

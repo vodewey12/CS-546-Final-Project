@@ -23,11 +23,10 @@ router.get("/", async (req, res) => {
     }
 
     res.render("dashboard/dashboard", {
-      title: "dashboard",
+      title: "Dashboard",
       partial: "dashboard_js_script",
       postItems: postList,
       sessionUserId: req.session.user.userId,
-      user: true,
     }); //(lecture_11 code index.js) partial at here only for passing in client side Javascript of /public/js/dashboard.js
     // res.render("dashboard/dashboard", { results: postList });  // if use { results: postList } pass 'results' in postCards.handlebars, we should put postCards.handlebars entirely into /views/dashboard/dashboard.handlebars, instead of putting it into partials. In this way, we maybe need refresh page
   } catch (e) {
@@ -99,7 +98,7 @@ router.get("/:id", async (req, res) => {
       );
     }
     res.render("partials/comments", {
-      title: "comments",
+      title: "Comments",
       partial: "comments_js_script",
       postItems: post,
       comments: comments,
@@ -163,6 +162,72 @@ router.put("/:id", async (req, res) => {
     res.json(updatedpost);
   } catch (e) {
     res.sendStatus(500);
+  }
+});
+
+router.get("/edit/:id", async (req, res) => {
+  // ❤ render comments that belong to corresponding post
+  const id = xss(req.params.id);
+  if (!id) {
+    res.status(400).json({ error: "Invalid postId" });
+    return;
+  }
+  try {
+    const post = await postData.getPostByPostId(id);
+    res.render("partials/edit", {
+      title: "Edit",
+      partial: "edit_js_script",
+      postItems: post,
+      sessionUserId: req.session.user.userId,
+      userName: req.session.user.userName,
+    });
+  } catch (e) {
+    res.status(404).json({ error: "Post not found" });
+  }
+});
+
+router.post("/edit/:id", async (req, res) => {
+  const id = xss(req.params.id);
+  if (!id) {
+    res.status(400).json({ error: "Invalid postId" });
+    return;
+  }
+  try {
+    const oldPost = await postData.getPostByPostId(req.params.id);
+    if (!req.params || !id) {
+      throw "Post ID not provided for edit!";
+    }
+    if (!req.body) {
+      throw "No request body provided!";
+    }
+    if (req.body.title && typeof req.body.title != "string") {
+      return res.status(400).json({
+        error: "Invalid post title, cannot be empty, type should be string.",
+      });
+    }
+    if (req.body.postContent && typeof req.body.postContent != "string") {
+      return res.status(400).json({
+        error: "Invalid post body, cannot be empty, type should be string.",
+      });
+    }
+    if (req.body.tags && typeof req.body.tags != "string") {
+      return res.status(400).json({
+        error: "Invalid tags, cannot be empty, type should be string.",
+      });
+    }
+    let updatedObject = {};
+    updatedObject.title = xss(req.body.title);
+    updatedObject.postContent = xss(req.body.postContent);
+    let tags = req.body.tags.split(", ");
+    for (let tag of tags) {
+      tag = xss(tag);
+    }
+    updatedObject.tags = tags;
+    const editedPost = await postData.updatePost(id, updatedObject);
+    res.redirect("/posts/" + id);
+  } catch (error) {
+    res.status(404).json({ error: "Post not found" });
+    return;
   }
 });
 
@@ -275,32 +340,20 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// router.get("/tags", async (req, res) => {  //search bar for tag to hit this router and pass in tag
-//   const tagInfo = req.body;
-
-//   if (!tagInfo || !tagInfo.tags) {
-//     res.status(400).json({
-//       error: "You must provide tags in search bar to search",
-//     });
-//     return;
-//   }
-
-//   const postListByTags = await postData.getPostsByTag(tagInfo.tags);
-
-//   for (let post of postListByTags) {
-//     if (post.userId == req.session.user.userId) {
-//       post.user = true;
-//       // console.log(post);
-//     }
-//   }
-//   res.render("dashboard/dashboard", {
-//     title: "dashboard",
-//     partial: "dashboard_js_script",
-//     postItems:  postListByTags,
-//     userId: req.session.user.userId,
-//     user: true,
-//   });
-// });
+router.post("/delete/:id", async (req, res) => {
+  const id = xss(req.params.id);
+  if (!id) {
+    res.status(400).json({ error: "Invalid postId" });
+    return;
+  }
+  try {
+    await postData.getPostByPostId(id);
+    let deleted = await postData.deletePost(id);
+    res.redirect("/posts");
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
 
 router.post("/like", async (req, res) => {
 

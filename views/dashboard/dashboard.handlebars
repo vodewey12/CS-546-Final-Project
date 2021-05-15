@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="/public/css/profile.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/public/css/dashboard.css">
 
 <link rel="stylesheet" href="/public/css/site.css">
 <div class="header">
@@ -9,17 +10,9 @@
 
     <a href="/posts" class="header-title">Stevens Collaboration Platform</a>
 
-    <div class="search-container">
-        <form id="search" class="search-form">
-            <!-- search form-->
-            <label class="search-label" id="searchLabel" for="searchTerm">
-                <input type="text" id="searchTerm" name="searchTerm" class="form-control" style="width: 400px;" placeholder="Search for title of posts">
-            </label>
-            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-        </form>
-    </div>
+
     <div class="header-right">
-        <a href="/user/{{userId}}/profile" title="My Account">
+        <a href="/user/{{sessionUserId}}/profile" title="My Account">
             <img src="https://www.w3schools.com/w3images/avatar2.png" class="circle"
                 style="height:30px;width:30px; display: inline-block;" alt="Avatar">
         </a>
@@ -36,11 +29,25 @@
     <hr class="hr">
     <a href="/posts">Dashboard</a>
     <hr class="hr">
-    <a href="/user/{{userId}}/profile">Profile</a>
+    <a href="/user/{{sessionUserId}}/profile">Profile</a>
 
 </div> <!-- header End -->
 
 <div class="post-container">
+    <div class="post-cards">
+        <h2>Search Posts</h2>
+        <hr class="hr-create">
+        <form id="search">
+            <div class="search-post-forms">
+                <label style="width:100%" id="searchLabel" for="searchTerm">
+                    <input type="text" id="searchTerm" name="searchTerm" placeholder="Search for title of posts">
+                </label>
+            </div>
+            <div class="card-actions">
+                <button type="submit" class="card-actions-button"><i class="fa fa-search"></i> Search</button>
+            </div>
+        </form>
+    </div>
     <div id="create-card" class="post-cards">
         <h2>Create Posts</h2>
         <hr class="hr-create">
@@ -53,8 +60,8 @@
                 </div>
                 <div class="row">
                     <div class="col-75">
-                        <textarea id="postContent" name="postContent" placeholder="Post Content.."
-                            style="height:100px" required></textarea>
+                        <textarea id="postContent" name="postContent" placeholder="Post Content.." style="height:100px"
+                            required></textarea>
                     </div>
                 </div>
                 <div class="row">
@@ -65,10 +72,10 @@
 
             </div>
             {{#if hasErrors}}
-          <div class="alert alert-danger">
-            {{error}}
-          </div>
-      {{/if}}
+            <div class="alert alert-danger">
+                {{error}}
+            </div>
+            {{/if}}
             <div class="card-actions">
                 <button type="submit" class="card-actions-button"><i class="fa fa-plus"></i>
                     Create</button>
@@ -77,11 +84,12 @@
     </div>
     <div id="main-posts">
         <h4>All Posts</h4>
-         <input type="hidden" id="user_id" name="user_id" value="{{sessionUserId}}">
-        <hr class="hr-create">
+        <input type="hidden" id="user_id" name="user_id" value="{{sessionUserId}}">
+        <hr class="hr-create" style="margin-bottom: 20px;">
         {{#each postItems}}
         <!-- postItems is a post list, for each post, it will use postCards.handlebars template (lecture11_code). I pass in postItems from /routers/index.js -->
-        {{> postCards}}
+
+        {{> postCards sessionUserId=../sessionUserId}}
         {{/each}}
     </div>
 

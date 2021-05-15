@@ -7,26 +7,16 @@
   margin-top: 20px;
 }
 
+.search-form {
+  display: inline-block;
+}
+
 @media (min-width: 601px) {
   .post-container {
     width: 58.33333%;
   }
-  .search-container {
-    display: inline-block;
-    margin: 0 auto;
-    width: 67%;
-  }
 
-  .search-form {
-    margin: 5px 0 0 0;
-    padding: 0;
-    text-align: center;
-  }
-}
 
-.search-label {
-  margin: 0;
-  padding: 0;
 }
 
 @media (min-width: 601px) {
@@ -88,6 +78,10 @@
   padding: 15px;
 }
 
+.search-post-forms {
+  margin: 0
+}
+
 .row {
   margin-bottom: 20px;
 }
@@ -109,6 +103,7 @@ label {
 
 .hr-create {
   border-color: #000;
+  margin: 5px 0 5px 0;
 }
 
 .comment-date {

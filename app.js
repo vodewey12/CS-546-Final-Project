@@ -25,6 +25,9 @@ const handlebarsInstance = exphbs.create({
     ifEquals: function (arg1, arg2, options) {
       return arg1 == arg2 ? options.fn(this) : options.inverse(this);
     },
+    print: function (arg1) {
+      console.log(arg1);
+    },
   },
   partialsDir: ["views/partials/"],
 });
