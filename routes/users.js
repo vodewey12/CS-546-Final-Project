@@ -236,7 +236,7 @@ router.post("/login", async (req, res) => {
         console.log(
           `[${crtTimeStamp}]: ${req.method} ${req.originalUrl} (Authenticated User)`
         );
-        res.redirect(`/posts`); // ❤ user input right password, we redirect them to user profile. I think it should be /user/:id/profile
+        res.redirect(`/auth`); // ❤ user input right password, we redirect them to user profile. I think it should be /user/:id/profile
       } //else res.status(404).send("Invalid Email/Password Combination");
       else {
         res.status(404).render("auth/login", {

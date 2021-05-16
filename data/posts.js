@@ -103,10 +103,12 @@ const exportedMethods = {
     if (updatedPost.title) {
       if (!stringCheck(updatedPost.title))
         throw "title attribute must be a nonempty string";
+      postUpdateInfo.title = updatedPost.title
     }
     if (updatedPost.postContent) {
       if (!stringCheck(updatedPost.postContent))
         throw "postContent attribute must be a nonempty string";
+      postUpdateInfo.postContent = updatedPost.postContent
     }
     if (updatedPost.tags) {
       if (
@@ -115,26 +117,27 @@ const exportedMethods = {
         )
       )
         throw "tags attribute must be an array of strings";
+      postUpdateInfo.tags = updatedPost.tags
+    }else{
+      
     }
 
-    if (updatedPost.usersLiked && !Array.isArray(updatedPost.usersLiked)){
-      throw 'usersLiked must be an array.';
+    if (updatedPost.usersLiked){
+      if(!Array.isArray(updatedPost.usersLiked)){
+        throw 'usersLiked must be an array.';
+      }
+      postUpdateInfo.usersLiked = updatedPost.usersLiked
     }
-
+    if(updatedPost.rating){
+      postUpdateInfo.rating = updatedPost.rating
+    }
+    updatedPost.postTime = new Date()
 
     const postCollection = await posts();
     const previousInfo = await postCollection.findOne({ _id: postId });
     const updateInfo = await postCollection.updateOne(
       { _id: postId },
-      {
-        $set: {
-          postTime: new Date(),
-          title: updatedPost.title,
-          postContent: updatedPost.postContent,
-          tags: updatedPost.tags,
-          usersLiked: updatedPost.usersLiked
-        },
-      }
+      {$set: postUpdateInfo}
     );
 
     if (!updateInfo && !updateInfo.modifiedCount){
@@ -233,7 +236,7 @@ const exportedMethods = {
       updatedUsersLiked.push(user_id);
     }
    
-    return await this.updatePost(post_id , {usersLiked : updatedUsersLiked});
+    return await this.updatePost(post_id , {usersLiked : updatedUsersLiked, rating: updatedUsersLiked.length});
     
     
   }

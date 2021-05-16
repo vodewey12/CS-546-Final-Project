@@ -362,7 +362,6 @@ router.post("/delete/:id", async (req, res) => {  // delete button function
 });
 
 router.post("/like", async (req, res) => {
-
   if (!req.session.isLogIn){
     res.status(401);
     res.redirect('/auth');

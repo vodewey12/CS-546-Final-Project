@@ -1,0 +1,84 @@
+<link rel='stylesheet' href='/public/css/profile.css' />
+<link
+    rel='stylesheet'
+    href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
+/>
+<link rel='stylesheet' href='/public/css/dashboard.css' />
+
+<link rel='stylesheet' href='/public/css/site.css' />
+<div class='header'>
+    <!-- header -->
+    <a class='header-nav' onclick='openNav()' href='javascript:void(0);'><i
+            class='fa fa-bars'
+            style='font-size: 1.5em;'
+        ></i></a>
+
+    <a href='/posts' class='header-title'>Stevens Collaboration Platform</a>
+
+    <div class='header-right'>
+        <a href='/user/{{sessionUserId}}/profile' title='My Account'>
+            <img
+                src='https://www.w3schools.com/w3images/avatar2.png'
+                class='circle'
+                style='height:30px;width:30px; display: inline-block;'
+                alt='Avatar'
+            />
+        </a>
+
+        <a href='/logout' title='Log Out' class='sign-out-button'>
+            <i
+                class='fa fa-sign-out'
+                aria-hidden='true'
+                style='font-size: 1.5em;'
+            > </i>
+        </a>
+    </div>
+</div>
+
+<div id='mySidenav' class='sidenav'>
+    <a
+        href='javascript:void(0)'
+        class='closebtn'
+        onclick='closeNav()'
+    >&times;</a>
+    <a href='/auth'>Home</a>
+    <hr class='hr' />
+    <a href='/posts'>Dashboard</a>
+    <hr class='hr' />
+    <a href='/user/{{sessionUserId}}/profile'>Profile</a>
+
+</div>
+<!-- header End -->
+
+<div class='post-container'>
+    <h1>Welcome to Stevens Academic Collaboration Platform</h1>
+    <h2>Core Features:</h2>
+    <ol>
+        <li>Landing Page: Users who are not logged in will see some description
+            of the platform and prompt to sign up or sign in. Users who are
+            logged in, will see the cards for their courses.
+        </li>
+        <li>Dashboard Page: Users can see the new posts, search bar, create
+            option, notification icons, and their profile.</li>
+        <li>Create Posts: New posts can be added on the feed with various tags
+            (with information such as datetime, body, tags as well as the author
+            of the posts)</li>
+        <li>Search Posts: Users will be able to search posts and view them based
+            on tags(say someone wants to see posts with specifically CS-546
+            tags).
+        </li>
+        <li>Comment on Posts: Users will be able to add comments below a post.</li>
+        <li>Remove/Edit Posts: Admin users / instructors can create courses /
+            delete posts. Normal users/ students can create posts and
+            comment/reply to posts, i.e. students should not be able to delete
+            posts/comments that are not their own.
+        </li>
+        <li>User profile: Displays their name, username, stevens email address.
+        </li>
+        <li>Rating System: Allow users to upvote/downvote a post or comment.</li>
+        <li>Status Label: Allow users with admin privileges to label posts and
+            comments as resolved or unresolved issues.
+        </li>
+    </ol>
+
+</div>
