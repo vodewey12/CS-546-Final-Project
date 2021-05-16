@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
         await userData.getUserById(req.session.user.userId);
         let postInfo = req.body;
         if (
-            !stringCheck(postInfo) ||
+            !postInfo ||
             !stringCheck(postInfo.title) ||
             !stringCheck(postInfo.postContent) ||
             !stringCheck(postInfo.tags)
@@ -370,7 +370,6 @@ router.post('/resolve', async (req, res) => {
         try {
             await postData.resolvePosts(postId);
             await commentData.markCommentSol(commentId);
-            console.log('resolved');
             res.redirect('/posts');
         } catch (e) {
             res.status(404).json({ error: e });
