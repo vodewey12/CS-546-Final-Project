@@ -103,10 +103,12 @@ const exportedMethods = {
     if (updatedPost.title) {
       if (!stringCheck(updatedPost.title))
         throw "title attribute must be a nonempty string";
+      postUpdateInfo.title = updatedPost.title
     }
     if (updatedPost.postContent) {
       if (!stringCheck(updatedPost.postContent))
         throw "postContent attribute must be a nonempty string";
+      postUpdateInfo.postContent = updatedPost.postContent
     }
     if (updatedPost.tags) {
       if (
@@ -115,34 +117,33 @@ const exportedMethods = {
         )
       )
         throw "tags attribute must be an array of strings";
+      postUpdateInfo.tags = updatedPost.tags
+    }else{
+      
     }
 
-    if (updatedPost.usersLiked && !Array.isArray(updatedPost.usersLiked)){
-      throw 'usersLiked must be an array.';
+    if (updatedPost.usersLiked){
+      if(!Array.isArray(updatedPost.usersLiked)){
+        throw 'usersLiked must be an array.';
+      }
+      postUpdateInfo.usersLiked = updatedPost.usersLiked
     }
-
+    if(updatedPost.rating){
+      postUpdateInfo.rating = updatedPost.rating
+    }
+    updatedPost.postTime = new Date()
 
     const postCollection = await posts();
     const previousInfo = await postCollection.findOne({ _id: postId });
     const updateInfo = await postCollection.updateOne(
       { _id: postId },
-      {
-        $set: {
-          postTime: new Date(),
-          title: updatedPost.title,
-          postContent: updatedPost.postContent,
-          tags: updatedPost.tags,
-          rating: updatedPost.rating,
-          usersLiked: updatedPost.usersLiked
-        },
-      }
+      {$set: postUpdateInfo}
     );
 
     if (!updateInfo && !updateInfo.modifiedCount){
       throw "Update failed";
     }
     let res = await this.getPostByPostId(postId.toString());
-    console.log(res);
     return res;
   },
 
@@ -198,7 +199,6 @@ const exportedMethods = {
 
   async updateUsersLiked(post_id , user_id){
 
-    console.log('db hit');
     if (
       !user_id ||
       typeof user_id !== "string" ||
