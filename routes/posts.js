@@ -6,6 +6,11 @@ const { Router } = require("express");
 const postData = data.posts;
 const commentData = data.comments;
 const userData = data.users;
+
+function stringCheck(string) {
+  return typeof string === "string" && string.trim().length !== 0;
+}
+
 router.get("/", async (req, res) => {
   // ❤ dashboard
   try {
@@ -43,12 +48,12 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {  // create post function in dashboard
   let postInfo = req.body;
-  if (!postInfo || !postInfo.title || !postInfo.postContent || !postInfo.tags) {
+  if (!stringCheck(postInfo) || !stringCheck(postInfo.title) || !stringCheck(postInfo.postContent) || !stringCheck(postInfo.tags)) {
     res.status(400).render("dashboard/dashboard", {
       title: "dashboard",
       partial: "dashboard_js_script",
       hasErrors: true,
-      error: "Must supply all fields.",
+      error: "Must supply all fields. Please return back to dashboard through naviagation bar",
       userId: req.session.user.userId,
     });
     //res.status(404).json({ error: 'Must supply all fields.' });

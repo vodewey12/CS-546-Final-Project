@@ -83,7 +83,9 @@
         </form>
     </div>
     <div id="main-posts">
+        {{#unless hasErrors}}
         <h4>All Posts</h4>
+        {{/unless}}
         <input type="hidden" id="user_id" name="user_id" value="{{sessionUserId}}">
         <hr class="hr-create" style="margin-bottom: 20px;">
         {{#each postItems}}  <!-- postItems is a post list, for each post, it will use postCards.handlebars template (lecture11_code). -->
