@@ -8,7 +8,8 @@ router.get('/', async (req, res) => {
         // res.status(200).json({ message: 'User is authenticated.' }); // should be redirected to home/dashboard once built
         res.render('dashboard/home', {
             title: 'Home',
-            partial: 'dashboard_js_script'
+            partial: 'dashboard_js_script',
+            sessionUserId: req.session.user.userId
         }); // if user already log in, when they go to login page, they should redirect profile page instead of seeing login form
         return;
     } else {
