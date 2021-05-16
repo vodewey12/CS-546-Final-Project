@@ -13,6 +13,21 @@ router.get("/", async (req, res) => {
     const userInfo = await userData.getUserById(req.session.user.userId);
     const likedPosts = userInfo.likedPosts;
 
+    for (let post of postList) {
+      if (post.userId == req.session.user.userId) {
+        post.user = true;
+        // console.log(post);
+      }
+      let numLikes = post.usersLiked.length;
+      if(numLikes > 1){
+        post.likeCount = `${numLikes} Likes`;
+      }else{
+        post.likeCount = `${numLikes} Like`;
+      }
+      post.isLiked = likedPosts.includes(post._id);
+      
+    }
+
     res.render("dashboard/dashboard", {
       title: "Dashboard",
       partial: "dashboard_js_script",
@@ -304,7 +319,8 @@ router.post("/resolve", async (req, res) => {
   try {
     await postData.resolvePosts(postId);
     await commentData.markCommentSol(commentId);
-    res.redirect("/" + postId);
+    console.log('resolved');
+    res.redirect("/posts");
   } catch (e) {
     res.status(404).json({ error: e });
   }
@@ -344,6 +360,32 @@ router.post("/delete/:id", async (req, res) => {  // delete button function
   } catch (e) {
     res.sendStatus(500);
   }
+});
+
+router.post("/like", async (req, res) => {
+  if (!req.session.isLogIn){
+    res.status(401);
+    res.redirect('/auth');
+    return;
+  }
+
+  if (!req.body.userId || !req.body.postId) {
+    res.status(404).json({ error: "Must supply all fields." });
+    return;
+  }
+
+  let userId = xss(req.body.userId);
+  let postId = xss(req.body.postId);
+
+
+  try{
+    let updatedPost = await postData.updateUsersLiked(postId , userId);
+    res.status(200).json(updatedPost);
+  }catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e.message });
+  }
+
 });
 
 module.exports = router;

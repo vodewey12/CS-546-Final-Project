@@ -1,7 +1,8 @@
 const mongoCollections = require("../config/mongoCollections");
 const posts = mongoCollections.posts;
 const users = require("./users");
-const { ObjectID } = require("mongodb");
+const { ObjectId } = require("mongodb");
+let ObjectID = require("mongodb").ObjectID;
 
 function stringCheck(string) {
   return typeof string === "string" && string.trim().length !== 0;
@@ -10,7 +11,7 @@ function stringCheck(string) {
 function idCheck(id) {
   if (!stringCheck(id)) throw "id parameter must be a nonempty string";
   if (!ObjectID.isValid(id)) throw "id parameter must be a valid ObjectID";
-  return ObjectID(id);
+  return ObjectId(id);
 }
 
 const exportedMethods = {
@@ -67,7 +68,7 @@ const exportedMethods = {
 
     const postCollection = await posts();
     let newPost = {
-      userId: ObjectID(userId),
+      userId: ObjectId(userId),
       userName: userName,
       title: title,
       postContent: postContent,
@@ -76,6 +77,7 @@ const exportedMethods = {
       rating: 0,
       resolvedStatus: false,
       commentIds: [], // [“6055a6784765c78268613749”, … ]
+      usersLiked: [], // array of user ids that liked this post
     };
     const newInsertInformation = await postCollection.insertOne(newPost);
     if (newInsertInformation.insertedCount === 0) throw "Insert failed!";
@@ -101,10 +103,12 @@ const exportedMethods = {
     if (updatedPost.title) {
       if (!stringCheck(updatedPost.title))
         throw "title attribute must be a nonempty string";
+      postUpdateInfo.title = updatedPost.title
     }
     if (updatedPost.postContent) {
       if (!stringCheck(updatedPost.postContent))
         throw "postContent attribute must be a nonempty string";
+      postUpdateInfo.postContent = updatedPost.postContent
     }
     if (updatedPost.tags) {
       if (
@@ -113,22 +117,34 @@ const exportedMethods = {
         )
       )
         throw "tags attribute must be an array of strings";
+      postUpdateInfo.tags = updatedPost.tags
+    }else{
+      
     }
+
+    if (updatedPost.usersLiked){
+      if(!Array.isArray(updatedPost.usersLiked)){
+        throw 'usersLiked must be an array.';
+      }
+      postUpdateInfo.usersLiked = updatedPost.usersLiked
+    }
+    if(updatedPost.rating){
+      postUpdateInfo.rating = updatedPost.rating
+    }
+    updatedPost.postTime = new Date()
+
     const postCollection = await posts();
     const previousInfo = await postCollection.findOne({ _id: postId });
     const updateInfo = await postCollection.updateOne(
       { _id: postId },
-      {
-        $set: {
-          postTime: new Date(),
-          title: updatedPost.title,
-          postContent: updatedPost.postContent,
-          tags: updatedPost.tags,
-        },
-      }
+      {$set: postUpdateInfo}
     );
-    if (!updateInfo && !updateInfo.modifiedCount) throw "Update failed";
-    return await this.getPostByPostId(postId.toString());
+
+    if (!updateInfo && !updateInfo.modifiedCount){
+      throw "Update failed";
+    }
+    let res = await this.getPostByPostId(postId.toString());
+    return res;
   },
 
   async deletePost(id) {
@@ -152,7 +168,7 @@ const exportedMethods = {
     try {
       const postCollection = await posts();
       const post = await postCollection.updateOne(
-        { _id: ObjectID(postId) },
+        { _id: ObjectId(postId) },
         {
           $push: {
             commentIds: commentId,
@@ -180,6 +196,50 @@ const exportedMethods = {
       throw new Error(error.message);
     }
   },
+
+  async updateUsersLiked(post_id , user_id){
+
+    if (
+      !user_id ||
+      typeof user_id !== "string" ||
+      user_id.trim().length === 0
+    ) {
+      throw "userId is a required non-empty string parameter.";
+    }
+  
+    if (
+      !post_id ||
+      typeof post_id !== "string" ||
+      post_id.trim().length === 0
+    ) {
+      throw "postId is a required non-empty string parameter.";
+    }
+  
+    const postInfo = await this.getPostByPostId(post_id);
+    const updatedUsersLiked = postInfo.usersLiked;
+  
+    let found = false;
+    let userIndex;
+    let i = 0;
+    for(let user of updatedUsersLiked){
+      if(user === user_id){
+        found = true;
+        userIndex = i;
+        break;
+      }
+      i++;
+    }
+  
+    if(found){ // delete
+      updatedUsersLiked.splice(userIndex , 1);
+    }else{ // insert
+      updatedUsersLiked.push(user_id);
+    }
+   
+    return await this.updatePost(post_id , {usersLiked : updatedUsersLiked, rating: updatedUsersLiked.length});
+    
+    
+  }
 };
 
 module.exports = exportedMethods;

@@ -32,17 +32,11 @@
 
     <form class="card-ations-form like-form" action="">
       {{#if isLiked}}
-        <button type="submit" class="card-actions-button"><i
-            class="fa fa-thumbs-up"
-            id="like"
-          ></i>
-          Like</button>
+      <button type="submit" class="card-actions-button"><span class="fa fa-thumbs-up" id="like"></span>
+        <span>{{likeCount}}</span></button>
       {{else}}
-        <button type="submit" class="card-actions-button"><i
-            class="fa fa-thumbs-up"
-            id="not-like"
-          ></i>
-          Like</button>
+      <button type="submit" class="card-actions-button"><span class="fa fa-thumbs-up" id="not-like"></span>
+       <span>{{likeCount}}</span></button>
       {{/if}}
 
       <input type="hidden" id="post_id" name="post_id" value="{{_id}}" />

@@ -9,13 +9,21 @@ const postFunctions = require("./../data/posts");
 
 router.get("/:id/profile", async (req, res) => {
   // after user input right password and log in, they redirect to this router by way of router.post("/login")
-  const id = xss(req.params.id);
+  const id = xss(req.session.user.userId);
   const userInfo = await userFunctions.getUserById(id);
   const postList = await postFunctions.getPostsByUserId(id);
+  
   for (let post of postList) {
     if (post.userId == req.session.user.userId) {
       post.user = true;
     }
+    let numLikes = post.usersLiked.length;
+      if(numLikes > 1){
+        post.likeCount = `${numLikes} Likes`;
+      }else{
+        post.likeCount = `${numLikes} Like`;
+      }
+      post.isLiked = post.usersLiked.includes(req.session.user.userId);
   }
   // console.log(userInfo);
   // console.log(await postFunctions.getPostsByUserId(id))
@@ -228,7 +236,7 @@ router.post("/login", async (req, res) => {
         console.log(
           `[${crtTimeStamp}]: ${req.method} ${req.originalUrl} (Authenticated User)`
         );
-        res.redirect(`/posts`); // ❤ user input right password, we redirect them to user profile. I think it should be /user/:id/profile
+        res.redirect(`/auth`); // ❤ user input right password, we redirect them to user profile. I think it should be /user/:id/profile
       } //else res.status(404).send("Invalid Email/Password Combination");
       else {
         res.status(404).render("auth/login", {
