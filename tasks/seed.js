@@ -20,7 +20,13 @@ async function tryCatch(callback) {
 
 async function main() {
     const db = await dbConnection();
-    await db.dropDatabase();  //Removes the current database, deleting the associated data files.
+
+    try{
+        await db.dropDatabase();  //Removes the current database, deleting the associated data files.
+    } catch (e){
+        console.log('no previous db instance found.');
+    }
+    
 
     // users collection
     const user1 = await users.createUser({
