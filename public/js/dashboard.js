@@ -33,15 +33,19 @@
 
 
         // send ajax request
-        $.post("/user/like" , 
-        {   userId: userId,
-            postId: postId
-        });
+        $.when(
+          $.post("/user/like" , 
+          {   userId: userId,
+              postId: postId
+          }),
 
-        $.post("/posts/like",
-        {
-          userId: userId,
-          postId: postId
+          $.post("/posts/like",
+          {
+            userId: userId,
+            postId: postId
+          }),
+        ).then(function(){
+
         });
     });
 

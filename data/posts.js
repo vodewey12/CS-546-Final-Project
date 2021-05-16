@@ -141,7 +141,6 @@ const exportedMethods = {
       throw "Update failed";
     }
     let res = await this.getPostByPostId(postId.toString());
-    console.log(res);
     return res;
   },
 
@@ -197,7 +196,6 @@ const exportedMethods = {
 
   async updateUsersLiked(post_id , user_id){
 
-    console.log('db hit');
     if (
       !user_id ||
       typeof user_id !== "string" ||
