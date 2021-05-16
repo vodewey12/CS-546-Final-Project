@@ -49,6 +49,42 @@ app.use(
   })
 );
 
+app.use('/user', (req, res, next) => {
+
+  if (!req.session.user) {
+    return res.redirect('/');
+  } else {
+    next();
+  }
+});
+
+app.use('/comments', (req, res, next) => {
+
+  if (!req.session.user) {
+    return res.redirect('/');
+  } else {
+    next();
+  }
+});
+
+app.use('/posts', (req, res, next) => {
+
+  if (!req.session.user) {
+    return res.redirect('/');
+  } else {
+    next();
+  }
+});
+
+app.use('/logout', (req, res, next) => {
+
+  if (!req.session.user) {
+    return res.redirect('/');
+  } else {
+    next();
+  }
+});
+
 configRoutes(app);
 
 app.listen(3000, () => {
