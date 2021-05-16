@@ -11,3 +11,11 @@ From there you can login with user information from the database or sign up as a
 Once signed in you can create, edit, delete posts as well as like and comment on your own and others posts. You can mark comments on your own posts that resolve your post.
 
 You can also access your own profile to see all the posts you made.
+
+Here is the login information for each of the users in the seed file. Each user signs in with their email:
+
+user1- email: sholmes@email.com password: elementarymydearwatson
+
+user2- email: elemon@email.com password: damnyoujackdonaghy
+
+user3- email: sh@email.com password: 123

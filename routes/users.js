@@ -9,13 +9,21 @@ const postFunctions = require("./../data/posts");
 
 router.get("/:id/profile", async (req, res) => {
   // after user input right password and log in, they redirect to this router by way of router.post("/login")
-  const id = xss(req.params.id);
+  const id = xss(req.session.user.userId);
   const userInfo = await userFunctions.getUserById(id);
   const postList = await postFunctions.getPostsByUserId(id);
+  
   for (let post of postList) {
     if (post.userId == req.session.user.userId) {
       post.user = true;
     }
+    let numLikes = post.usersLiked.length;
+      if(numLikes > 1){
+        post.likeCount = `${numLikes} Likes`;
+      }else{
+        post.likeCount = `${numLikes} Like`;
+      }
+      post.isLiked = post.usersLiked.includes(req.session.user.userId);
   }
   // console.log(userInfo);
   // console.log(await postFunctions.getPostsByUserId(id))
